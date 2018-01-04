@@ -15,6 +15,11 @@ if (CURSES_FOUND)
   list(APPEND LIBS ${CURSES_LIBRARIES})
 endif()
 
+find_package(Threads)
+if (THREADS_FOUND)
+  list(APPEND LIBS ${CMAKE_THREAD_LIBS_INIT})
+endif()
+
 limix_process_default_dirs()
 
 limix_add_library(${PROJECT_NAME} ${PROJECT_VERSION}

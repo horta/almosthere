@@ -74,7 +74,11 @@ struct almosthere *almosthere_create(long volume) {
     almosthere_widget_create(&at->widget);
 
     at->stop_thread = 0;
-    thrd_create(&at->thr, almosthere_thread_start, at);
+    int status = thrd_create(&at->thr, almosthere_thread_start, at);
+    if (status != thrd_success) {
+        printf("Could not spawn a thread.", stderr);
+        return NULL;
+    }
 
     return at;
 }
@@ -87,6 +91,8 @@ void almosthere_update_speed(struct almosthere *at) {
     almosthere_timespec_diff(&at->delta_start, &curr, &diff);
 
     double dlt = almosthere_timespec_sec(&diff);
+    printf("dlt: %.30f\n", dlt);
+    printf("%d %ld\n", curr.tv_sec, curr.tv_nsec);
 
     if (dlt >= MINIMUM_DELTA) {
         at->speed = at->consumed_start / dlt;
