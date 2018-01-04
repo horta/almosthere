@@ -1,4 +1,5 @@
 #include "almosthere_time.h"
+#include "c11threads.h"
 
 /**
  * Cross-platform sleep function for C
@@ -32,4 +33,19 @@ void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,
 
 double almosthere_timespec_sec(struct timespec *ts) {
   return ts->tv_sec + ts->tv_nsec / 1000.0 / 1000.0 / 1000.0
+}
+
+void almosthere_sec_timespec(double seconds, struct timespec *ts) {
+
+  int isec = (int)seconds;
+  ts->tv_sec = isec;
+  double remainder = seconds - ((double)isec);
+  ts->tv_nsec = remainder * 1000 * 1000 * 1000;
+}
+
+void almosthere_thrd_sleep(double seconds) {
+
+  struct timespec ts;
+  almosthere_sec_timespec(seconds, &ts);
+  thrd_sleep(&ts, NULL);
 }

@@ -16,5 +16,6 @@
 void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,
                               struct timespec *diff);
 double almosthere_timespec_sec(struct timespec *ts);
+void almosthere_thrd_sleep(double seconds);
 
 #endif /* end of include guard: ALMOSTHERE_TIME_H_ */
