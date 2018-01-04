@@ -4,12 +4,18 @@
 #include "posix_check.h"
 #include <time.h>
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #ifdef POSIX_SYSTEM
 #include <unistd.h>
+#endif
+
+#ifdef WIN32
+#include <windows.h>
+#if _MSC_VER < 1800
+struct timespec {
+    long tv_sec;
+    long tv_nsec;
+};
+#endif
 #endif
 
 void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,
