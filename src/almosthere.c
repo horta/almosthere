@@ -1,7 +1,7 @@
 #include "almosthere.h"
+#include "almosthere_thread.h"
 #include "almosthere_time.h"
 #include "almosthere_widget.h"
-#include "c11threads.h"
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -1,5 +1,5 @@
+#include "almosthere_thread.h"
 #include "almosthere_time.h"
-#include "c11threads.h"
 
 void almosthere_sleep(long milliseconds) {
 #ifdef WIN32
@@ -16,9 +16,9 @@ void almosthere_sleep(long milliseconds) {
 
 int almosthere_timespec_get(struct timespec *ts) {
 #ifdef POSIX_SYSTEM
-    clock_gettime(CLOCK_REALTIME, ts);
+    return clock_gettime(CLOCK_REALTIME, ts);
 #else
-    timespec_get(ts, 0);
+    return timespec_get(ts, 0);
 #endif
 }
 
