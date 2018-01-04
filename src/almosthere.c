@@ -30,7 +30,8 @@ void almosthere_update(struct almosthere *at) {
     almosthere_update_speed(at);
 
     struct timespec curr, diff;
-    timespec_get(&curr, 0);
+    /* timespec_get(&curr, 0); */
+    clock_gettime(CLOCK_REALTIME, &curr);
 
     if (at->last_update == NULL) {
         // This is the first update call.
@@ -68,7 +69,8 @@ struct almosthere *almosthere_create(long volume) {
     at->consumed = 0;
     at->speed = 0;
     at->last_update = NULL;
-    timespec_get(&at->delta_start, 0);
+    /* timespec_get(&at->delta_start, 0); */
+    clock_gettime(CLOCK_REALTIME, &at->delta_start);
     at->consumed_start = 0;
 
     almosthere_widget_create(&at->widget);
@@ -87,12 +89,11 @@ void almosthere_update_speed(struct almosthere *at) {
     // TODO: NEED TO BE ATOMIC!!
     struct timespec curr, diff;
 
-    timespec_get(&curr, 0);
+    /* timespec_get(&curr, 0); */
+    clock_gettime(CLOCK_REALTIME, &curr);
     almosthere_timespec_diff(&at->delta_start, &curr, &diff);
 
     double dlt = almosthere_timespec_sec(&diff);
-    printf("dlt: %.30f\n", dlt);
-    printf("%d %ld\n", curr.tv_sec, curr.tv_nsec);
 
     if (dlt >= MINIMUM_DELTA) {
         at->speed = at->consumed_start / dlt;

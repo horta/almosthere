@@ -16,19 +16,12 @@ void almosthere_widget_finish(struct almosthere_widget *widget) {
 
 void almosthere_widget_draw(struct almosthere_widget *widget) {
 
-        printf("Consumed: %.30f\n", widget->consumed);
-        fflush(stdout);
     int i;
     for (i = 0; i < (int)(widget->consumed * widget->length); ++i) {
-        printf("ldqkdkqlw\n");
-        fflush(stdout);
         fputc('.', stderr);
-        fputc('.', stdout);
     }
-    //fputc('\r', stderr);
-    //fputc('\n', stderr);
+    fputc('\r', stderr);
     fflush(stderr);
-    fflush(stdout);
 }
 
 void almosthere_widget_update(struct almosthere_widget *widget, double consumed,
@@ -38,7 +31,6 @@ void almosthere_widget_update(struct almosthere_widget *widget, double consumed,
         // First time this update is called.
         widget->consumed = consumed;
     }
-    printf("Speed: %.30f\n", speed);
     widget->consumed = speed * dlt + widget->consumed;
     if (widget->consumed > consumed)
         widget->consumed = consumed;
