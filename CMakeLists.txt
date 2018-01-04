@@ -6,12 +6,12 @@ limix_config()
 
 set(LIBS "")
 
-# find_package(Curses)
-# if (CURSES_FOUND)
-#   include_directories(${CURSES_INCLUDE_DIRS})
-#   add_definitions(-DCURSES_FOUND)
-#   list(APPEND LIBS ${CURSES_LIBRARIES})
-# endif()
+find_package(Curses)
+if (CURSES_FOUND)
+  include_directories(${CURSES_INCLUDE_DIRS})
+  add_definitions(-DCURSES_FOUND)
+  list(APPEND LIBS ${CURSES_LIBRARIES})
+endif()
 
 limix_process_default_dirs()
 
