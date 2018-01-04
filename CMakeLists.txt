@@ -20,6 +20,12 @@ if (THREADS_FOUND)
   list(APPEND LIBS ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
+find_package(LibRt)
+if (LIBRT_FOUND)
+  list(APPEND LIBS ${LIBRT_LIBRARIES})
+endif()
+
+
 limix_process_default_dirs()
 
 limix_add_library(${PROJECT_NAME} ${PROJECT_VERSION}
