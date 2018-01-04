@@ -1,13 +1,12 @@
 #ifndef ALMOSTHERE_WIDGET_H
 #define ALMOSTHERE_WIDGET_H
 
-struct almosthere_widget {
-    double consumed;
-};
+typedef void (*almosthere_widget_create)(void **);
+typedef void (*almosthere_widget_finish)(void *);
+typedef void (*almosthere_widget_update)(double, double, double, void *);
 
-void almosthere_widget_create(struct almosthere_widget **widget);
-void almosthere_widget_finish(struct almosthere_widget *widget);
-void almosthere_widget_update(struct almosthere_widget *widget, double consumed,
-                              double speed, double dlt);
+void almosthere_widget_line_create(void **);
+void almosthere_widget_line_finish(void *);
+void almosthere_widget_line_update(double, double, double, void *);
 
 #endif /* end of include guard: ALMOSTHERE_WIDGET_H */

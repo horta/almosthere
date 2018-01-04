@@ -3,37 +3,49 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void almosthere_widget_create(struct almosthere_widget **widget) {
+struct line_data {
+    double consumed;
+};
 
-    *widget = malloc(sizeof(struct almosthere_widget));
-    (*widget)->consumed = -1.0;
+// struct almosthere_line_widget {
+//     int nwidgets;
+//     void *widget;
+//     void *widget_start;
+//     void *widget_length;
+// };
+
+// struct almosthere_bar_widget {};
+
+void almosthere_widget_line_create(void **data) {
+
+    struct line_data *d = malloc(sizeof(struct line_data));
+    d->consumed = -1.0;
+    *data = d;
 }
 
-void almosthere_widget_finish(struct almosthere_widget *widget) {
-    free(widget);
-}
+void almosthere_widget_line_finish(void *data) { free(data); }
 
-void almosthere_widget_draw(struct almosthere_widget *widget) {
+void line_draw(struct line_data *data) {
 
     int i;
     unsigned length = almosthere_get_term_width();
-    for (i = 0; i < (int)(widget->consumed * length); ++i) {
+    for (i = 0; i < (int)(data->consumed * length); ++i) {
         fputc('.', stderr);
     }
     fputc('\r', stderr);
     fflush(stderr);
 }
 
-void almosthere_widget_update(struct almosthere_widget *widget, double consumed,
-                              double speed, double dlt) {
-
-    if (widget->consumed == -1) {
+void almosthere_widget_line_update(double consumed, double speed, double dlt,
+                                   void *data) {
+    struct line_data *d = data;
+    if (d->consumed == -1) {
         // First time this update is called.
-        widget->consumed = consumed;
+        d->consumed = consumed;
     }
-    widget->consumed = speed * dlt + widget->consumed;
-    if (widget->consumed > consumed)
-        widget->consumed = consumed;
+    d->consumed = speed * dlt + d->consumed;
+    if (d->consumed > consumed)
+        d->consumed = consumed;
 
-    almosthere_widget_draw(widget);
+    line_draw(d);
 }
