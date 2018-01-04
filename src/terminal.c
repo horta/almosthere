@@ -1,4 +1,5 @@
 #include "terminal.h"
+#ifdef CURSES_FOUND
 #include <curses.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -58,3 +59,6 @@ done:
         close(tty_fd);
     return cols < 0 ? 0 : cols;
 }
+#else
+unsigned almosthere_get_term_width(void) { return 80; }
+#endif
