@@ -1,4 +1,5 @@
 function(define_sources BASE_DIR _SOURCES)
-    limix_convert_rel_to_full(FULL_SOURCES ${BASE_DIR} almosthere.c)
+    list(APPEND SOURCES almosthere.c almosthere_widget.c almosthere_time.c)
+    limix_convert_rel_to_full(FULL_SOURCES ${BASE_DIR} "${SOURCES}")
     set(${_SOURCES} ${FULL_SOURCES} PARENT_SCOPE)
 endfunction(define_sources)

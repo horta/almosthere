@@ -13,9 +13,8 @@
  * Cross-platform sleep function for C
  * @param int milliseconds
  */
-void sleep_ms(int milliseconds);
-void timespec_diff(struct timespec *start, struct timespec *stop,
-                   struct timespec *result);
-double timespec_seconds(struct timespec *ts);
+void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,
+                              struct timespec *diff);
+double almosthere_timespec_sec(struct timespec *ts);
 
 #endif /* end of include guard: ALMOSTHERE_TIME_H_ */
