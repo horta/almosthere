@@ -1,66 +1,81 @@
-#include <stdio.h>
+#include "almosthere.h"
+#include "almosthere_time.h"
+#include "almosthere_widget.h"
+#include <stdlib.h>
 
-struct almosthere_widget {};
+/* Minimum different in seconds considered safe for computing speed. */
+static const int MINIMUM_DELTA = 0.01;
 
 struct almosthere {
-  int64_t initial_volume;
-  int64_t current_volume;
-  struct *almosthere_widget widget;
+  int64_t volume;
+  double consumed;
+  double speed;
+  struct timespec delta_start;
+  double consumed_start;
+  struct almosthere_widget_bar *widget;
+  thrd_t thr;
 };
 
-struct almosthere *almosthere_create(int64_t volume) {}
-void almosthere_update(struct almosthere *at, int64_t drink) {}
-struct almosthere *almosthere_finish(struct almosthere *at) {}
+int almosthere_thread_start(void *args) {
+  // struct cline *line = (struct cline *)args;
+  //
+  // long sleeping_delta = 1000 * 1000 * 10;
+  //
+  // cline_update(line, 0);
+  // while (line->drawn < line->length) {
+  //   thrd_sleep(&(struct timespec){.tv_nsec = sleeping_delta}, NULL);
+  //   cline_update_speed(line);
+  //   cline_update(line, sleeping_delta);
+  // }
 
-void almosthere_draw(struct almosthere *at) { (at->widget)() }
-
-unsigned get_term_width(void) {
-  int cols = 0;
-  int tty_fd = -1;
-
-  char const *const term = getenv("TERM");
-  if (!term) {
-    fprintf(stderr, "TERM environment variable not set\n");
-    return 0;
-  }
-
-  char const *const cterm_path = ctermid(NULL);
-  if (!cterm_path || !cterm_path[0]) {
-    fprintf(stderr, "ctermid() failed\n");
-    return 0;
-  }
-
-  tty_fd = open(cterm_path, O_RDWR);
-  if (tty_fd == -1) {
-    fprintf(stderr, "open(\"%s\") failed (%d): %s\n", cterm_path, errno,
-            strerror(errno));
-    return 0;
-  }
-
-  int setupterm_err;
-  if (setupterm((char *)term, tty_fd, &setupterm_err) == ERR) {
-    switch (setupterm_err) {
-    case -1:
-      fprintf(stderr, "setupterm() failed: terminfo database not found\n");
-      goto done;
-    case 0:
-      fprintf(
-          stderr,
-          "setupterm() failed: TERM=%s not found in database or too generic\n",
-          term);
-      goto done;
-    case 1:
-      fprintf(stderr, "setupterm() failed: terminal is hardcopy\n");
-      goto done;
-    } // err
-  }
-
-  cols = tigetnum((char *)"cols");
-  if (cols < 0)
-    fprintf(stderr, "tigetnum() failed (%d)\n", cols);
-
-done:
-  if (tty_fd != -1)
-    close(tty_fd);
-  return cols < 0 ? 0 : cols;
+  return 0;
 }
+
+struct almosthere *almosthere_create(int64_t volume) {
+
+  struct almosthere *at = malloc(sizeof(struct almosthere));
+
+  at->volume = volume;
+  at->consumed = 0;
+  at->speed = 0;
+  timespec_get(&at->delta_start, 0);
+  at->consumed_start = 0;
+
+  almosthere_widget_create(&at->widget);
+
+  thrd_create(&at->thr, almosthere_thread_start, at);
+
+  return at;
+}
+
+void almosthere_update_speed(struct almosthere *at) {
+  // TODO: NEED TO BE ATOMIC!!
+  struct timespec curr, diff;
+
+  timespec_get(&curr, 0);
+  timespec_diff(&at->delta_start, &curr, &diff);
+
+  double dlt = timespec_seconds(diff);
+
+  if (dlt >= MINIMUM_DELTA) {
+    at->speed = at->consumed_start / dlt;
+    at->delta_start = curr;
+    at->consumed_start = at->consumed;
+  }
+}
+
+void almosthere_consume(struct almosthere *at, int64_t consume) {
+  // TODO: NEED TO BE ATOMIC!!
+  at->consumed += consume;
+  if (at->consumed > at->volume)
+    at->consumed = at->volume;
+}
+
+struct almosthere *almosthere_finish(struct almosthere *at) {
+
+  pthread_join(at->thr, NULL);
+  almosthere_widget_create(at->widget);
+  free(at);
+}
+
+// void almosthere_draw(struct almosthere *at) { (at->widget)() }

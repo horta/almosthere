@@ -1,15 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
-// #include <threads.h>
 #include "c11threads.h"
-
-#ifdef WIN32
-#include <windows.h>
-#elif _POSIX_C_SOURCE >= 199309L
-#include <time.h>
-#else
-#include <unistd.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
 
 struct cline {
   int64_t length;
@@ -22,37 +13,7 @@ struct cline {
   int64_t acc;
 };
 
-/**
- * Cross-platform sleep function for C
- * @param int milliseconds
- */
-void sleep_ms(int milliseconds) {
-#ifdef WIN32
-  Sleep(milliseconds);
-#elif _POSIX_C_SOURCE >= 199309L
-  struct timespec ts;
-  ts.tv_sec = milliseconds / 1000;
-  ts.tv_nsec = (milliseconds % 1000) * 1000000;
-  nanosleep(&ts, NULL);
-#else
-  usleep(milliseconds * 1000);
-#endif
-}
-
 void cline_update(struct cline *line, long dlt_nsec);
-
-void timespec_diff(struct timespec *start, struct timespec *stop,
-                   struct timespec *result) {
-  if ((stop->tv_nsec - start->tv_nsec) < 0) {
-    result->tv_sec = stop->tv_sec - start->tv_sec - 1;
-    result->tv_nsec = stop->tv_nsec - start->tv_nsec + 1000000000;
-  } else {
-    result->tv_sec = stop->tv_sec - start->tv_sec;
-    result->tv_nsec = stop->tv_nsec - start->tv_nsec;
-  }
-
-  return;
-}
 
 // TODO: ATOMIC!
 void cline_update_speed(struct cline *line) {
