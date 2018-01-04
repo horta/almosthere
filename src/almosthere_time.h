@@ -25,5 +25,17 @@ void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,
                               struct timespec *diff);
 double almosthere_timespec_sec(struct timespec *ts);
 void almosthere_thread_sleep(double seconds);
+int almosthere_timespec_get(struct timespec *ts);
+
+// #ifdef __unix__
+// /* Yes it is a UNIX because __unix__ is defined.  */
+//
+// #include <unistd.h>
+//
+// /* You can find out the version with _POSIX_VERSION.
+// ..
+// ..  */
+//
+// #endif
 
 #endif /* end of include guard: ALMOSTHERE_TIME_H_ */
