@@ -87,11 +87,12 @@ struct almosthere *almosthere_create(long volume) {
 }
 
 void almosthere_update_speed(struct almosthere *at) {
-    // TODO: NEED TO BE ATOMIC!!
     struct timespec curr, diff;
+    long consumed;
     double dlt;
 
     almosthere_timespec_get(&curr);
+    consumed = at->consumed;
     almosthere_timespec_diff(&at->delta_start, &curr, &diff);
 
     dlt = almosthere_timespec_sec(&diff);
@@ -99,15 +100,15 @@ void almosthere_update_speed(struct almosthere *at) {
     if (dlt >= MINIMUM_DELTA) {
         at->speed = at->consumed_start / dlt;
         at->delta_start = curr;
-        at->consumed_start = at->consumed;
+        at->consumed_start = consumed;
     }
 }
 
 void almosthere_consume(struct almosthere *at, long consume) {
-    // TODO: NEED TO BE ATOMIC!!
-    at->consumed += consume;
-    if (at->consumed > at->volume)
+    if (at->consumed + consume > at->volume)
         at->consumed = at->volume;
+    else
+        at->consumed += consume;
 }
 
 void almosthere_finish(struct almosthere *at) {
@@ -119,5 +120,3 @@ void almosthere_finish(struct almosthere *at) {
     almosthere_widget_finish(at->widget);
     free(at);
 }
-
-// void almosthere_draw(struct almosthere *at) { (at->widget)() }
