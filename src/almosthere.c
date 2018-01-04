@@ -109,7 +109,7 @@ void almosthere_consume(struct almosthere *at, long consume) {
 void almosthere_finish(struct almosthere *at) {
 
     at->stop_thread = 1;
-    pthread_join(at->thr, NULL);
+    thrd_join(at->thr, NULL);
     if (at->last_update != NULL)
         free(at->last_update);
     almosthere_widget_finish(at->widget);
