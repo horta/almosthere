@@ -1,11 +1,19 @@
 #ifndef ALMOSTHERE_TIME_H_
 #define ALMOSTHERE_TIME_H_
 
+#include <time.h>
+
+// #ifdef WIN32
+// #include <windows.h>
+// #elif _POSIX_C_SOURCE >= 199309L
+// #include <time.h>
+// #else
+// #include <unistd.h>
+// #endif
+
 #ifdef WIN32
 #include <windows.h>
-#elif _POSIX_C_SOURCE >= 199309L
-#include <time.h>
-#else
+#elif _POSIX_C_SOURCE < 199309L
 #include <unistd.h>
 #endif
 
