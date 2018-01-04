@@ -1,5 +1,6 @@
 #include "terminal.h"
 #ifdef CURSES_FOUND
+#include < unistd.h>
 #include <curses.h>
 #include <errno.h>
 #include <fcntl.h>
