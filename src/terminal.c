@@ -61,5 +61,14 @@ done:
     return cols < 0 ? 0 : cols;
 }
 #else
+#ifdef WIN32
+#include <windows.h>
+unsigned almosthere_get_term_width(void) {
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+}
+#else
 unsigned almosthere_get_term_width(void) { return 80; }
+#endif
 #endif

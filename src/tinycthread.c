@@ -870,7 +870,6 @@ int _tthread_timespec_get(struct timespec *ts, int base)
 #elif !defined(CLOCK_REALTIME)
   struct timeval tv;
 #endif
-
   if (base != TIME_UTC)
   {
     return 0;

@@ -27,9 +27,11 @@ void almosthere_update_speed(struct almosthere *at);
 
 void almosthere_update(struct almosthere *at) {
 
-    almosthere_update_speed(at);
-
     struct timespec curr, diff;
+    double dlt, consumed;
+
+    almosthere_update_speed(at);
+    
     almosthere_timespec_get(&curr);
 
     if (at->last_update == NULL) {
@@ -39,9 +41,9 @@ void almosthere_update(struct almosthere *at) {
     }
 
     almosthere_timespec_diff(at->last_update, &curr, &diff);
-    double dlt = almosthere_timespec_sec(&diff);
+    dlt = almosthere_timespec_sec(&diff);
 
-    double consumed = ((double)at->consumed) / at->volume;
+    consumed = ((double)at->consumed) / at->volume;
     almosthere_widget_update(at->widget, consumed, at->speed, dlt);
 
     *at->last_update = curr;
@@ -63,6 +65,7 @@ int almosthere_thread_start(void *args) {
 struct almosthere *almosthere_create(long volume) {
 
     struct almosthere *at = malloc(sizeof(struct almosthere));
+    int status;
 
     at->volume = volume;
     at->consumed = 0;
@@ -74,7 +77,7 @@ struct almosthere *almosthere_create(long volume) {
     almosthere_widget_create(&at->widget);
 
     at->stop_thread = 0;
-    int status = thrd_create(&at->thr, almosthere_thread_start, at);
+    status = thrd_create(&at->thr, almosthere_thread_start, at);
     if (status != thrd_success) {
         printf("Could not spawn a thread.", stderr);
         return NULL;
@@ -86,11 +89,12 @@ struct almosthere *almosthere_create(long volume) {
 void almosthere_update_speed(struct almosthere *at) {
     // TODO: NEED TO BE ATOMIC!!
     struct timespec curr, diff;
+    double dlt;
 
     almosthere_timespec_get(&curr);
     almosthere_timespec_diff(&at->delta_start, &curr, &diff);
 
-    double dlt = almosthere_timespec_sec(&diff);
+    dlt = almosthere_timespec_sec(&diff);
 
     if (dlt >= MINIMUM_DELTA) {
         at->speed = at->consumed_start / dlt;

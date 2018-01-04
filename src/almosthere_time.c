@@ -18,7 +18,7 @@ int almosthere_timespec_get(struct timespec *ts) {
 #ifdef POSIX_SYSTEM
     return clock_gettime(CLOCK_REALTIME, ts);
 #else
-    return timespec_get(ts, 0);
+    return timespec_get(ts, TIME_UTC);
 #endif
 }
 
@@ -42,9 +42,10 @@ double almosthere_timespec_sec(struct timespec *ts) {
 void almosthere_sec_timespec(double seconds, struct timespec *ts) {
 
     int isec = (int)seconds;
+    double remainder;
     ts->tv_sec = isec;
-    double remainder = seconds - ((double)isec);
-    ts->tv_nsec = remainder * 1000 * 1000 * 1000;
+    remainder = seconds - ((double)isec);
+    ts->tv_nsec = (long)(remainder * 1000 * 1000 * 1000);
 }
 
 void almosthere_thread_sleep(double seconds) {
