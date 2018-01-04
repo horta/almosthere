@@ -4,7 +4,7 @@ limix_initialise()
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES C)
 limix_config()
 
-# set(LIBS "")
+set(LIBS "")
 
 # find_package(Curses)
 # if (CURSES_FOUND)

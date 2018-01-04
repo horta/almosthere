@@ -32,7 +32,7 @@ void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,
 }
 
 double almosthere_timespec_sec(struct timespec *ts) {
-  return ts->tv_sec + ts->tv_nsec / 1000.0 / 1000.0 / 1000.0
+  return ts->tv_sec + ts->tv_nsec / 1000.0 / 1000.0 / 1000.0;
 }
 
 void almosthere_sec_timespec(double seconds, struct timespec *ts) {
@@ -43,7 +43,7 @@ void almosthere_sec_timespec(double seconds, struct timespec *ts) {
   ts->tv_nsec = remainder * 1000 * 1000 * 1000;
 }
 
-void almosthere_thrd_sleep(double seconds) {
+void almosthere_thread_sleep(double seconds) {
 
   struct timespec ts;
   almosthere_sec_timespec(seconds, &ts);

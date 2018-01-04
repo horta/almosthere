@@ -1,14 +1,14 @@
 #include "almosthere.h"
 #include "almosthere_time.h"
 #include "almosthere_widget.h"
+#include "c11threads.h"
 #include <stdlib.h>
 
 /* Minimum different in seconds considered safe for computing speed. */
-static const int MINIMUM_DELTA = 0.01;
+static const double MINIMUM_DELTA = 0.01;
 
-/* updates per second */
-static const int UPS = 30;
-static const int TIMESTEP = 1.0 / UPS;
+/* how often to update */
+static const double TIMESTEP = 1.0 / 30.0;
 
 struct almosthere {
   long volume;
@@ -16,27 +16,54 @@ struct almosthere {
   double speed;
   struct timespec delta_start;
   double consumed_start;
-  struct almosthere_widget_bar *widget;
+  struct almosthere_widget *widget;
   thrd_t thr;
   int stop_thread;
 };
 
+void almosthere_update(struct almosthere *at, long dlt_nsec) {
+
+  // long i;
+  //
+  // double dlt = coef * dlt_nsec;
+  //
+  // long ndots = (long)(at->speed * dlt);
+  // double ndots_remainder = at->speed * dlt - ((double)ndots);
+  // double rest = ndots_remainder + at->drawn_remainder;
+  // ndots += (long)rest;
+  // rest -= (double)((long)rest);
+  //
+  // if (at->drawn + ndots > at->consumed)
+  //   ndots = at->consumed - at->drawn;
+  //
+  // for (i = 0; i < ndots; ++i) {
+  //   putchar('.');
+  // }
+  // fflush(stdout);
+  //
+  // at->drawn += ndots;
+  // at->drawn_remainder = rest;
+  // // printf("%.60f\n", line->drawn_remainder);
+}
+
 int almosthere_thread_start(void *args) {
-  struct almosthere *at = (struct almosthere *)args;
 
-  long sleeping_delta = 1000 * 1000 * 10;
-
-  almosthere_update(at, 0);
-  while (at->stop_thread == 0) {
-    thrd_sleep(&(struct timespec){.tv_nsec = sleeping_delta}, NULL);
-    cline_update_speed(line);
-    cline_update(line, sleeping_delta);
-  }
+  // struct almosthere *at = (struct almosthere *)args;
+  //
+  // long sleeping_delta = 1000 * 1000 * 10;
+  //
+  // almosthere_update(at, 0);
+  // while (at->stop_thread == 0) {
+  //   almosthere_thread_sleep(&(struct timespec){.tv_nsec = sleeping_delta},
+  //                           NULL);
+  //   almosthere_update_speed(at);
+  //   almosthere_update(at, sleeping_delta);
+  // }
 
   return 0;
 }
 
-struct almosthere *almosthere_create(int64_t volume) {
+struct almosthere *almosthere_create(long volume) {
 
   struct almosthere *at = malloc(sizeof(struct almosthere));
 
@@ -59,9 +86,9 @@ void almosthere_update_speed(struct almosthere *at) {
   struct timespec curr, diff;
 
   timespec_get(&curr, 0);
-  timespec_diff(&at->delta_start, &curr, &diff);
+  almosthere_timespec_diff(&at->delta_start, &curr, &diff);
 
-  double dlt = timespec_seconds(diff);
+  double dlt = almosthere_timespec_sec(&diff);
 
   if (dlt >= MINIMUM_DELTA) {
     at->speed = at->consumed_start / dlt;
@@ -70,7 +97,7 @@ void almosthere_update_speed(struct almosthere *at) {
   }
 }
 
-void almosthere_consume(struct almosthere *at, int64_t consume) {
+void almosthere_consume(struct almosthere *at, long consume) {
   // TODO: NEED TO BE ATOMIC!!
   at->consumed += consume;
   if (at->consumed > at->volume)
@@ -81,7 +108,7 @@ struct almosthere *almosthere_finish(struct almosthere *at) {
 
   at->stop_thread = 0;
   pthread_join(at->thr, NULL);
-  almosthere_widget_create(at->widget);
+  almosthere_widget_create(&at->widget);
   free(at);
 }
 
