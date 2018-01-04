@@ -1,11 +1,6 @@
 #include "almosthere_time.h"
 #include "c11threads.h"
-#include "posix_check.h"
 
-/**
- * Cross-platform sleep function for C
- * @param int milliseconds
- */
 void almosthere_sleep(long milliseconds) {
 #ifdef WIN32
     Sleep(milliseconds);

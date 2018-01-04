@@ -3,7 +3,6 @@
 
 struct almosthere_widget {
     double consumed;
-    int length;
 };
 
 void almosthere_widget_create(struct almosthere_widget **widget);

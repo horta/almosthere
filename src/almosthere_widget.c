@@ -7,7 +7,6 @@ void almosthere_widget_create(struct almosthere_widget **widget) {
 
     *widget = malloc(sizeof(struct almosthere_widget));
     (*widget)->consumed = -1.0;
-    (*widget)->length = almosthere_get_term_width();
 }
 
 void almosthere_widget_finish(struct almosthere_widget *widget) {
@@ -17,7 +16,8 @@ void almosthere_widget_finish(struct almosthere_widget *widget) {
 void almosthere_widget_draw(struct almosthere_widget *widget) {
 
     int i;
-    for (i = 0; i < (int)(widget->consumed * widget->length); ++i) {
+    unsigned length = almosthere_get_term_width();
+    for (i = 0; i < (int)(widget->consumed * length); ++i) {
         fputc('.', stderr);
     }
     fputc('\r', stderr);
