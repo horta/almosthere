@@ -18,10 +18,9 @@ void almosthere_widget_draw(struct almosthere_widget *widget) {
 
     int i;
     for (i = 0; i < (int)(widget->consumed * widget->length); ++i) {
-        putchar('.');
+        fputc('.', stderr);
     }
-    printf("\n");
-    fflush(stdout);
+    fputc('\r', stderr);
 }
 
 void almosthere_widget_update(struct almosthere_widget *widget, double consumed,
