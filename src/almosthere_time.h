@@ -1,15 +1,18 @@
 #ifndef ALMOSTHERE_TIME_H_
 #define ALMOSTHERE_TIME_H_
 
-#include "posix_check.h"
 #include <time.h>
-
-#ifdef POSIX_SYSTEM
-#include <unistd.h>
-#endif
 
 #ifdef WIN32
 #include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+#ifdef __APPLE__
+#ifndef TIME_UTC
+#define TIME_UTC 1
+#endif
 #endif
 
 void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,

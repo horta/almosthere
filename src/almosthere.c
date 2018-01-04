@@ -1,7 +1,7 @@
 #include "almosthere.h"
-#include "almosthere_thread.h"
 #include "almosthere_time.h"
 #include "almosthere_widget.h"
+#include "thread/thread.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,7 +31,7 @@ void almosthere_update(struct almosthere *at) {
     double dlt, consumed;
 
     almosthere_update_speed(at);
-    
+
     almosthere_timespec_get(&curr);
 
     if (at->last_update == NULL) {

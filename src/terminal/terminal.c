@@ -1,6 +1,5 @@
-#include "terminal.h"
+#include "terminal/terminal.h"
 #ifdef CURSES_FOUND
-#include <unistd.h>
 #include <curses.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -8,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <term.h>
+#include <unistd.h>
 
 unsigned almosthere_get_term_width(void) {
     int cols = 0;

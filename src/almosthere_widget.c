@@ -1,5 +1,5 @@
 #include "almosthere_widget.h"
-#include "terminal.h"
+#include "terminal/terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
 

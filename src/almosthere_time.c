@@ -1,5 +1,5 @@
-#include "almosthere_thread.h"
 #include "almosthere_time.h"
+#include "thread/thread.h"
 
 void almosthere_sleep(long milliseconds) {
 #ifdef WIN32
