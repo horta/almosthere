@@ -42,8 +42,14 @@ int main() {
     almosthere_sleep(40);
     almosthere_consume(at, 10);
 
+    almosthere_sleep(400);
+    almosthere_consume(at, 10);
+
+    almosthere_sleep(400);
+    almosthere_consume(at, 4);
+
     almosthere_sleep(100);
-    almosthere_consume(at, 15);
+    almosthere_consume(at, 1);
 
     almosthere_finish(at);
 

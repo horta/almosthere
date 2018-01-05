@@ -16,7 +16,7 @@ struct widget {
     widget_get_min_length get_min_length;
     widget_get_max_length get_max_length;
     void *data;
-    struct canvas *canvas;
+    struct canvas canvas;
 };
 
 #endif /* end of include guard: ALMOSTHERE_WIDGET_H_ */

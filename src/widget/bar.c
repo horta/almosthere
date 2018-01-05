@@ -12,7 +12,6 @@ struct widget *widget_bar_create(void) {
     struct bar_data *d = malloc(sizeof(struct bar_data));
     struct widget *w = malloc(sizeof(struct widget));
     d->consumed = -1.0;
-    w->canvas = malloc(sizeof(struct canvas));
     w->data = d;
     w->finish = widget_bar_finish;
     w->update = widget_bar_update;
@@ -23,7 +22,6 @@ struct widget *widget_bar_create(void) {
 
 void widget_bar_finish(struct widget *w) {
     free(w->data);
-    free(w->canvas);
     free(w);
 }
 
@@ -46,7 +44,7 @@ void widget_bar_update(struct widget *w, double consumed, double speed,
     if (d->consumed > consumed)
         d->consumed = consumed;
 
-    bar_draw(d, w->canvas);
+    bar_draw(d, &w->canvas);
 }
 
 int widget_bar_get_min_length(struct widget *widget) { return 20; }
