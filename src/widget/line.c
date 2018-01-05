@@ -1,3 +1,4 @@
+#include "canvas.h"
 #include "terminal/terminal.h"
 #include "widget/line.h"
 #include <stdio.h>
@@ -32,6 +33,9 @@ struct widget *widget_line_create(int nwidgets, struct widget **widget,
     w->data = l;
     w->finish = widget_line_finish;
     w->update = widget_line_update;
+    w->get_min_length = widget_line_get_min_length;
+
+    w->canvas = canvas_create(widget_line_get_min_length());
 
     return w;
 }
@@ -47,19 +51,25 @@ void widget_line_finish(struct widget *widget) {
     free(d->widget);
     free(d->start);
     free(d->length);
+    canvas_finish(widget->canvas);
 }
 
 void widget_line_update(struct widget *widget, double consumed, double speed,
                         double dlt) {
     struct line_data *w = widget->data;
     int i;
-    int acc = 0;
+    int base = 0;
+
+    canvas_clean(widget->canvas);
+    widget->canvas->buff[widget->canvas->length - 1] = '\r';
+
     for (i = 0; i < w->nwidgets; ++i) {
-        w->widget[i]->canvas.buff = widget->canvas.buff + acc;
-        w->widget[i]->canvas.length = w->length[i];
+        w->widget[i]->canvas->buff = widget->canvas->buff + base;
+        w->widget[i]->canvas->length = w->length[i];
         w->widget[i]->update(w->widget[i], consumed, speed, dlt);
-        acc += w->length[i];
+        base += w->length[i];
     }
-    fputc('\r', stderr);
-    fflush(stderr);
+    canvas_draw(widget->canvas);
 }
+
+int widget_line_get_min_length(void) { return 10; }

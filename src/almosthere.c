@@ -23,21 +23,10 @@ struct almosthere {
     thrd_t thr;
     int stop_thread;
 
-    struct widget *widget;
+    struct widget *line;
 };
 
 void almosthere_update_speed(struct almosthere *at);
-
-void canvas_draw(struct canvas canvas) {
-    fprintf(stderr, "%.*s\r", canvas.length, canvas.buff);
-    fflush(stderr);
-}
-
-void canvas_clean(struct canvas canvas) {
-    int i;
-    for (i = 0; i < canvas.length; ++i)
-        canvas.buff[i] = ' ';
-}
 
 void almosthere_update(struct almosthere *at) {
 
@@ -58,13 +47,8 @@ void almosthere_update(struct almosthere *at) {
     dlt = almosthere_timespec_sec(&diff);
 
     consumed = ((double)at->consumed) / at->volume;
-    at->widget->canvas.length = 15;
-    at->widget->canvas.buff = malloc(sizeof(char) * at->widget->canvas.length);
-    canvas_clean(at->widget->canvas);
-    at->widget->update(at->widget, consumed, at->speed, dlt);
-    free(at->widget->canvas.buff);
-    // widget_line_update(consumed, at->speed, dlt, at->widget_data);
-    canvas_draw(at->widget->canvas);
+
+    at->line->update(at->line, consumed, at->speed, dlt);
 
     *at->last_update = curr;
 }
@@ -82,6 +66,11 @@ int almosthere_thread_start(void *args) {
     return 0;
 }
 
+void almosthere_create_line(struct widget **line) {
+
+    *line = widget_line_create(0, NULL, NULL, NULL);
+}
+
 struct almosthere *almosthere_create(long volume) {
 
     struct almosthere *at = malloc(sizeof(struct almosthere));
@@ -94,15 +83,15 @@ struct almosthere *almosthere_create(long volume) {
     almosthere_timespec_get(&at->delta_start);
     at->consumed_start = 0;
 
-    // at->widget = widget_bar_create();
+    almosthere_create_line(&at->line);
 
-    struct widget **widget = malloc(1 * sizeof(struct widget *));
-    widget[0] = widget_bar_create();
-    int start[] = {0};
-    int length[] = {25};
-    at->widget = widget_line_create(1, widget, start, length);
+    // struct widget **widget = malloc(1 * sizeof(struct widget *));
+    // widget[0] = widget_bar_create();
+    // int start[] = {0};
+    // int length[] = {25};
+    // at->line = widget_line_create(1, widget, start, length);
 
-    free(widget);
+    // free(widget);
 
     at->stop_thread = 0;
     status = thrd_create(&at->thr, almosthere_thread_start, at);
@@ -146,7 +135,6 @@ void almosthere_finish(struct almosthere *at) {
     if (at->last_update != NULL)
         free(at->last_update);
 
-    at->widget->finish(at->widget);
-    // widget_line_finish(at->widget_data);
+    at->line->finish(at->line);
     free(at);
 }

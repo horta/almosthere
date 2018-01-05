@@ -15,6 +15,7 @@ struct widget *widget_bar_create(void) {
     w->data = d;
     w->finish = widget_bar_finish;
     w->update = widget_bar_update;
+    w->get_min_length = widget_bar_get_min_length;
     return w;
 }
 
@@ -42,5 +43,7 @@ void widget_bar_update(struct widget *w, double consumed, double speed,
     if (d->consumed > consumed)
         d->consumed = consumed;
 
-    bar_draw(d, &w->canvas);
+    bar_draw(d, w->canvas);
 }
+
+int widget_bar_get_min_length(void) { return 1; }
