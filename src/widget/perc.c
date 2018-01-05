@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define PERC_LEN 5
+
 struct perc_data {
-    char str[6];
+    char str[PERC_LEN + 1];
     double consumed;
 };
 
@@ -18,12 +20,6 @@ struct widget *widget_perc_create(void) {
 
     struct perc_data *d = malloc(sizeof(struct perc_data));
     struct widget *w = malloc(sizeof(struct widget));
-
-    d->str[0] = ' ';
-    d->str[1] = ' ';
-    d->str[2] = ' ';
-    d->str[3] = '0';
-    d->str[4] = '%';
 
     w->data = d;
     w->finish = widget_perc_finish;
@@ -57,12 +53,12 @@ void widget_perc_update(struct widget *w, double consumed, double speed,
     else
         perc = (int)(d->consumed * 100);
 
-    snprintf(d->str + 1, 5, "%3d%%", perc);
+    snprintf(d->str, PERC_LEN + 1, " %3d%%", perc);
 
-    for (i = 0; i < 5; ++i) {
+    for (i = 0; i < PERC_LEN; ++i) {
         w->canvas.buff[i] = d->str[i];
     }
 }
 
-int widget_perc_get_min_length(struct widget *w) { return 5; }
-int widget_perc_get_max_length(struct widget *w) { return 5; }
+int widget_perc_get_min_length(struct widget *w) { return PERC_LEN; }
+int widget_perc_get_max_length(struct widget *w) { return PERC_LEN; }

@@ -20,7 +20,7 @@ struct widget *widget_text_create(const char *str) {
     d->len = strlen(str);
     d->str = malloc(d->len * sizeof(char));
 
-    strncpy(d->str, str, d->len);
+    memcpy(d->str, str, d->len);
 
     w->data = d;
     w->finish = widget_text_finish;
