@@ -2,7 +2,7 @@
 #define ALMOSTHERE_H_
 
 /* Minimum different in seconds considered safe for computing speed. */
-static const double ALMOSTHERE_MIN_DLT = 0.01;
+static const double ALMOSTHERE_MIN_DLT = 0.5;
 
 /* how often to update, in seconds */
 static const double ALMOSTHERE_TIMESTEP = 1.0 / 30.0;

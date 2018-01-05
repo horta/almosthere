@@ -32,22 +32,17 @@ void widget_bar_finish(struct widget *w) {
 void bar_draw(struct bar_data *data, struct canvas *canvas) {
 
     int i;
-    for (i = 0; i < (int)(data->consumed * canvas->length); ++i) {
-        canvas->buff[i] = '.';
+    for (i = 1; i < (int)(data->consumed * (canvas->length - 1)); ++i) {
+        canvas->buff[i] = '=';
     }
+    canvas->buff[0] = '|';
+    canvas->buff[canvas->length - 1] = '|';
 }
 
 void widget_bar_update(struct widget *w, double consumed, double speed,
                        double dlt) {
     struct bar_data *d = w->data;
-    if (d->consumed == -1.0) {
-        // First time this update is called.
-        d->consumed = consumed;
-    }
-    d->consumed = speed * dlt + d->consumed;
-    if (d->consumed > consumed)
-        d->consumed = consumed;
-
+    d->consumed = consumed;
     bar_draw(d, &w->canvas);
 }
 

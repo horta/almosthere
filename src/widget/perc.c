@@ -40,13 +40,7 @@ void widget_perc_update(struct widget *w, double consumed, double speed,
     struct perc_data *d = w->data;
     int i, perc;
 
-    if (d->consumed == -1.0) {
-        // First time this update is called.
-        d->consumed = consumed;
-    }
-    d->consumed = speed * dlt + d->consumed;
-    if (d->consumed > consumed)
-        d->consumed = consumed;
+    d->consumed = consumed;
 
     if (d->consumed == 1.0)
         perc = 100;

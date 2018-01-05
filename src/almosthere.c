@@ -76,6 +76,10 @@ void almosthere_finish(struct almosthere *at) {
         free(at->last_update);
 
     at->line->finish(at->line);
+
+    if (at->volume > at->consumed) {
+        printf("\nThe total volume has not been fully consumed.");
+    }
     free(at);
     fprintf(stderr, "\n");
 }
@@ -89,6 +93,7 @@ int thread_start(void *args) {
         almosthere_thread_sleep(ALMOSTHERE_TIMESTEP);
         update(at);
     }
+    update(at);
 
     return 0;
 }
@@ -119,6 +124,7 @@ int create_line(struct widget **line) {
 void update_speed(struct almosthere *at) {
     struct timespec curr, diff;
     long consumed;
+    double rate;
     double dlt;
 
     almosthere_timespec_get(&curr);
@@ -127,8 +133,9 @@ void update_speed(struct almosthere *at) {
 
     dlt = almosthere_timespec_sec(&diff);
 
-    if (dlt >= ALMOSTHERE_MIN_DLT) {
-        at->speed = at->consumed_start / dlt;
+    if (dlt >= ALMOSTHERE_MIN_DLT && consumed > at->consumed_start) {
+        rate = ((double)consumed - at->consumed_start) / at->volume;
+        at->speed = rate / dlt;
         at->delta_start = curr;
         at->consumed_start = consumed;
     }

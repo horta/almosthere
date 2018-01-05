@@ -42,22 +42,25 @@ void widget_eta_update(struct widget *w, double consumed, double speed,
     int i;
     double eta_sec;
 
-    if (d->consumed == -1.0) {
-        // First time this update is called.
-        d->consumed = consumed;
-    }
-    d->consumed = speed * dlt + d->consumed;
-    if (d->consumed > consumed)
-        d->consumed = consumed;
+    d->consumed = consumed;
+
+    // if (d->consumed == -1.0) {
+    //     // First time this update is called.
+    //     d->consumed = consumed;
+    // }
+    // d->consumed = speed * dlt + d->consumed;
+    // if (d->consumed > consumed)
+    //     d->consumed = consumed;
 
     if (d->consumed == 1.0)
         eta_sec = 0.0;
 
     if (speed < MIN_SPEED) {
-        snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " -- ");
-    } else {
-        eta_sec = (1 - d->consumed) / speed;
         snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " ");
+    } else {
+        // printf("%.30f %.30f\n", 1 - d->consumed, speed);
+        eta_sec = (1 - d->consumed) / speed;
+        snprintf(d->str, ETA_SIZE + 1, "%*d eta", ETA_SIZE - 4, (int)eta_sec);
     }
 
     // snprintf(d->str + 1, 5, "%3d%%", perc);
