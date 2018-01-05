@@ -128,6 +128,15 @@ void almosthere_consume(struct almosthere *at, long consume) {
         at->consumed += consume;
 }
 
+#include <curses.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <term.h>
+#include <unistd.h>
+
 void almosthere_finish(struct almosthere *at) {
 
     at->stop_thread = 1;
@@ -137,4 +146,8 @@ void almosthere_finish(struct almosthere *at) {
 
     at->line->finish(at->line);
     free(at);
+
+    TERMINAL *cur_term = set_curterm(NULL);
+    if (cur_term != NULL)
+        del_curterm(cur_term);
 }

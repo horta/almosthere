@@ -12,7 +12,6 @@
 unsigned almosthere_get_term_width(void) {
     int cols = 0;
     int tty_fd = -1;
-    TERMINAL *cur_term = NULL;
 
     char const *const term = getenv("TERM");
     if (!term) {
@@ -52,8 +51,6 @@ unsigned almosthere_get_term_width(void) {
         } // err
     }
 
-    cur_term = set_curterm(NULL);
-
     cols = tigetnum((char *)"cols");
     if (cols < 0)
         fprintf(stderr, "tigetnum() failed (%d)\n", cols);
@@ -61,8 +58,7 @@ unsigned almosthere_get_term_width(void) {
 done:
     if (tty_fd != -1)
         close(tty_fd);
-    if (cur_term != NULL)
-        del_curterm(cur_term);
+
     return cols < 0 ? 0 : cols;
 }
 #else
