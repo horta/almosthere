@@ -1,5 +1,6 @@
 #include "almosthere.h"
 #include "almosthere_time.h"
+#include "terminal/terminal.h"
 #include "thread/thread.h"
 #include "widget/bar.h"
 #include "widget/eta.h"
@@ -80,6 +81,7 @@ void almosthere_finish(struct almosthere *at) {
     if (at->volume > at->consumed) {
         printf("\nThe total volume has not been fully consumed.");
     }
+
     free(at);
     fprintf(stderr, "\n");
 }

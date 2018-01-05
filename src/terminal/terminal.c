@@ -33,6 +33,7 @@ unsigned almosthere_get_term_width(void) {
     }
 
     int setupterm_err;
+
     if (setupterm((char *)term, tty_fd, &setupterm_err) == ERR) {
         switch (setupterm_err) {
         case -1:
@@ -54,6 +55,9 @@ unsigned almosthere_get_term_width(void) {
     cols = tigetnum((char *)"cols");
     if (cols < 0)
         fprintf(stderr, "tigetnum() failed (%d)\n", cols);
+
+    struct term *termp = set_curterm(NULL);
+    (void)del_curterm(termp);
 
 done:
     if (tty_fd != -1)
