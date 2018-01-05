@@ -52,6 +52,7 @@ void widget_line_finish(struct widget *widget) {
     free(d->start);
     free(d->length);
     canvas_finish(widget->canvas);
+    free(d);
     free(widget);
 }
 
