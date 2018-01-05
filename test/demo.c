@@ -33,9 +33,17 @@ int main() {
     almosthere_consume(at, 10);
     almosthere_sleep(40);
     almosthere_consume(at, 10);
+    almosthere_sleep(40);
+    almosthere_consume(at, 10);
+    almosthere_sleep(40);
+    almosthere_consume(at, 10);
+    almosthere_sleep(40);
+    almosthere_consume(at, 10);
+    almosthere_sleep(40);
+    almosthere_consume(at, 10);
 
-    almosthere_sleep(800);
-    almosthere_consume(at, 55);
+    almosthere_sleep(100);
+    almosthere_consume(at, 15);
 
     almosthere_finish(at);
 

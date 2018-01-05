@@ -3,38 +3,64 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// struct line_widget {
-//     int nwidgets;
-//     almosthere_widget *widget;
-//     void *widget_data;
-//     int *start;
-//     int *length;
-// };
+struct line_data {
+    int nwidgets;
+    struct almosthere_widget **widget;
+    int *start;
+    int *length;
+};
 //
-// void *almosthere_widget_line_create(int nwidgets, almosthere_widget *widget,
-//                                     int *start, int *length) {
-//
-//     struct line_widget *w;
-//     int i;
-//
-//     w = malloc(sizeof(struct line_widget));
-//     w->nwidgets = nwidgets;
-//     w->widget = malloc(nwidgets * sizeof(struct almosthere_widget));
-//     w->start = malloc(nwidgets * sizeof(int));
-//     w->length = malloc(nwidgets * sizeof(int));
-//
-//     for (i = 0; i < nwidgets; ++i) {
-//         w->widget[i] = widget[i];
-//         w->start[i] = start[i];
-//         w->length[i] = length[i];
-//     }
-//
-//     return w;
-// }
-//
-// void almosthere_widget_line_finish(void *) {}
-//
-// void almosthere_widget_line_update(double, double, double, void *) {}
+struct almosthere_widget *
+almosthere_widget_line_create(int nwidgets, struct almosthere_widget **widget,
+                              int *start, int *length) {
+    struct line_data *l;
+    int i;
+    struct almosthere_widget *w;
+    w = malloc(sizeof(struct almosthere_widget));
+
+    l = malloc(sizeof(struct line_data));
+    l->nwidgets = nwidgets;
+    l->widget = malloc(nwidgets * sizeof(struct almosthere_widget *));
+    l->start = malloc(nwidgets * sizeof(int));
+    l->length = malloc(nwidgets * sizeof(int));
+
+    for (i = 0; i < nwidgets; ++i) {
+        l->widget[i] = widget[i];
+        l->start[i] = start[i];
+        l->length[i] = length[i];
+    }
+
+    w->data = l;
+    w->finish = almosthere_widget_line_finish;
+    w->update = almosthere_widget_line_update;
+
+    return w;
+}
+
+void almosthere_widget_line_finish(struct almosthere_widget *widget) {
+    struct line_data *d = widget->data;
+    int i;
+
+    for (i = 0; i < d->nwidgets; ++i) {
+        d->widget[i]->finish(d->widget[i]);
+    }
+
+    free(d->widget);
+    free(d->start);
+    free(d->length);
+}
+
+void almosthere_widget_line_update(struct almosthere_widget *widget,
+                                   double consumed, double speed, double dlt) {
+    struct line_data *w = widget->data;
+    int i;
+
+    for (i = 0; i < w->nwidgets; ++i) {
+        w->widget[i]->update(w->widget[i], consumed, speed, dlt);
+    }
+    fputc('\r', stderr);
+    fflush(stderr);
+}
 
 struct bar_data {
     double consumed;

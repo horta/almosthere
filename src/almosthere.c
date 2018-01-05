@@ -77,7 +77,16 @@ struct almosthere *almosthere_create(long volume) {
     almosthere_timespec_get(&at->delta_start);
     at->consumed_start = 0;
 
-    at->widget = almosthere_widget_bar_create();
+    // at->widget = almosthere_widget_bar_create();
+
+    struct almosthere_widget **widget =
+        malloc(1 * sizeof(struct almosthere_widget *));
+    widget[0] = almosthere_widget_bar_create();
+    int start[] = {0};
+    int length[] = {25};
+    at->widget = almosthere_widget_line_create(1, widget, start, length);
+
+    free(widget);
 
     at->stop_thread = 0;
     status = thrd_create(&at->thr, almosthere_thread_start, at);
