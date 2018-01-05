@@ -141,7 +141,7 @@ int widget_line_dist_len(int nwidgets, struct widget **widget, int length) {
 
 int widget_line_get_min_length(struct widget *widget) { return 4; }
 int widget_line_get_max_length(struct widget *widget) {
-    return ALMOSTHERE_MAX_STR_LEN;
+    return ATHR_MAX_STR_LEN;
 }
 
 int check_if_fit(int nwidgets, struct widget **widget) {

@@ -9,7 +9,7 @@
 #include <term.h>
 #include <unistd.h>
 
-unsigned almosthere_get_term_width(void) {
+unsigned athr_get_term_width(void) {
     int cols = 0;
     int tty_fd = -1;
 
@@ -69,12 +69,12 @@ done:
 #else
 #ifdef WIN32
 #include <windows.h>
-unsigned almosthere_get_term_width(void) {
+unsigned athr_get_term_width(void) {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
     return csbi.srWindow.Right - csbi.srWindow.Left + 1;
 }
 #else
-unsigned almosthere_get_term_width(void) { return 80; }
+unsigned athr_get_term_width(void) { return 80; }
 #endif
 #endif

@@ -48,5 +48,5 @@ void widget_bar_update(struct widget *w, double consumed, double speed,
 
 int widget_bar_get_min_length(struct widget *widget) { return 3; }
 int widget_bar_get_max_length(struct widget *widget) {
-    return ALMOSTHERE_MAX_STR_LEN;
+    return ATHR_MAX_STR_LEN;
 }

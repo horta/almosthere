@@ -1,2 +1,2 @@
-# almosthere
+# athr
 Progress indicator C library.

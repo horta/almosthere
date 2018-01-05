@@ -8,7 +8,7 @@ void canvas_create(struct canvas *canvas, int min_length) {
 
     canvas->min_length = min_length;
 
-    ncols = (int)almosthere_get_term_width() + 1;
+    ncols = (int)athr_get_term_width() + 1;
     if (ncols < canvas->min_length)
         canvas->length = canvas->min_length;
     else
@@ -24,7 +24,7 @@ void canvas_draw(struct canvas *canvas) {
 
 void canvas_resize(struct canvas *canvas) {
 
-    int ncols = (int)almosthere_get_term_width() + 1;
+    int ncols = (int)athr_get_term_width() + 1;
     if (ncols < canvas->min_length)
         ncols = canvas->min_length;
 

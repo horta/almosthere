@@ -1,6 +1,6 @@
-#ifndef ALMOSTHERE_TERMINAL_H_
-#define ALMOSTHERE_TERMINAL_H_
+#ifndef ATHR_TERMINAL_H_
+#define ATHR_TERMINAL_H_
 
-unsigned almosthere_get_term_width(void);
+unsigned athr_get_term_width(void);
 
-#endif /* end of include guard: ALMOSTHERE_TERMINAL_H_ */
+#endif /* end of include guard: ATHR_TERMINAL_H_ */

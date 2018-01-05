@@ -1,5 +1,5 @@
-#ifndef ALMOSTHERE_CANVAS_H_
-#define ALMOSTHERE_CANVAS_H_
+#ifndef ATHR_CANVAS_H_
+#define ATHR_CANVAS_H_
 
 struct canvas {
     char *buff;
@@ -28,4 +28,4 @@ void canvas_clean(struct canvas *canvas);
 void canvas_resize(struct canvas *canvas);
 void canvas_finish(struct canvas *canvas);
 
-#endif /* end of include guard: ALMOSTHERE_CANVAS_H_ */
+#endif /* end of include guard: ATHR_CANVAS_H_ */

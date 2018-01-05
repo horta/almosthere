@@ -1,10 +1,10 @@
-#ifndef ALMOSTHERE_WIDGET_H_
-#define ALMOSTHERE_WIDGET_H_
+#ifndef ATHR_WIDGET_H_
+#define ATHR_WIDGET_H_
 
 #include "canvas.h"
 
 /* maximum string number for preventing catastrophic mistakes */
-#define ALMOSTHERE_MAX_STR_LEN 1048576
+#define ATHR_MAX_STR_LEN 1048576
 
 struct widget;
 
@@ -22,4 +22,4 @@ struct widget {
     struct canvas canvas;
 };
 
-#endif /* end of include guard: ALMOSTHERE_WIDGET_H_ */
+#endif /* end of include guard: ATHR_WIDGET_H_ */

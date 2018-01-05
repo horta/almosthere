@@ -1,5 +1,5 @@
-#include "almosthere.h"
-#include "almosthere_time.h"
+#include "athr.h"
+#include "athr_time.h"
 #include "terminal/terminal.h"
 #include "thread/thread.h"
 #include "widget/bar.h"
@@ -10,7 +10,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct almosthere {
+/* Minimum difference in seconds considered safe for computing speed. */
+static const double ATHR_MIN_DLT = 0.2;
+
+/* how often to update, in seconds */
+static const double ATHR_TIMESTEP = 1.0 / 30.0;
+
+struct athr {
     long volume;                  /* total size to be consumed */
     long consumed;                /* how much have been consumed */
     double speed;                 /* current consumption speed */
@@ -24,27 +30,30 @@ struct almosthere {
     struct widget *line; /* root widget */
 };
 
-void update_speed(struct almosthere *at);
+void update_speed(struct athr *at);
 int thread_start(void *args);
-int create_line(struct widget **line);
-void update_speed(struct almosthere *at);
-void update(struct almosthere *at);
+int create_line(struct widget **line, const char *);
+void update_speed(struct athr *at);
+void update(struct athr *at);
 
-struct almosthere *almosthere_create(long volume) {
+struct athr *athr_create(long volume, const char *desc) {
 
-    struct almosthere *at = NULL;
+    struct athr *at = NULL;
     int status;
 
-    at = malloc(sizeof(struct almosthere));
+    if (desc == NULL)
+        desc = "";
+
+    at = malloc(sizeof(struct athr));
 
     at->volume = volume;
     at->consumed = 0;
     at->speed = 0;
     at->last_update = NULL;
-    almosthere_timespec_get(&at->delta_start);
+    athr_timespec_get(&at->delta_start);
     at->consumed_start = 0;
 
-    if (create_line(&at->line))
+    if (create_line(&at->line, desc))
         goto err;
 
     at->stop_thread = 0;
@@ -61,7 +70,7 @@ err:
     return NULL;
 }
 
-void almosthere_consume(struct almosthere *at, long consume) {
+void athr_consume(struct athr *at, long consume) {
     if (at->consumed + consume > at->volume) {
         fprintf(stderr, "Trying to consume more than the total volume.\n");
         at->consumed = at->volume;
@@ -69,7 +78,7 @@ void almosthere_consume(struct almosthere *at, long consume) {
         at->consumed += consume;
 }
 
-void almosthere_finish(struct almosthere *at) {
+void athr_finish(struct athr *at) {
 
     at->stop_thread = 1;
     thrd_join(at->thr, NULL);
@@ -88,11 +97,11 @@ void almosthere_finish(struct almosthere *at) {
 
 int thread_start(void *args) {
 
-    struct almosthere *at = (struct almosthere *)args;
+    struct athr *at = (struct athr *)args;
 
     update(at);
     while (at->stop_thread == 0) {
-        almosthere_thread_sleep(ALMOSTHERE_TIMESTEP);
+        athr_thread_sleep(ATHR_TIMESTEP);
         update(at);
     }
     update(at);
@@ -100,11 +109,11 @@ int thread_start(void *args) {
     return 0;
 }
 
-int create_line(struct widget **line) {
+int create_line(struct widget **line, const char *desc) {
 
-    struct widget **widget = malloc(3 * sizeof(struct widget *));
+    struct widget **widget = malloc(4 * sizeof(struct widget *));
 
-    widget[0] = widget_text_create("Horta:");
+    widget[0] = widget_text_create(desc);
     widget[1] = widget_perc_create();
 
     widget[2] = widget_bar_create();
@@ -123,19 +132,19 @@ int create_line(struct widget **line) {
     return 0;
 }
 
-void update_speed(struct almosthere *at) {
+void update_speed(struct athr *at) {
     struct timespec curr, diff;
     long consumed;
     double rate;
     double dlt;
 
-    almosthere_timespec_get(&curr);
+    athr_timespec_get(&curr);
     consumed = at->consumed;
-    almosthere_timespec_diff(&at->delta_start, &curr, &diff);
+    athr_timespec_diff(&at->delta_start, &curr, &diff);
 
-    dlt = almosthere_timespec_sec(&diff);
+    dlt = athr_timespec_sec(&diff);
 
-    if (dlt >= ALMOSTHERE_MIN_DLT) {
+    if (dlt >= ATHR_MIN_DLT) {
         if (consumed > at->consumed_start) {
             rate = (consumed - at->consumed_start) / ((double)at->volume);
             at->speed = rate / dlt;
@@ -147,22 +156,22 @@ void update_speed(struct almosthere *at) {
     }
 }
 
-void update(struct almosthere *at) {
+void update(struct athr *at) {
 
     struct timespec curr, diff;
     double dlt, frc_consumed;
 
     update_speed(at);
 
-    almosthere_timespec_get(&curr);
+    athr_timespec_get(&curr);
 
     if (at->last_update == NULL) {
         at->last_update = malloc(sizeof(struct timespec));
         *at->last_update = curr;
     } // This is the first update call.
 
-    almosthere_timespec_diff(at->last_update, &curr, &diff);
-    dlt = almosthere_timespec_sec(&diff);
+    athr_timespec_diff(at->last_update, &curr, &diff);
+    dlt = athr_timespec_sec(&diff);
 
     frc_consumed = ((double)at->consumed) / at->volume;
 
