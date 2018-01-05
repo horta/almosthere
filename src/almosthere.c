@@ -68,7 +68,11 @@ int almosthere_thread_start(void *args) {
 
 void almosthere_create_line(struct widget **line) {
 
-    *line = widget_line_create(0, NULL, NULL, NULL);
+    struct widget **widget = malloc(1 * sizeof(struct widget *));
+
+    widget[0] = widget_bar_create();
+    *line = widget_line_create(1, widget);
+    free(widget);
 }
 
 struct almosthere *almosthere_create(long volume) {
@@ -84,14 +88,6 @@ struct almosthere *almosthere_create(long volume) {
     at->consumed_start = 0;
 
     almosthere_create_line(&at->line);
-
-    // struct widget **widget = malloc(1 * sizeof(struct widget *));
-    // widget[0] = widget_bar_create();
-    // int start[] = {0};
-    // int length[] = {25};
-    // at->line = widget_line_create(1, widget, start, length);
-
-    // free(widget);
 
     at->stop_thread = 0;
     status = thrd_create(&at->thr, almosthere_thread_start, at);
