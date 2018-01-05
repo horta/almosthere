@@ -52,6 +52,7 @@ void widget_line_finish(struct widget *widget) {
     free(d->start);
     free(d->length);
     canvas_finish(widget->canvas);
+    free(widget);
 }
 
 void widget_line_update(struct widget *widget, double consumed, double speed,
