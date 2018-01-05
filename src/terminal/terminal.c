@@ -61,6 +61,7 @@ done:
 
     return cols < 0 ? 0 : cols;
 }
+
 #else
 #ifdef WIN32
 #include <windows.h>
