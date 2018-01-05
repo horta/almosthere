@@ -1,7 +1,8 @@
 #include "almosthere.h"
 #include "almosthere_time.h"
-#include "almosthere_widget.h"
 #include "thread/thread.h"
+#include "widget/bar.h"
+#include "widget/line.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,7 +23,7 @@ struct almosthere {
     thrd_t thr;
     int stop_thread;
 
-    struct almosthere_widget *widget;
+    struct widget *widget;
 };
 
 void almosthere_update_speed(struct almosthere *at);
@@ -62,7 +63,7 @@ void almosthere_update(struct almosthere *at) {
     canvas_clean(at->widget->canvas);
     at->widget->update(at->widget, consumed, at->speed, dlt);
     free(at->widget->canvas.buff);
-    // almosthere_widget_line_update(consumed, at->speed, dlt, at->widget_data);
+    // widget_line_update(consumed, at->speed, dlt, at->widget_data);
     canvas_draw(at->widget->canvas);
 
     *at->last_update = curr;
@@ -93,14 +94,13 @@ struct almosthere *almosthere_create(long volume) {
     almosthere_timespec_get(&at->delta_start);
     at->consumed_start = 0;
 
-    // at->widget = almosthere_widget_bar_create();
+    // at->widget = widget_bar_create();
 
-    struct almosthere_widget **widget =
-        malloc(1 * sizeof(struct almosthere_widget *));
-    widget[0] = almosthere_widget_bar_create();
+    struct widget **widget = malloc(1 * sizeof(struct widget *));
+    widget[0] = widget_bar_create();
     int start[] = {0};
     int length[] = {25};
-    at->widget = almosthere_widget_line_create(1, widget, start, length);
+    at->widget = widget_line_create(1, widget, start, length);
 
     free(widget);
 
@@ -147,6 +147,6 @@ void almosthere_finish(struct almosthere *at) {
         free(at->last_update);
 
     at->widget->finish(at->widget);
-    // almosthere_widget_line_finish(at->widget_data);
+    // widget_line_finish(at->widget_data);
     free(at);
 }

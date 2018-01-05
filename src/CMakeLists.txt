@@ -1,6 +1,6 @@
 function(define_sources BASE_DIR _SOURCES)
-    list(APPEND SOURCES almosthere.c almosthere_widget.c almosthere_time.c
-                        terminal/terminal.c)
+    list(APPEND SOURCES almosthere.c almosthere_time.c
+         terminal/terminal.c widget/bar.c widget/line.c)
     IF (WIN32)
         list(APPEND SOURCES thread/tinycthread.c)
     ENDIF()
