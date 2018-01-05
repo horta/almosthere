@@ -9,6 +9,11 @@ struct line_data {
     struct widget **widget;
 };
 
+void widget_line_finish(struct widget *);
+void widget_line_update(struct widget *, double, double, double);
+int widget_line_get_min_length(struct widget *);
+int widget_line_get_max_length(struct widget *);
+
 int check_if_fit(int nwidgets, struct widget **widget) {
     int i;
     int len = 0;
@@ -146,4 +151,6 @@ void widget_line_update(struct widget *widget, double consumed, double speed,
 }
 
 int widget_line_get_min_length(struct widget *widget) { return 50; }
-int widget_line_get_max_length(struct widget *widget) { return 20000; }
+int widget_line_get_max_length(struct widget *widget) {
+    return ALMOSTHERE_MAX_STR_LEN;
+}

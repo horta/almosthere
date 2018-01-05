@@ -3,6 +3,9 @@
 
 #include "canvas.h"
 
+/* maximum string number for preventing catastrophic mistakes */
+#define ALMOSTHERE_MAX_STR_LEN 1048576
+
 struct widget;
 
 typedef void (*widget_finish)(struct widget *);

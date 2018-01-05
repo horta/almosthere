@@ -1,6 +1,12 @@
 #include "almosthere_time.h"
 #include "thread/thread.h"
 
+#ifdef __APPLE__
+#ifndef TIME_UTC
+#define TIME_UTC 1
+#endif
+#endif
+
 void almosthere_sleep(long milliseconds) {
 #ifdef WIN32
     Sleep(milliseconds);

@@ -9,12 +9,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef __APPLE__
-#ifndef TIME_UTC
-#define TIME_UTC 1
-#endif
-#endif
-
 void almosthere_timespec_diff(struct timespec *start, struct timespec *stop,
                               struct timespec *diff);
 double almosthere_timespec_sec(struct timespec *ts);
