@@ -22,7 +22,7 @@ struct almosthere {
     thrd_t thr;
     int stop_thread;
 
-    void *widget_data;
+    struct almosthere_widget *widget;
 };
 
 void almosthere_update_speed(struct almosthere *at);
@@ -46,7 +46,8 @@ void almosthere_update(struct almosthere *at) {
     dlt = almosthere_timespec_sec(&diff);
 
     consumed = ((double)at->consumed) / at->volume;
-    almosthere_widget_line_update(consumed, at->speed, dlt, at->widget_data);
+    at->widget->update(at->widget, consumed, at->speed, dlt);
+    // almosthere_widget_line_update(consumed, at->speed, dlt, at->widget_data);
 
     *at->last_update = curr;
 }
@@ -76,7 +77,7 @@ struct almosthere *almosthere_create(long volume) {
     almosthere_timespec_get(&at->delta_start);
     at->consumed_start = 0;
 
-    almosthere_widget_line_create(&at->widget_data);
+    at->widget = almosthere_widget_bar_create();
 
     at->stop_thread = 0;
     status = thrd_create(&at->thr, almosthere_thread_start, at);
@@ -119,6 +120,8 @@ void almosthere_finish(struct almosthere *at) {
     thrd_join(at->thr, NULL);
     if (at->last_update != NULL)
         free(at->last_update);
-    almosthere_widget_line_finish(at->widget_data);
+
+    at->widget->finish(at->widget);
+    // almosthere_widget_line_finish(at->widget_data);
     free(at);
 }

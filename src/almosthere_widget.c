@@ -3,29 +3,60 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct line_data {
+// struct line_widget {
+//     int nwidgets;
+//     almosthere_widget *widget;
+//     void *widget_data;
+//     int *start;
+//     int *length;
+// };
+//
+// void *almosthere_widget_line_create(int nwidgets, almosthere_widget *widget,
+//                                     int *start, int *length) {
+//
+//     struct line_widget *w;
+//     int i;
+//
+//     w = malloc(sizeof(struct line_widget));
+//     w->nwidgets = nwidgets;
+//     w->widget = malloc(nwidgets * sizeof(struct almosthere_widget));
+//     w->start = malloc(nwidgets * sizeof(int));
+//     w->length = malloc(nwidgets * sizeof(int));
+//
+//     for (i = 0; i < nwidgets; ++i) {
+//         w->widget[i] = widget[i];
+//         w->start[i] = start[i];
+//         w->length[i] = length[i];
+//     }
+//
+//     return w;
+// }
+//
+// void almosthere_widget_line_finish(void *) {}
+//
+// void almosthere_widget_line_update(double, double, double, void *) {}
+
+struct bar_data {
     double consumed;
 };
 
-// struct almosthere_line_widget {
-//     int nwidgets;
-//     void *widget;
-//     void *widget_start;
-//     void *widget_length;
-// };
+struct almosthere_widget *almosthere_widget_bar_create(void) {
 
-// struct almosthere_bar_widget {};
-
-void almosthere_widget_line_create(void **data) {
-
-    struct line_data *d = malloc(sizeof(struct line_data));
+    struct bar_data *d = malloc(sizeof(struct bar_data));
+    struct almosthere_widget *w = malloc(sizeof(struct almosthere_widget));
     d->consumed = -1.0;
-    *data = d;
+    w->data = d;
+    w->finish = almosthere_widget_bar_finish;
+    w->update = almosthere_widget_bar_update;
+    return w;
 }
 
-void almosthere_widget_line_finish(void *data) { free(data); }
+void almosthere_widget_bar_finish(struct almosthere_widget *w) {
+    free(w->data);
+    free(w);
+}
 
-void line_draw(struct line_data *data) {
+void bar_draw(struct bar_data *data) {
 
     int i;
     unsigned length = almosthere_get_term_width();
@@ -36,9 +67,9 @@ void line_draw(struct line_data *data) {
     fflush(stderr);
 }
 
-void almosthere_widget_line_update(double consumed, double speed, double dlt,
-                                   void *data) {
-    struct line_data *d = data;
+void almosthere_widget_bar_update(struct almosthere_widget *w, double consumed,
+                                  double speed, double dlt) {
+    struct bar_data *d = w->data;
     if (d->consumed == -1) {
         // First time this update is called.
         d->consumed = consumed;
@@ -47,5 +78,5 @@ void almosthere_widget_line_update(double consumed, double speed, double dlt,
     if (d->consumed > consumed)
         d->consumed = consumed;
 
-    line_draw(d);
+    bar_draw(d);
 }
