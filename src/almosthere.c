@@ -22,14 +22,16 @@ struct almosthere {
 
 void update_speed(struct almosthere *at);
 int thread_start(void *args);
-void create_line(struct widget **line);
+int create_line(struct widget **line);
 void update_speed(struct almosthere *at);
 void update(struct almosthere *at);
 
 struct almosthere *almosthere_create(long volume) {
 
-    struct almosthere *at = malloc(sizeof(struct almosthere));
+    struct almosthere *at = NULL;
     int status;
+
+    at = malloc(sizeof(struct almosthere));
 
     at->volume = volume;
     at->consumed = 0;
@@ -38,16 +40,21 @@ struct almosthere *almosthere_create(long volume) {
     almosthere_timespec_get(&at->delta_start);
     at->consumed_start = 0;
 
-    create_line(&at->line);
+    if (create_line(&at->line))
+        goto err;
 
     at->stop_thread = 0;
     status = thrd_create(&at->thr, thread_start, at);
     if (status != thrd_success) {
         fprintf(stderr, "Could not spawn a thread.\n");
-        return NULL;
+        goto err;
     }
 
     return at;
+err:
+    if (at != NULL)
+        free(at);
+    return NULL;
 }
 
 void almosthere_consume(struct almosthere *at, long consume) {
@@ -67,6 +74,7 @@ void almosthere_finish(struct almosthere *at) {
 
     at->line->finish(at->line);
     free(at);
+    fprintf(stderr, "\n");
 }
 
 int thread_start(void *args) {
@@ -82,13 +90,16 @@ int thread_start(void *args) {
     return 0;
 }
 
-void create_line(struct widget **line) {
+int create_line(struct widget **line) {
 
     struct widget **widget = malloc(1 * sizeof(struct widget *));
 
     widget[0] = widget_bar_create();
     *line = widget_line_create(1, widget);
+    if (*line == NULL)
+        return 1;
     free(widget);
+    return 0;
 }
 
 void update_speed(struct almosthere *at) {

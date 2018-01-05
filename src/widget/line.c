@@ -13,15 +13,8 @@ void widget_line_finish(struct widget *);
 void widget_line_update(struct widget *, double, double, double);
 int widget_line_get_min_length(struct widget *);
 int widget_line_get_max_length(struct widget *);
-
-int check_if_fit(int nwidgets, struct widget **widget) {
-    int i;
-    int len = 0;
-    for (i = 0; i < nwidgets; ++i) {
-        len += widget[i]->get_min_length(widget[i]);
-    }
-    return len < widget_line_get_min_length(NULL);
-}
+int check_if_fit(int nwidgets, struct widget **widget);
+int widget_line_dist_len(int nwidgets, struct widget **widget, int length);
 
 struct widget *widget_line_create(int nwidgets, struct widget **widget) {
     struct line_data *l;
@@ -29,13 +22,13 @@ struct widget *widget_line_create(int nwidgets, struct widget **widget) {
     struct widget *w;
 
     if (!check_if_fit(nwidgets, widget)) {
-        fprintf(stderr, "The widgets don't fit under the line widget.\n");
-        exit(0);
+        fprintf(stderr, "The widgets don't fit in the line widget.\n");
+        return NULL;
     }
 
     w = malloc(sizeof(struct widget));
-
     l = malloc(sizeof(struct line_data));
+
     l->nwidgets = nwidgets;
     l->widget = malloc(nwidgets * sizeof(struct widget *));
 
@@ -54,6 +47,28 @@ struct widget *widget_line_create(int nwidgets, struct widget **widget) {
     return w;
 }
 
+void widget_line_update(struct widget *widget, double consumed, double speed,
+                        double dlt) {
+    struct line_data *l = widget->data;
+    int i;
+    int base = 0;
+    int rem;
+
+    canvas_resize(&widget->canvas);
+    canvas_clean(&widget->canvas);
+
+    rem = widget_line_dist_len(l->nwidgets, l->widget, widget->canvas.length);
+    widget->canvas.buff[widget->canvas.length - 1] = '\r';
+
+    for (i = 0; i < l->nwidgets; ++i) {
+        l->widget[i]->canvas.buff = widget->canvas.buff + base;
+
+        l->widget[i]->update(l->widget[i], consumed, speed, dlt);
+        base += l->widget[i]->canvas.length;
+    }
+    canvas_draw(&widget->canvas);
+}
+
 void widget_line_finish(struct widget *widget) {
     struct line_data *d = widget->data;
     int i;
@@ -68,8 +83,7 @@ void widget_line_finish(struct widget *widget) {
     free(widget);
 }
 
-int widget_line_distribute_lengths(int nwidgets, struct widget **widget,
-                                   int length) {
+int widget_line_dist_len(int nwidgets, struct widget **widget, int length) {
 
     int i = 0;
     int j = 0;
@@ -127,30 +141,16 @@ int widget_line_distribute_lengths(int nwidgets, struct widget **widget,
     return length;
 }
 
-void widget_line_update(struct widget *widget, double consumed, double speed,
-                        double dlt) {
-    struct line_data *l = widget->data;
-    int i;
-    int base = 0;
-    int rem;
-
-    canvas_resize(&widget->canvas);
-    canvas_clean(&widget->canvas);
-
-    rem = widget_line_distribute_lengths(l->nwidgets, l->widget,
-                                         widget->canvas.length);
-    widget->canvas.buff[widget->canvas.length - 1 - rem] = '\r';
-
-    for (i = 0; i < l->nwidgets; ++i) {
-        l->widget[i]->canvas.buff = widget->canvas.buff + base;
-
-        l->widget[i]->update(l->widget[i], consumed, speed, dlt);
-        base += l->widget[i]->canvas.length;
-    }
-    canvas_draw(&widget->canvas);
-}
-
-int widget_line_get_min_length(struct widget *widget) { return 50; }
+int widget_line_get_min_length(struct widget *widget) { return 4; }
 int widget_line_get_max_length(struct widget *widget) {
     return ALMOSTHERE_MAX_STR_LEN;
+}
+
+int check_if_fit(int nwidgets, struct widget **widget) {
+    int i;
+    int len = 0;
+    for (i = 0; i < nwidgets; ++i) {
+        len += widget[i]->get_min_length(widget[i]);
+    }
+    return len < widget_line_get_max_length(NULL);
 }
