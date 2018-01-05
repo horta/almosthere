@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-const int ETA_SIZE = 9;
-const double MIN_SPEED = 0.000001;
+#define ETA_SIZE 9
+#define MIN_SPEED 0.000001
 
 struct eta_data {
     char str[ETA_SIZE + 1];
@@ -54,7 +54,7 @@ void widget_eta_update(struct widget *w, double consumed, double speed,
         eta_sec = 0.0;
 
     if (speed < MIN_SPEED) {
-        snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " ");
+        snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " -- ");
     } else {
         eta_sec = (1 - d->consumed) / speed;
         snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " ");
