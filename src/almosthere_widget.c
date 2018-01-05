@@ -9,7 +9,7 @@ struct line_data {
     int *start;
     int *length;
 };
-//
+
 struct almosthere_widget *
 almosthere_widget_line_create(int nwidgets, struct almosthere_widget **widget,
                               int *start, int *length) {
@@ -54,9 +54,12 @@ void almosthere_widget_line_update(struct almosthere_widget *widget,
                                    double consumed, double speed, double dlt) {
     struct line_data *w = widget->data;
     int i;
-
+    int acc = 0;
     for (i = 0; i < w->nwidgets; ++i) {
+        w->widget[i]->canvas.buff = widget->canvas.buff + acc;
+        w->widget[i]->canvas.length = w->length[i];
         w->widget[i]->update(w->widget[i], consumed, speed, dlt);
+        acc += w->length[i];
     }
     fputc('\r', stderr);
     fflush(stderr);
@@ -82,15 +85,16 @@ void almosthere_widget_bar_finish(struct almosthere_widget *w) {
     free(w);
 }
 
-void bar_draw(struct bar_data *data) {
+void bar_draw(struct bar_data *data, struct canvas *canvas) {
 
     int i;
-    unsigned length = almosthere_get_term_width();
-    for (i = 0; i < (int)(data->consumed * length); ++i) {
-        fputc('.', stderr);
+    // unsigned length = almosthere_get_term_width();
+    for (i = 0; i < (int)(data->consumed * canvas->length); ++i) {
+        // fputc('.', stderr);
+        canvas->buff[i] = '.';
     }
-    fputc('\r', stderr);
-    fflush(stderr);
+    // fputc('\r', stderr);
+    // fflush(stderr);
 }
 
 void almosthere_widget_bar_update(struct almosthere_widget *w, double consumed,
@@ -104,5 +108,5 @@ void almosthere_widget_bar_update(struct almosthere_widget *w, double consumed,
     if (d->consumed > consumed)
         d->consumed = consumed;
 
-    bar_draw(d);
+    bar_draw(d, &w->canvas);
 }

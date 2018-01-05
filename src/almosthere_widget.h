@@ -7,10 +7,16 @@ typedef void (*almosthere_widget_finish)(struct almosthere_widget *);
 typedef void (*almosthere_widget_update)(struct almosthere_widget *, double,
                                          double, double);
 
+struct canvas {
+    char *buff;
+    int length;
+};
+
 struct almosthere_widget {
     almosthere_widget_finish finish;
     almosthere_widget_update update;
     void *data;
+    struct canvas canvas;
 };
 
 struct almosthere_widget *

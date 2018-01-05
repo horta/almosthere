@@ -27,6 +27,17 @@ struct almosthere {
 
 void almosthere_update_speed(struct almosthere *at);
 
+void canvas_draw(struct canvas canvas) {
+    fprintf(stderr, "%.*s\r", canvas.length, canvas.buff);
+    fflush(stderr);
+}
+
+void canvas_clean(struct canvas canvas) {
+    int i;
+    for (i = 0; i < canvas.length; ++i)
+        canvas.buff[i] = ' ';
+}
+
 void almosthere_update(struct almosthere *at) {
 
     struct timespec curr, diff;
@@ -46,8 +57,13 @@ void almosthere_update(struct almosthere *at) {
     dlt = almosthere_timespec_sec(&diff);
 
     consumed = ((double)at->consumed) / at->volume;
+    at->widget->canvas.length = 15;
+    at->widget->canvas.buff = malloc(sizeof(char) * at->widget->canvas.length);
+    canvas_clean(at->widget->canvas);
     at->widget->update(at->widget, consumed, at->speed, dlt);
+    free(at->widget->canvas.buff);
     // almosthere_widget_line_update(consumed, at->speed, dlt, at->widget_data);
+    canvas_draw(at->widget->canvas);
 
     *at->last_update = curr;
 }
