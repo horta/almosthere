@@ -6,12 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Minimum different in seconds considered safe for computing speed. */
-static const double MINIMUM_DELTA = 0.01;
-
-/* how often to update, in seconds */
-static const double TIMESTEP = 1.0 / 30.0;
-
 struct almosthere {
     long volume;                  /* total size to be consumed */
     long consumed;                /* how much have been consumed */
@@ -58,7 +52,7 @@ struct almosthere *almosthere_create(long volume) {
 
 void almosthere_consume(struct almosthere *at, long consume) {
     if (at->consumed + consume > at->volume) {
-        fprintf(stderr, "User trying to consume more than the total volume.\n");
+        fprintf(stderr, "Trying to consume more than the total volume.\n");
         at->consumed = at->volume;
     } else
         at->consumed += consume;
@@ -81,7 +75,7 @@ int thread_start(void *args) {
 
     update(at);
     while (at->stop_thread == 0) {
-        almosthere_thread_sleep(TIMESTEP);
+        almosthere_thread_sleep(ALMOSTHERE_TIMESTEP);
         update(at);
     }
 
@@ -108,7 +102,7 @@ void update_speed(struct almosthere *at) {
 
     dlt = almosthere_timespec_sec(&diff);
 
-    if (dlt >= MINIMUM_DELTA) {
+    if (dlt >= ALMOSTHERE_MIN_DLT) {
         at->speed = at->consumed_start / dlt;
         at->delta_start = curr;
         at->consumed_start = consumed;
@@ -125,10 +119,9 @@ void update(struct almosthere *at) {
     almosthere_timespec_get(&curr);
 
     if (at->last_update == NULL) {
-        // This is the first update call.
         at->last_update = malloc(sizeof(struct timespec));
         *at->last_update = curr;
-    }
+    } // This is the first update call.
 
     almosthere_timespec_diff(at->last_update, &curr, &diff);
     dlt = almosthere_timespec_sec(&diff);
