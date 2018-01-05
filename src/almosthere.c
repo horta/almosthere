@@ -3,6 +3,7 @@
 #include "thread/thread.h"
 #include "widget/bar.h"
 #include "widget/line.h"
+#include "widget/text.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -92,13 +93,21 @@ int thread_start(void *args) {
 
 int create_line(struct widget **line) {
 
-    struct widget **widget = malloc(1 * sizeof(struct widget *));
+    struct widget **widget = malloc(2 * sizeof(struct widget *));
 
-    widget[0] = widget_bar_create();
-    *line = widget_line_create(1, widget);
-    if (*line == NULL)
+    widget[0] = widget_text_create("Danilo");
+
+    widget[1] = widget_bar_create();
+
+    *line = widget_line_create(2, widget);
+
+    if (*line == NULL) {
+        // some memory leak occurs
         return 1;
+    }
+
     free(widget);
+
     return 0;
 }
 

@@ -52,13 +52,11 @@ void widget_line_update(struct widget *widget, double consumed, double speed,
     struct line_data *l = widget->data;
     int i;
     int base = 0;
-    int rem;
 
     canvas_resize(&widget->canvas);
     canvas_clean(&widget->canvas);
 
-    rem = widget_line_dist_len(l->nwidgets, l->widget, widget->canvas.length);
-    widget->canvas.buff[widget->canvas.length - 1] = '\r';
+    widget_line_dist_len(l->nwidgets, l->widget, widget->canvas.length - 1);
 
     for (i = 0; i < l->nwidgets; ++i) {
         l->widget[i]->canvas.buff = widget->canvas.buff + base;
