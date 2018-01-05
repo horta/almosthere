@@ -96,7 +96,7 @@ struct almosthere *almosthere_create(long volume) {
     at->stop_thread = 0;
     status = thrd_create(&at->thr, almosthere_thread_start, at);
     if (status != thrd_success) {
-        fprintf("Could not spawn a thread.", stderr);
+        fprintf(stderr, "Could not spawn a thread.");
         return NULL;
     }
 
