@@ -133,9 +133,13 @@ void update_speed(struct almosthere *at) {
 
     dlt = almosthere_timespec_sec(&diff);
 
-    if (dlt >= ALMOSTHERE_MIN_DLT && consumed > at->consumed_start) {
-        rate = ((double)consumed - at->consumed_start) / at->volume;
-        at->speed = rate / dlt;
+    if (dlt >= ALMOSTHERE_MIN_DLT) {
+        if (consumed > at->consumed_start) {
+            rate = (consumed - at->consumed_start) / ((double)at->volume);
+            at->speed = rate / dlt;
+        } else {
+            at->speed /= 2;
+        }
         at->delta_start = curr;
         at->consumed_start = consumed;
     }
@@ -144,7 +148,7 @@ void update_speed(struct almosthere *at) {
 void update(struct almosthere *at) {
 
     struct timespec curr, diff;
-    double dlt, consumed;
+    double dlt, frc_consumed;
 
     update_speed(at);
 
@@ -158,9 +162,9 @@ void update(struct almosthere *at) {
     almosthere_timespec_diff(at->last_update, &curr, &diff);
     dlt = almosthere_timespec_sec(&diff);
 
-    consumed = ((double)at->consumed) / at->volume;
+    frc_consumed = ((double)at->consumed) / at->volume;
 
-    at->line->update(at->line, consumed, at->speed, dlt);
+    at->line->update(at->line, frc_consumed, at->speed, dlt);
 
     *at->last_update = curr;
 }

@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define ETA_SIZE 9
-#define MIN_SPEED 0.000001
+#define MIN_SPEED 0.000000001
 
 #define MIN_SEC 60
 #define HOUR_SEC 3600
@@ -54,21 +54,27 @@ void widget_eta_update(struct widget *w, double consumed, double speed,
         eta_sec = 0.0;
 
     if (speed < MIN_SPEED) {
-        snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " ");
+        snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " - eta - ");
     } else {
         eta_sec = (1 - d->consumed) / speed;
 
-        // 60 1min
-        // 3600 1hour
-        // 86400 1 day
-        // 2592000 1 month
-        // 31104000 1 year
-        // if (perc )
-        if (YEAR_SEC >= (int)eta_sec)
-            snprintf(d->str, ETA_SIZE + 1, "%*d years eta", ETA_SIZE - 4,
+        if (eta_sec >= YEAR_SEC)
+            snprintf(d->str, ETA_SIZE + 1, "%*d years", ETA_SIZE - 6,
                      (int)(eta_sec / YEAR_SEC));
+        else if (eta_sec >= MONTH_SEC)
+            snprintf(d->str, ETA_SIZE + 1, "%*d months", ETA_SIZE - 7,
+                     (int)(eta_sec / MONTH_SEC));
+        else if (eta_sec >= DAY_SEC)
+            snprintf(d->str, ETA_SIZE + 1, "%*d days", ETA_SIZE - 5,
+                     (int)(eta_sec / DAY_SEC));
+        else if (eta_sec >= HOUR_SEC)
+            snprintf(d->str, ETA_SIZE + 1, "%*d hours", ETA_SIZE - 6,
+                     (int)(eta_sec / HOUR_SEC));
+        else if (eta_sec >= MIN_SEC)
+            snprintf(d->str, ETA_SIZE + 1, "%*d mins", ETA_SIZE - 5,
+                     (int)(eta_sec / MIN_SEC));
         else
-            snprintf(d->str, ETA_SIZE + 1, "%*d secs eta", ETA_SIZE - 4,
+            snprintf(d->str, ETA_SIZE + 1, "%*d secs", ETA_SIZE - 5,
                      (int)eta_sec);
     }
 

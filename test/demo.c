@@ -9,7 +9,13 @@ int main() {
     almosthere_sleep(500);
     almosthere_consume(at, 5);
     almosthere_sleep(500);
-    almosthere_consume(at, 5);
+    almosthere_consume(at, 2);
+    almosthere_sleep(10000);
+    almosthere_consume(at, 1);
+    almosthere_sleep(10000);
+    almosthere_consume(at, 1);
+    almosthere_sleep(10000);
+    almosthere_consume(at, 1);
     almosthere_sleep(400);
     almosthere_consume(at, 5);
     almosthere_sleep(300);
