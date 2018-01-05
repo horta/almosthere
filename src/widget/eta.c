@@ -7,6 +7,12 @@
 #define ETA_SIZE 9
 #define MIN_SPEED 0.000001
 
+#define MIN_SEC 60
+#define HOUR_SEC 3600
+#define DAY_SEC 86400
+#define MONTH_SEC 2592000
+#define YEAR_SEC 31104000
+
 struct eta_data {
     char str[ETA_SIZE + 1];
     double consumed;
@@ -44,26 +50,27 @@ void widget_eta_update(struct widget *w, double consumed, double speed,
 
     d->consumed = consumed;
 
-    // if (d->consumed == -1.0) {
-    //     // First time this update is called.
-    //     d->consumed = consumed;
-    // }
-    // d->consumed = speed * dlt + d->consumed;
-    // if (d->consumed > consumed)
-    //     d->consumed = consumed;
-
     if (d->consumed == 1.0)
         eta_sec = 0.0;
 
     if (speed < MIN_SPEED) {
         snprintf(d->str, ETA_SIZE + 1, "%*s", ETA_SIZE, " ");
     } else {
-        // printf("%.30f %.30f\n", 1 - d->consumed, speed);
         eta_sec = (1 - d->consumed) / speed;
-        snprintf(d->str, ETA_SIZE + 1, "%*d eta", ETA_SIZE - 4, (int)eta_sec);
-    }
 
-    // snprintf(d->str + 1, 5, "%3d%%", perc);
+        // 60 1min
+        // 3600 1hour
+        // 86400 1 day
+        // 2592000 1 month
+        // 31104000 1 year
+        // if (perc )
+        if (YEAR_SEC >= (int)eta_sec)
+            snprintf(d->str, ETA_SIZE + 1, "%*d years eta", ETA_SIZE - 4,
+                     (int)(eta_sec / YEAR_SEC));
+        else
+            snprintf(d->str, ETA_SIZE + 1, "%*d secs eta", ETA_SIZE - 4,
+                     (int)eta_sec);
+    }
 
     for (i = 0; i < ETA_SIZE; ++i) {
         w->canvas.buff[i] = d->str[i];

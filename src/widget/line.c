@@ -59,7 +59,6 @@ void widget_line_update(struct widget *widget, double consumed, double speed,
     widget_line_dist_len(l->nwidgets, l->widget, widget->canvas.length - 1);
 
     for (i = 0; i < l->nwidgets; ++i) {
-        // printf("%i: %d\n", i, l->widget[i]->canvas.length);
         l->widget[i]->canvas.buff = widget->canvas.buff + base;
 
         l->widget[i]->update(l->widget[i], consumed, speed, dlt);

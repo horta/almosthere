@@ -6,6 +6,12 @@
 
 #define PERC_LEN 5
 
+#define MIN_SEC 60
+#define HOUR_SEC 3600
+#define DAY_SEC 86400
+#define MONTH_SEC 2592000
+#define YEAR_SEC 31104000
+
 struct perc_data {
     char str[PERC_LEN + 1];
     double consumed;
@@ -47,7 +53,14 @@ void widget_perc_update(struct widget *w, double consumed, double speed,
     else
         perc = (int)(d->consumed * 100);
 
-    snprintf(d->str, PERC_LEN + 1, " %3d%%", perc);
+    // 60 1min
+    // 3600 1hour
+    // 86400 1 day
+    // 2592000 1 month
+    // 31104000 1 year
+    // if (perc )
+    if (YEAR_SEC)
+        snprintf(d->str, PERC_LEN + 1, " %3d%%", perc);
 
     for (i = 0; i < PERC_LEN; ++i) {
         w->canvas.buff[i] = d->str[i];
