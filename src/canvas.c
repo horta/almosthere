@@ -9,7 +9,7 @@ void canvas_create(struct canvas *canvas, int min_length) {
     canvas->min_length = min_length;
 
     ncols = (int)athr_get_term_width() + 1;
-#ifdef (WIN32)
+#ifdef WIN32
     ncols--;
 #endif
 
@@ -29,7 +29,7 @@ void canvas_draw(struct canvas *canvas) {
 void canvas_resize(struct canvas *canvas) {
 
     int ncols = (int)athr_get_term_width() + 1;
-#ifdef (WIN32)
+#ifdef WIN32
     ncols--;
 #endif
 
