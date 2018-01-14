@@ -71,7 +71,13 @@ done:
 #include <windows.h>
 unsigned athr_get_term_width(void) {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hdl == INVALID_HANDLE_VALUE) {
+        return 80;
+    }
+    if (GetConsoleScreenBufferInfo(hdl, &csbi) == 0) {
+        return 80;
+    }
     return csbi.srWindow.Right - csbi.srWindow.Left + 1;
 }
 #else

@@ -40,6 +40,7 @@ macro(limix_config)
     # Windows specific common configuration
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+      set_property(GLOBAL PROPERTY USE_FOLDERS ON)
       add_definitions(-D_CRT_SECURE_NO_WARNINGS)
       add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
       add_definitions(-Dinline=__inline)
@@ -109,9 +110,10 @@ macro(limix_add_test NAME LIBRARY SOURCES)
     add_executable(${NAME} ${SOURCES})
     target_link_libraries(${NAME} ${LIBRARY})
     add_test(test_${NAME} ${NAME} -E environment)
-
     file(TO_CMAKE_PATH "$ENV{PATH}" MYPATH)
+
     list(APPEND MYPATH ${CMAKE_BINARY_DIR})
+    list(APPEND MYPATH ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
     string(REPLACE ";" "\\;" MYPATH "${MYPATH}")
 
     set_property(TEST test_${NAME} APPEND PROPERTY ENVIRONMENT
