@@ -3,6 +3,9 @@
 
 #if defined(_MSC_VER) && _MSC_VER < 1900
 
+#include <stdarg.h>
+#include <stdio.h>
+
 #define snprintf c99_snprintf
 #define vsnprintf c99_vsnprintf
 
