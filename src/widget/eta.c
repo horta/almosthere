@@ -1,3 +1,4 @@
+#include "snprintf.h"
 #include "widget/eta.h"
 
 #include <stdio.h>

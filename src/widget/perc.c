@@ -1,3 +1,4 @@
+#include "snprintf.h"
 #include "widget/perc.h"
 
 #include <stdio.h>
