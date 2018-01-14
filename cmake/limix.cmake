@@ -18,6 +18,26 @@ function(display_welcome)
     endforeach()
 endfunction(display_welcome)
 
+macro(limix_windows_config)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+    add_definitions(-Dinline=__inline)
+
+    set(CompilerFlags
+        CMAKE_CXX_FLAGS
+        CMAKE_CXX_FLAGS_DEBUG
+        CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_C_FLAGS
+        CMAKE_C_FLAGS_DEBUG
+        CMAKE_C_FLAGS_RELEASE)
+
+    foreach(CompilerFlag ${CompilerFlags})
+        string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+    endforeach()
+endmacro(limix_windows_config)
+
 macro(limix_config)
     enable_testing()
 
@@ -39,11 +59,7 @@ macro(limix_config)
 
     # Windows specific common configuration
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-      set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-      set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-      add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-      add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
-      add_definitions(-Dinline=__inline)
+        limix_windows_config()
     endif()
 
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
