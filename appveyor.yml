@@ -12,12 +12,12 @@ environment:
 build_script:
     - mkdir build.%BDIR%
     - cd build.%BDIR%
-    - cmake .. -G"%PRJ_GEN%" ^
-        -DCMAKE_BUILD_TYPE=%CONFIGURATION% ^
-        -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER% ^
+    - cmake .. -G"%PRJ_GEN%"
         -DCMAKE_BUILD_TYPE=Release
-    - cmake --build . --config %CONFIGURATION% --target install
-    - ctest -V --output-on-failure -C %CONFIGURATION%
+        -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%
+        -DCMAKE_BUILD_TYPE=Release
+    - cmake --build . --config Release --target install
+    - ctest -V --output-on-failure -C Release
     - if NOT exist %APPVEYOR_BUILD_FOLDER%\lib\athr.lib exit 1
     - if NOT exist %APPVEYOR_BUILD_FOLDER%\bin\athr.dll exit 1
     - if NOT exist %APPVEYOR_BUILD_FOLDER%\lib\athr_static.lib exit 1
