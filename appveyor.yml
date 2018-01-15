@@ -26,8 +26,6 @@ build_script:
     - ctest -V --output-on-failure -C Release
 
 test_script:
-    - dir %APPVEYOR_BUILD_FOLDER%
-    - dir %APPVEYOR_BUILD_FOLDER%\include
     - if NOT exist %APPVEYOR_BUILD_FOLDER%\lib\athr.lib exit 1
     - if NOT exist %APPVEYOR_BUILD_FOLDER%\bin\athr.dll exit 1
     - if NOT exist %APPVEYOR_BUILD_FOLDER%\lib\athr_static.lib exit 1
