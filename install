@@ -37,7 +37,7 @@ function failed
 }
 
 FILE=athr-$VERSION.tar.gz
-DIR=athr-$VERSION
+DIR=almosthere-$VERSION
 URL=https://github.com/horta/almosthere/archive/$VERSION.tar.gz
 
 silent_trun rm $FILE
@@ -67,8 +67,8 @@ silent_run do_then_sudo make install
 [ $? == 0 ] && echo "done." || failed
 
 cd .. && cd ..
-silent_trun rm athr-$VERSION.tar.gz
-silent_trun rm -rf athr-$VERSION
+silent_trun rm $FILE
+silent_trun rm -rf $DIR
 
 if type "ldconfig" >/dev/null 2>&1; then
     silent_run do_then_sudo ldconfig
