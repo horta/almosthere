@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL=https://raw.githubusercontent.com/limix/almosthere/master/VERSION
+URL=https://raw.githubusercontent.com/horta/almosthere/master/VERSION
 VERSION=$(curl -s $URL)
 
 echo "[_/_] Library(athr==$VERSION)"
@@ -38,7 +38,7 @@ function failed
 
 FILE=athr-$VERSION.tar.gz
 DIR=athr-$VERSION
-URL=https://github.com/limix/almosthere/archive/$VERSION.tar.gz
+URL=https://github.com/horta/almosthere/archive/$VERSION.tar.gz
 
 silent_trun rm $FILE
 silent_trun rm -rf $DIR
