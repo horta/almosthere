@@ -1,3 +1,5 @@
+build: off
+
 notifications:
   - provider: Email
     on_build_success: false
@@ -16,12 +18,10 @@ environment:
         BDIR: msvc2015
 
 build_script:
-    - mkdir build.%BDIR%
-    - cd build.%BDIR%
+    - mkdir build.%BDIR% && cd build.%BDIR%
     - cmake .. -G"%PRJ_GEN%"
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%
-        -DCMAKE_BUILD_TYPE=Release
     - cmake --build . --config Release --target install
     - ctest -V --output-on-failure -C Release
 
