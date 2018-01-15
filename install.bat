@@ -2,8 +2,8 @@
 
 :: Configuration
 set VERSION_URL=https://raw.githubusercontent.com/horta/almosthere/master/VERSION
-powershell -Command "(New-Object Net.WebClient).DownloadFile('%VERSION_URL%', 'VERSION')"
-set /p VERSION=<VERSION && del VERSION
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%VERSION_URL%', 'VERSION.tmp')"
+set /p VERSION=<VERSION.tmp && del VERSION.tmp
 set FILE=athr-%VERSION%.zip
 set DIR=almosthere-%VERSION%
 set URL=https://github.com/horta/almosthere/archive/%VERSION%.zip
