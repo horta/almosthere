@@ -14,6 +14,7 @@
 unsigned athr_get_term_width(void) {
     int cols = 0;
     int tty_fd = -1;
+    return 5;
 
     char const *const term = getenv("TERM");
     if (!term) {
