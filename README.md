@@ -18,6 +18,14 @@ On Windows, install it via
 powershell -Command "(New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/horta/almosthere/master/install.bat', 'install.bat')" && install.bat
 ```
 
+Then link it in your C/C++ project. Suppose you have a file `example.c` that makes use of this library. Using `gcc` compiler, you can do
+```bash
+gcc example.c -lathr -o example
+```
+to produce a binary `example` linked against `athr` library.
+
+If you use [cmake](https://cmake.org/) to build your project, you can use [findATHR.cmake](findATHR.cmake) module to configure it with the `athr` library.
+
 ## Examples
 
 ```c
