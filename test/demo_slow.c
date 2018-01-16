@@ -2,7 +2,7 @@
 
 int main() {
 
-    struct athr *at = athr_create(150, "Demo:");
+    struct athr *at = athr_create(150, "Demo:", ATHR_ETA);
 
     athr_sleep(400);
     athr_consume(at, 5);

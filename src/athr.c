@@ -28,15 +28,15 @@ struct athr {
     int stop_thread; /* send stop thread signal */
 
     struct widget *line; /* root widget */
+    enum ATHR_OPTS opts; /* display options */
 };
 
-void update_speed(struct athr *at);
-int thread_start(void *args);
-int create_line(struct widget **line, const char *);
-void update_speed(struct athr *at);
-void update(struct athr *at);
+void athr_update_speed(struct athr *at);
+int athr_thread_start(void *args);
+int athr_create_line(struct widget **line, const char *, enum ATHR_OPTS opts);
+void athr_update(struct athr *at);
 
-struct athr *athr_create(long volume, const char *desc) {
+struct athr *athr_create(long volume, const char *desc, enum ATHR_OPTS opts) {
 
     struct athr *at = NULL;
     int status;
@@ -52,12 +52,13 @@ struct athr *athr_create(long volume, const char *desc) {
     at->last_update = NULL;
     athr_timespec_get(&at->delta_start);
     at->consumed_start = 0;
+    at->opts = opts;
 
-    if (create_line(&at->line, desc))
+    if (athr_create_line(&at->line, desc, opts))
         goto err;
 
     at->stop_thread = 0;
-    status = thrd_create(&at->thr, thread_start, at);
+    status = thrd_create(&at->thr, athr_thread_start, at);
     if (status != thrd_success) {
         fprintf(stderr, "Could not spawn a thread.\n");
         goto err;
@@ -95,44 +96,51 @@ void athr_finish(struct athr *at) {
     fprintf(stderr, "\n");
 }
 
-int thread_start(void *args) {
+int athr_thread_start(void *args) {
 
     struct athr *at = (struct athr *)args;
 
-    update(at);
+    athr_update(at);
     while (at->stop_thread == 0) {
         athr_thread_sleep(ATHR_TIMESTEP);
-        update(at);
+        athr_update(at);
     }
-    update(at);
+    athr_update(at);
 
     return 0;
 }
 
-int create_line(struct widget **line, const char *desc) {
+int athr_create_line(struct widget **line, const char *desc,
+                     enum ATHR_OPTS opts) {
 
-    struct widget **widget = malloc(4 * sizeof(struct widget *));
+    size_t i = 0;
+    struct widget *widget[4];
 
-    widget[0] = widget_text_create(desc);
-    widget[1] = widget_perc_create();
+    // widget = malloc(4 * sizeof(struct widget *));
+    //
+    widget[i++] = widget_text_create(desc);
+    if (opts & ATHR_PERC) {
+        widget[i++] = widget_perc_create();
+    }
 
-    widget[2] = widget_bar_create();
+    if (opts & ATHR_BAR) {
+        widget[i++] = widget_bar_create();
+    }
 
-    widget[3] = widget_eta_create();
+    if (opts & ATHR_ETA) {
+        widget[i++] = widget_eta_create();
+    }
 
-    *line = widget_line_create(4, widget);
+    *line = widget_line_create(i, widget);
 
     if (*line == NULL) {
-        // some memory leak occurs
         return 1;
     }
 
-    free(widget);
-
     return 0;
 }
 
-void update_speed(struct athr *at) {
+void athr_update_speed(struct athr *at) {
     struct timespec curr, diff;
     long consumed;
     double rate;
@@ -156,12 +164,12 @@ void update_speed(struct athr *at) {
     }
 }
 
-void update(struct athr *at) {
+void athr_update(struct athr *at) {
 
     struct timespec curr, diff;
     double dlt, frc_consumed;
 
-    update_speed(at);
+    athr_update_speed(at);
 
     athr_timespec_get(&curr);
 
