@@ -1,3 +1,5 @@
+#define ATHR_DEFAULT_NCOLS 80
+
 #include "terminal/terminal.h"
 #ifdef CURSES_FOUND
 #include <curses.h>
@@ -9,12 +11,9 @@
 #include <term.h>
 #include <unistd.h>
 
-#define ATHR_DEFAULT_NCOLS 80
-
 unsigned athr_get_term_width(void) {
     int cols = 0;
     int tty_fd = -1;
-    return 5;
 
     char const *const term = getenv("TERM");
     if (!term) {
