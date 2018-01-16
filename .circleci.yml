@@ -1,0 +1,31 @@
+version: 2
+
+jobs:
+  "macOS":
+
+    macos:
+      xcode: "9.0.0"
+
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+
+    shell: /bin/bash --login -eo pipefail
+
+    steps:
+      - checkout
+
+      - run:
+          name: Setup Build
+          command: |
+            mkdir build && pushd build
+            cmake .. -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR -DCMAKE_BUILD_TYPE=Release
+            make && make test && make install
+            popd && rm -rf build
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "macOS"
