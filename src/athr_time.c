@@ -5,9 +5,7 @@
 #ifndef TIME_UTC
 #define TIME_UTC 1
 #endif
-#endif
-
-#ifdef __unix__
+#elif __linux__
 #include <unistd.h>
 #define POSIX_SYSTEM
 #endif
