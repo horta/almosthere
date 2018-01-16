@@ -7,6 +7,11 @@
 #endif
 #endif
 
+#ifdef __unix__
+#include <unistd.h>
+#define POSIX_SYSTEM
+#endif
+
 void athr_sleep(long milliseconds) {
 #ifdef WIN32
     Sleep(milliseconds);
@@ -29,7 +34,7 @@ int athr_timespec_get(struct timespec *ts) {
 }
 
 void athr_timespec_diff(struct timespec *start, struct timespec *stop,
-                              struct timespec *diff) {
+                        struct timespec *diff) {
     if ((stop->tv_nsec - start->tv_nsec) < 0) {
         diff->tv_sec = stop->tv_sec - start->tv_sec - 1;
         diff->tv_nsec = stop->tv_nsec - start->tv_nsec + 1000000000;
