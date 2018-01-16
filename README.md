@@ -8,6 +8,18 @@ ATHR is a simple yet powerfull progress indicator library that works on Windows,
 
 ## Usage
 
+On Linux or macOS, install it via
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/limix/progressbar/master/install)
+```
+
+On Windows, install it via
+```powershell
+powershell -Command "(New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/horta/almosthere/master/install.bat', 'install.bat')" && install.bat
+```
+
+## Examples
+
 ```c
 /* example1.c */
 
