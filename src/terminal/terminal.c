@@ -9,6 +9,8 @@
 #include <term.h>
 #include <unistd.h>
 
+#define ATHR_DEFAULT_NCOLS 80
+
 unsigned athr_get_term_width(void) {
     int cols = 0;
     int tty_fd = -1;
@@ -16,13 +18,13 @@ unsigned athr_get_term_width(void) {
     char const *const term = getenv("TERM");
     if (!term) {
         fprintf(stderr, "TERM environment variable not set\n");
-        return 0;
+        return ATHR_DEFAULT_NCOLS;
     }
 
     char const *const cterm_path = ctermid(NULL);
     if (!cterm_path || !cterm_path[0]) {
         fprintf(stderr, "ctermid() failed\n");
-        return 0;
+        return ATHR_DEFAULT_NCOLS;
     }
 
     tty_fd = open(cterm_path, O_RDWR);
@@ -63,7 +65,7 @@ done:
     if (tty_fd != -1)
         close(tty_fd);
 
-    return cols < 0 ? 0 : cols;
+    return cols < 0 ? ATHR_DEFAULT_NCOLS : cols;
 }
 
 #else
@@ -73,14 +75,14 @@ unsigned athr_get_term_width(void) {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hdl == INVALID_HANDLE_VALUE) {
-        return 80;
+        return ATHR_DEFAULT_NCOLS;
     }
     if (GetConsoleScreenBufferInfo(hdl, &csbi) == 0) {
-        return 80;
+        return ATHR_DEFAULT_NCOLS;
     }
     return csbi.srWindow.Right - csbi.srWindow.Left + 1;
 }
 #else
-unsigned athr_get_term_width(void) { return 80; }
+unsigned athr_get_term_width(void) { return ATHR_DEFAULT_NCOLS; }
 #endif
 #endif
