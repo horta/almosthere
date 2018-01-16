@@ -36,7 +36,8 @@ int athr_thread_start(void *args);
 int athr_create_line(struct widget **line, const char *, enum ATHR_OPTS opts);
 void athr_update(struct athr *at);
 
-struct athr *athr_create(long volume, const char *desc, enum ATHR_OPTS opts) {
+struct athr *athr_create_base(long volume, const char *desc,
+                              enum ATHR_OPTS opts) {
 
     struct athr *at = NULL;
     int status;
@@ -69,6 +70,15 @@ err:
     if (at != NULL)
         free(at);
     return NULL;
+}
+
+struct athr *athr_create_var(athr_create_args in) {
+    long volume_out = in.volume ? in.volume : 0;
+    const char *desc_out = in.desc ? in.desc : NULL;
+    enum ATHR_OPTS opts_out =
+        in.opts ? in.opts : ATHR_BAR | ATHR_ETA | ATHR_PERC;
+
+    return athr_create_base(volume_out, desc_out, opts_out);
 }
 
 void athr_consume(struct athr *at, long consume) {
