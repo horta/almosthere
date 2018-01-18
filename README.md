@@ -127,7 +127,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 make && make test && make install
 ```
 
-## cmake
+## Project management through cmake
 
 If you use [cmake](https://cmake.org/) to manage your project, you can use [findATHR.cmake](findATHR.cmake) module to configure it with the `athr` library once it has been installed.
 
@@ -138,12 +138,41 @@ It consists in two functions
 void athr_consume(struct athr *at, long consume);
 void athr_finish(struct athr *at);
 ```
-and a variadic macro
+a variadic macro
 
 ```c
 athr_create(...)
 ```
 
+and three enum options
+
+```c
+enum ATHR_OPTS { ATHR_BAR = 1, ATHR_ETA = 2, ATHR_PERC = 4 };
+```
+
+The variadic macro is better explained by examples
+```c
+/* progress indicator with ATHR_BAR, ATHR_ETA, and ATHR_PERC widgets */
+struct athr *at0 = athr_create(100);
+
+/* progress indicator with all the widgets plus a description */
+struct athr *at1 = athr_create(100, "Description");
+
+/* progress indicator with ATHR_BAR widget plus a description */
+struct athr *at2 = athr_create(100, "Description", ATHR_BAR);
+
+/* progress indicator with ATHR_BAR and ATHR_ETA widgets plus a description */
+struct athr *at3 = athr_create(100, "Description", ATHR_BAR | ATHR_ETA);
+
+/* progress indicator with ATHR_PERC widget plus a description */
+struct athr *at4 = athr_create(100, .opts=ATHR_PERC, .desc="Description");
+
+/* progress indicator with ATHR_PERC widget only */
+struct athr *at5 = athr_create(100, .opts=ATHR_PERC);
+```
+
+The first parameter is mandatory and specify the total volume from which we will consume through `athr_consume` calls.
+A `athr_finish` call then ends the process.
 
 
 ## Authors
