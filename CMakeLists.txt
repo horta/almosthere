@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
 include(cmake/limix.cmake)
 limix_initialise()
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES C)
