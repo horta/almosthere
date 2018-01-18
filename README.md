@@ -18,7 +18,7 @@ Similarly, on Windows, open a command prompt and install it via
 powershell -Command "(New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/horta/almosthere/master/install.bat', 'install.bat')" && install.bat
 ```
 
-The above commands will download the latest library version, compile it to create static and dynamic library objects and copy the C/C++ header into the appropriate directory. (For a more manual approach, see the section [Manual installation](#Manual%20installation) in this document.)
+The above commands will download the latest library version, compile it to create static and dynamic library objects and copy the C/C++ header into the appropriate directory. (For a more manual approach, see the section [Manual installation](#manual-installation) in this document.)
 
 It is now ready to be linked into in your C/C++ project. Suppose you have a file `example.c` that makes use of this library. Using `gcc` compiler, you can do
 ```bash
