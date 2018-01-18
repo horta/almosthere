@@ -4,27 +4,27 @@
 
 Progress indicator C library.
 
-ATHR is a simple yet powerfull progress indicator library that works on Windows, Linux, and macOS.
+ATHR is a simple yet powerfull progress indicator library that works on Windows, Linux, and macOS. It is non-blocking as the progress update is done via a dedicated, lightweight thread, as to be impair the performance of the calling program.
 
-## Usage
+## Get started
 
-On Linux or macOS, install it via
+On Linux or macOS, open a terminal and install it via
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/limix/progressbar/master/install)
 ```
 
-On Windows, install it via
+Similarly, on Windows, open a command prompt and install it via
 ```powershell
 powershell -Command "(New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/horta/almosthere/master/install.bat', 'install.bat')" && install.bat
 ```
 
-Then link it in your C/C++ project. Suppose you have a file `example.c` that makes use of this library. Using `gcc` compiler, you can do
+The above commands will download the latest library version, compile it to create static and dynamic library objects and copy the C/C++ header into the appropriate directory. (For a more manual approach, see the section [Manual installation](#Manual%20installation) in this document.)
+
+It is now ready to be linked into in your C/C++ project. Suppose you have a file `example.c` that makes use of this library. Using `gcc` compiler, you can do
 ```bash
 gcc example.c -lathr -o example
 ```
 to produce a binary `example` linked against `athr` library.
-
-If you use [cmake](https://cmake.org/) to build your project, you can use [findATHR.cmake](findATHR.cmake) module to configure it with the `athr` library.
 
 ## Examples
 
@@ -112,7 +112,42 @@ int main() {
 ```
 ![Example 4](example4.gif)
 
+## Manual installation
+
+Clone and enter into the repository folder
+```bash
+git clone https://github.com/horta/almosthere
+cd almosthere
+```
+
+Create a `build` folder to not clutter the project and proceed with cmake steps
+```bash
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make && make test && make install
+```
+
+## cmake
+
+If you use [cmake](https://cmake.org/) to manage your project, you can use [findATHR.cmake](findATHR.cmake) module to configure it with the `athr` library once it has been installed.
+
+## Interface
+
+It consists in two functions
+```c
+void athr_consume(struct athr *at, long consume);
+void athr_finish(struct athr *at);
+```
+and a variadic macro
+
+```c
+athr_create(...)
+```
+
+
+
 ## Authors
+
 * [Danilo Horta](https://github.com/horta)
 
 ## Acknowledgements

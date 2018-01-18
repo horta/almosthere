@@ -51,7 +51,7 @@ tar xzf $FILE && cd $DIR
 mkdir build && cd build
 
 echo -n "[2/5] Configuring... "
-silent_run cmake ..
+silent_run cmake .. -DCMAKE_BUILD_TYPE=Release
 [ $? == 0 ] && echo "done." || failed
 
 echo -n "[3/5] Compiling... "
