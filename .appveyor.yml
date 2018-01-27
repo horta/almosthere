@@ -10,8 +10,16 @@ environment:
     matrix:
       - PRJ_GEN: "Visual Studio 12 2013 Win64"
         BDIR: msvc2013
+        TARGET: x64
       - PRJ_GEN: "Visual Studio 14 2015 Win64"
         BDIR: msvc2015
+        TARGET: x64
+      - PRJ_GEN: "Visual Studio 12 2013"
+        BDIR: msvc2013
+        TARGET: x86
+      - PRJ_GEN: "Visual Studio 14 2015"
+        BDIR: msvc2015
+        TARGET: x86
 
 build_script:
     - mkdir build.%BDIR% && cd build.%BDIR%
