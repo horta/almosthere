@@ -7,6 +7,7 @@ set /p VERSION=<VERSION.tmp && del VERSION.tmp
 set FILE=athr-%VERSION%.zip
 set DIR=almosthere-%VERSION%
 set URL=https://github.com/horta/almosthere/archive/%VERSION%.zip
+IF "%ARCH%"=="" set ARCH=x64
 
 echo [0/4] Library(athr==%VERSION%)
 
@@ -32,7 +33,7 @@ if %ERRORLEVEL% NEQ 0 (echo FAILED. && type %LOG_FILE% && exit /B 1) else (echo 
 cd %DIR% && mkdir build && cd build
 
 echo|set /p="[3/4] Configuring... "
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="%programfiles%\athr" >>%LOG_FILE% 2>&1
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=%ARCH% -DCMAKE_INSTALL_PREFIX="%programfiles%\athr" >>%LOG_FILE% 2>&1
 if %ERRORLEVEL% NEQ 0 (echo FAILED. && type %LOG_FILE% && exit /B 1) else (echo done.)
 
 echo|set /p="[4/4] Compiling and installing... "
