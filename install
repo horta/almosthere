@@ -3,7 +3,7 @@
 URL=https://raw.githubusercontent.com/horta/almosthere/master/VERSION
 VERSION=$(curl -s $URL)
 
-echo "[_/_] Library(athr==$VERSION)"
+echo "[0/5] Library(athr==$VERSION)"
 
 rm /tmp/athr.XXXX.log >/dev/null 2>&1 || true
 
