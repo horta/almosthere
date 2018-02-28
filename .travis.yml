@@ -24,7 +24,7 @@ script:
   fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then test -e $TRAVIS_BUILD_DIR/lib/libathr_static.a;
   fi
-- bash <(curl -fsSL https://raw.githubusercontent.com/limix/almosthere/master/install)
+- bash <(curl -fsSL https://raw.githubusercontent.com/horta/almosthere/master/install)
 after_success:
 - mkdir dist && pushd dist && cmake .. -DCMAKE_BUILD_TYPE=Release && popd
 - mv dist athr-`cat VERSION`
