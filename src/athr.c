@@ -1,3 +1,5 @@
+#define ATHR_API_EXPORTS
+
 #include "athr.h"
 #include "athr_time.h"
 #include "terminal/terminal.h"
@@ -72,7 +74,7 @@ err:
     return NULL;
 }
 
-struct athr *athr_create_var(athr_create_args in) {
+ATHR_API struct athr *athr_create_var(athr_create_args in) {
     long volume_out = in.volume ? in.volume : 0;
     const char *desc_out = in.desc ? in.desc : NULL;
     enum ATHR_OPTS opts_out =
@@ -81,7 +83,7 @@ struct athr *athr_create_var(athr_create_args in) {
     return athr_create_base(volume_out, desc_out, opts_out);
 }
 
-void athr_consume(struct athr *at, long consume) {
+ATHR_API void athr_consume(struct athr *at, long consume) {
     if (at->consumed + consume > at->volume) {
         fprintf(stderr, "Trying to consume more than the total volume.\n");
         at->consumed = at->volume;
@@ -89,7 +91,7 @@ void athr_consume(struct athr *at, long consume) {
         at->consumed += consume;
 }
 
-void athr_finish(struct athr *at) {
+ATHR_API void athr_finish(struct athr *at) {
 
     at->stop_thread = 1;
     thrd_join(at->thr, NULL);

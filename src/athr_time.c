@@ -1,3 +1,6 @@
+#define ATHR_API_EXPORTS
+
+#include "athr.h"
 #include "athr_time.h"
 #include "thread/thread.h"
 
@@ -10,7 +13,7 @@
 #define POSIX_SYSTEM
 #endif
 
-void athr_sleep(long milliseconds) {
+ATHR_API void athr_sleep(long milliseconds) {
 #ifdef WIN32
     Sleep(milliseconds);
 #elif _POSIX_C_SOURCE >= 199309L
