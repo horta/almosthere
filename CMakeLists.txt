@@ -5,6 +5,7 @@ project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES C)
 limix_config()
 
 set(CMAKE_C_STANDARD 11)
+add_definitions(-D_XOPEN_SOURCE=500 -D_POSIX_C_SOURCE=200112L)
 
 set(LIBS "")
 
