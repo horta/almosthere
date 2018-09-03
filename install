@@ -40,6 +40,13 @@ FILE=athr-$VERSION.tar.gz
 DIR=almosthere-$VERSION
 URL=https://github.com/horta/almosthere/archive/$VERSION.tar.gz
 
+if [[ -z "${ALMOSTHERE_INSTALL_PREFIX}" ]]; then
+    install_prefix_opt=""
+else
+    echo "Using environment variable ALMOSTHERE_INSTALL_PREFIX."
+    install_prefix_opt="-DCMAKE_INSTALL_PREFIX=${ALMOSTHERE_INSTALL_PREFIX}"
+fi
+
 silent_trun rm $FILE
 silent_trun rm -rf $DIR
 
@@ -51,7 +58,7 @@ tar xzf $FILE && cd $DIR
 mkdir build && cd build
 
 echo -n "[2/5] Configuring... "
-silent_run cmake .. -DCMAKE_BUILD_TYPE=Release
+silent_run cmake .. "${install_prefix_opt}" -DCMAKE_BUILD_TYPE=Release
 [ $? == 0 ] && echo "done." || failed
 
 echo -n "[3/5] Compiling... "

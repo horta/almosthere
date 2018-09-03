@@ -15,6 +15,13 @@ set DIR=almosthere-%VERSION%
 set URL=https://github.com/horta/almosthere/archive/%VERSION%.zip
 IF "%ARCH%"=="" set ARCH=x64
 
+IF "%ALMOSTHERE_INSTALL_PREFIX%"=="" (
+    set install_prefix_opt=-DCMAKE_INSTALL_PREFIX="%programfiles%\athr"
+) else (
+    echo Using environment variable ALMOSTHERE_INSTALL_PREFIX.
+    set install_prefix_opt=-DCMAKE_INSTALL_PREFIX=%ALMOSTHERE_INSTALL_PREFIX%
+)
+
 echo [0/4] Library(athr==%VERSION%)
 
 :: Cleaning up previous mess
@@ -35,7 +42,7 @@ if %ERRORLEVEL% NEQ 0 (echo FAILED. && type %LOG_FILE% && exit /B 1) else (echo 
 cd %DIR% && mkdir build && cd build
 
 echo|set /p="[3/4] Configuring... "
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=%ARCH% -DCMAKE_INSTALL_PREFIX="%programfiles%\athr" >>%LOG_FILE% 2>&1
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=%ARCH% %install_prefix_opt% >>%LOG_FILE% 2>&1
 if %ERRORLEVEL% NEQ 0 (echo FAILED. && type %LOG_FILE% && exit /B 1) else (echo done.)
 
 echo|set /p="[4/4] Compiling and installing... "
