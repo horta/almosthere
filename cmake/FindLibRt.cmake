@@ -33,7 +33,7 @@ pkg_check_modules(PC_RT QUIET rt)
 execute_process(COMMAND pkg-config --cflags rt --silence-errors
   COMMAND cut -d I -f 2
   OUTPUT_VARIABLE RT_PKG_CONFIG_INCLUDE_DIRS)
-set(RT_PKG_CONFIG_INCLUDE_DIRS "${RT_PKG_CONFIG_INCLUDE_DIRS}" CACHE STRING "Compiler flags for RT library"
+set(RT_PKG_CONFIG_INCLUDE_DIRS "${RT_PKG_CONFIG_INCLUDE_DIRS}" CACHE STRING "Compiler flags for RT library")
 
 find_path(LIBRT_INCLUDE_DIRS
   NAMES time.h
