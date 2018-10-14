@@ -26,11 +26,31 @@
 # A user may set ``LIBRT_ROOT`` to a realtime installation root to tell this
 # module where to look.
 
+find_package(PkgConfig)
+pkg_check_modules(PC_RT QUIET rt)
+
+# Use pkg-config to get hints about paths
+execute_process(COMMAND pkg-config --cflags rt --silence-errors
+  COMMAND cut -d I -f 2
+  OUTPUT_VARIABLE RT_PKG_CONFIG_INCLUDE_DIRS)
+set(RT_PKG_CONFIG_INCLUDE_DIRS "${RT_PKG_CONFIG_INCLUDE_DIRS}" CACHE STRING "Compiler flags for RT library"
+
 find_path(LIBRT_INCLUDE_DIRS
   NAMES time.h
-  PATHS ${LIBRT_ROOT}/include/
+  PATHS ${LIBRT_ROOT}/include
+  ${RT_PKG_CONFIG_INCLUDE_DIRS}
+  /usr/local/include /usr/include
+  ${CMAKE_EXTRA_INCLUDES}
 )
-find_library(LIBRT_LIBRARIES rt)
+
+find_library(LIBRT_LIBRARIES
+  NAMES rt
+  PATHS ${LIBRT_ROOT}/lib
+  ${PC_RT_LIBDIR} ${PC_RT_LIBRARY_DIRS}
+  /usr/local/lib /usr/lib /lib
+  ${CMAKE_EXTRA_LIBRARIES}
+)
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LibRt DEFAULT_MSG LIBRT_LIBRARIES LIBRT_INCLUDE_DIRS)
 mark_as_advanced(LIBRT_INCLUDE_DIRS LIBRT_LIBRARIES)
