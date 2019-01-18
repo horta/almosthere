@@ -1,6 +1,15 @@
 #ifndef ATHR_H_
 #define ATHR_H_
 
+/** Major athr version. */
+#define BGEN_VERSION_MAJOR 1
+/** Minor athr version. */
+#define BGEN_VERSION_MINOR 0
+/** Minor athr version. */
+#define BGEN_VERSION_PATCH 2
+/** Bgen version. */
+#define BGEN_VERSION "1.0.2"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

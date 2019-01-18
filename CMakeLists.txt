@@ -21,8 +21,7 @@ if (THREADS_FOUND)
   list(APPEND LIBS ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
-find_package(LibRt)
-if (LIBRT_FOUND)
+if (UNIX AND NOT APPLE)
   list(APPEND LIBS ${LIBRT_LIBRARIES})
 endif()
 
