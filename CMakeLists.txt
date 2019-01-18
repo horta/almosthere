@@ -22,7 +22,7 @@ if (THREADS_FOUND)
 endif()
 
 if (UNIX AND NOT APPLE)
-  list(APPEND LIBS ${LIBRT_LIBRARIES})
+  list(APPEND LIBS rt)
 endif()
 
 limix_process_default_dirs()

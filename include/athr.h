@@ -6,9 +6,9 @@
 /** Minor athr version. */
 #define BGEN_VERSION_MINOR 0
 /** Minor athr version. */
-#define BGEN_VERSION_PATCH 2
+#define BGEN_VERSION_PATCH 3
 /** Bgen version. */
-#define BGEN_VERSION "1.0.2"
+#define BGEN_VERSION "1.0.3"
 
 #ifdef __cplusplus
 extern "C" {
