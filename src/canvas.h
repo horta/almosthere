@@ -1,7 +1,8 @@
 #ifndef ATHR_CANVAS_H_
 #define ATHR_CANVAS_H_
 
-struct canvas {
+struct canvas
+{
     char *buff;
     int length;
     int min_length;

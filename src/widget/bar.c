@@ -1,9 +1,10 @@
-#include "terminal/terminal.h"
 #include "widget/bar.h"
+#include "terminal/terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-struct bar_data {
+struct bar_data
+{
     double consumed;
 };
 
@@ -11,7 +12,8 @@ void widget_bar_update(struct widget *, double, double, double);
 int widget_bar_get_min_length(struct widget *);
 int widget_bar_get_max_length(struct widget *);
 
-struct widget *widget_bar_create(void) {
+struct widget *widget_bar_create(void)
+{
 
     struct bar_data *d = malloc(sizeof(struct bar_data));
     struct widget *w = malloc(sizeof(struct widget));
@@ -24,12 +26,14 @@ struct widget *widget_bar_create(void) {
     return w;
 }
 
-void widget_bar_finish(struct widget *w) {
+void widget_bar_finish(struct widget *w)
+{
     free(w->data);
     free(w);
 }
 
-void bar_draw(struct bar_data *data, struct canvas *canvas) {
+void bar_draw(struct bar_data *data, struct canvas *canvas)
+{
 
     int i;
     for (i = 1; i < (int)(data->consumed * (canvas->length - 1)); ++i) {
@@ -39,14 +43,12 @@ void bar_draw(struct bar_data *data, struct canvas *canvas) {
     canvas->buff[canvas->length - 1] = '|';
 }
 
-void widget_bar_update(struct widget *w, double consumed, double speed,
-                       double dlt) {
+void widget_bar_update(struct widget *w, double consumed, double speed, double dlt)
+{
     struct bar_data *d = w->data;
     d->consumed = consumed;
     bar_draw(d, &w->canvas);
 }
 
 int widget_bar_get_min_length(struct widget *widget) { return 3; }
-int widget_bar_get_max_length(struct widget *widget) {
-    return ATHR_MAX_STR_LEN;
-}
+int widget_bar_get_max_length(struct widget *widget) { return ATHR_MAX_STR_LEN; }

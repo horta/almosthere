@@ -9,8 +9,8 @@
 #define snprintf c99_snprintf
 #define vsnprintf c99_vsnprintf
 
-__inline int c99_vsnprintf(char *outBuf, size_t size, const char *format,
-                           va_list ap) {
+__inline int c99_vsnprintf(char *outBuf, size_t size, const char *format, va_list ap)
+{
     int count = -1;
 
     if (size != 0)
@@ -21,7 +21,8 @@ __inline int c99_vsnprintf(char *outBuf, size_t size, const char *format,
     return count;
 }
 
-__inline int c99_snprintf(char *outBuf, size_t size, const char *format, ...) {
+__inline int c99_snprintf(char *outBuf, size_t size, const char *format, ...)
+{
     int count;
     va_list ap;
 

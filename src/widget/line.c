@@ -1,10 +1,11 @@
+#include "widget/line.h"
 #include "canvas.h"
 #include "terminal/terminal.h"
-#include "widget/line.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-struct line_data {
+struct line_data
+{
     int nwidgets;
     struct widget **widget;
 };
@@ -16,7 +17,8 @@ int widget_line_get_max_length(struct widget *);
 int check_if_fit(int nwidgets, struct widget **widget);
 int widget_line_dist_len(int nwidgets, struct widget **widget, int length);
 
-struct widget *widget_line_create(int nwidgets, struct widget **widget) {
+struct widget *widget_line_create(int nwidgets, struct widget **widget)
+{
     struct line_data *l;
     int i;
     struct widget *w;
@@ -48,7 +50,8 @@ struct widget *widget_line_create(int nwidgets, struct widget **widget) {
 }
 
 void widget_line_update(struct widget *widget, double consumed, double speed,
-                        double dlt) {
+                        double dlt)
+{
     struct line_data *l = widget->data;
     int i;
     int base = 0;
@@ -67,7 +70,8 @@ void widget_line_update(struct widget *widget, double consumed, double speed,
     canvas_draw(&widget->canvas);
 }
 
-void widget_line_finish(struct widget *widget) {
+void widget_line_finish(struct widget *widget)
+{
     struct line_data *d = widget->data;
     int i;
 
@@ -81,7 +85,8 @@ void widget_line_finish(struct widget *widget) {
     free(widget);
 }
 
-int widget_line_dist_len(int nwidgets, struct widget **widget, int length) {
+int widget_line_dist_len(int nwidgets, struct widget **widget, int length)
+{
 
     int i = 0;
     int j = 0;
@@ -139,7 +144,8 @@ int widget_line_dist_len(int nwidgets, struct widget **widget, int length) {
     return length;
 }
 
-int widget_line_get_min_length(struct widget *widget) {
+int widget_line_get_min_length(struct widget *widget)
+{
 
     struct line_data *l = (struct line_data *)widget->data;
     int s = 1;
@@ -148,11 +154,10 @@ int widget_line_get_min_length(struct widget *widget) {
         s += l->widget[i]->get_min_length(l->widget[i]);
     return s;
 }
-int widget_line_get_max_length(struct widget *widget) {
-    return ATHR_MAX_STR_LEN;
-}
+int widget_line_get_max_length(struct widget *widget) { return ATHR_MAX_STR_LEN; }
 
-int check_if_fit(int nwidgets, struct widget **widget) {
+int check_if_fit(int nwidgets, struct widget **widget)
+{
     int i;
     int len = 0;
     for (i = 0; i < nwidgets; ++i) {

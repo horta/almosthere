@@ -1,5 +1,5 @@
-#include "snprintf.h"
 #include "widget/eta.h"
+#include "snprintf.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +14,8 @@
 #define MONTH_SEC 2592000
 #define YEAR_SEC 31104000
 
-struct eta_data {
+struct eta_data
+{
     char str[ETA_SIZE + 1];
     double consumed;
 };
@@ -24,7 +25,8 @@ void widget_eta_finish(struct widget *);
 int widget_eta_get_min_length(struct widget *);
 int widget_eta_get_max_length(struct widget *);
 
-struct widget *widget_eta_create(void) {
+struct widget *widget_eta_create(void)
+{
 
     struct eta_data *d = malloc(sizeof(struct eta_data));
     struct widget *w = malloc(sizeof(struct widget));
@@ -38,13 +40,14 @@ struct widget *widget_eta_create(void) {
     return w;
 }
 
-void widget_eta_finish(struct widget *w) {
+void widget_eta_finish(struct widget *w)
+{
     free(w->data);
     free(w);
 }
 
-void widget_eta_update(struct widget *w, double consumed, double speed,
-                       double dlt) {
+void widget_eta_update(struct widget *w, double consumed, double speed, double dlt)
+{
     struct eta_data *d = w->data;
     int i;
     double eta_sec;
@@ -75,8 +78,7 @@ void widget_eta_update(struct widget *w, double consumed, double speed,
             snprintf(d->str, ETA_SIZE + 1, "%*d mins", ETA_SIZE - 5,
                      (int)(eta_sec / MIN_SEC));
         else
-            snprintf(d->str, ETA_SIZE + 1, "%*d secs", ETA_SIZE - 5,
-                     (int)eta_sec);
+            snprintf(d->str, ETA_SIZE + 1, "%*d secs", ETA_SIZE - 5, (int)eta_sec);
     }
 
     for (i = 0; i < ETA_SIZE; ++i) {

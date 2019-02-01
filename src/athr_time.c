@@ -1,7 +1,7 @@
 #define ATHR_API_EXPORTS
 
-#include "athr.h"
 #include "athr_time.h"
+#include "athr.h"
 #include "thread/thread.h"
 
 #ifdef __APPLE__
@@ -13,7 +13,8 @@
 #define POSIX_SYSTEM
 #endif
 
-ATHR_API void athr_sleep(long milliseconds) {
+ATHR_API void athr_sleep(long milliseconds)
+{
 #ifdef WIN32
     Sleep(milliseconds);
 #elif _POSIX_C_SOURCE >= 199309L
@@ -26,7 +27,8 @@ ATHR_API void athr_sleep(long milliseconds) {
 #endif
 }
 
-int athr_timespec_get(struct timespec *ts) {
+int athr_timespec_get(struct timespec *ts)
+{
 #ifdef POSIX_SYSTEM
     return clock_gettime(CLOCK_REALTIME, ts);
 #else
@@ -35,7 +37,8 @@ int athr_timespec_get(struct timespec *ts) {
 }
 
 void athr_timespec_diff(struct timespec *start, struct timespec *stop,
-                        struct timespec *diff) {
+                        struct timespec *diff)
+{
     if ((stop->tv_nsec - start->tv_nsec) < 0) {
         diff->tv_sec = stop->tv_sec - start->tv_sec - 1;
         diff->tv_nsec = stop->tv_nsec - start->tv_nsec + 1000000000;
@@ -47,11 +50,13 @@ void athr_timespec_diff(struct timespec *start, struct timespec *stop,
     return;
 }
 
-double athr_timespec_sec(struct timespec *ts) {
+double athr_timespec_sec(struct timespec *ts)
+{
     return ts->tv_sec + ts->tv_nsec / 1000.0 / 1000.0 / 1000.0;
 }
 
-void athr_sec_timespec(double seconds, struct timespec *ts) {
+void athr_sec_timespec(double seconds, struct timespec *ts)
+{
 
     int isec = (int)seconds;
     double remainder;
@@ -60,7 +65,8 @@ void athr_sec_timespec(double seconds, struct timespec *ts) {
     ts->tv_nsec = (long)(remainder * 1000 * 1000 * 1000);
 }
 
-void athr_thread_sleep(double seconds) {
+void athr_thread_sleep(double seconds)
+{
 
     struct timespec ts;
     athr_sec_timespec(seconds, &ts);
