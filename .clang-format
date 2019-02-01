@@ -37,14 +37,14 @@ BraceWrapping:
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Mozilla
 BreakBeforeInheritanceComma: false
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
 BreakConstructorInitializers: BeforeColon
 BreakAfterJavaFieldAnnotations: false
 BreakStringLiterals: true
-ColumnLimit:     80
+ColumnLimit:     88
 CommentPragmas:  '^ IWYU pragma:'
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
@@ -90,9 +90,10 @@ PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Right
 RawStringFormats:
-  - Delimiter:       pb
-    Language:        TextProto
-    BasedOnStyle:    google
+  - Language: TextProto
+    Delimiters:
+      - 'pb'
+    BasedOnStyle: google
 ReflowComments:  true
 SortIncludes:    true
 SortUsingDeclarations: true

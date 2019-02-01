@@ -11,27 +11,34 @@
 #include <term.h>
 #include <unistd.h>
 
-unsigned athr_get_term_width(void) {
-    int cols = 0;
+unsigned athr_get_term_width(void)
+{
+    static int failed_before = 0;
+    int cols = -1;
     int tty_fd = -1;
 
     char const *const term = getenv("TERM");
     if (!term) {
-        fprintf(stderr, "TERM environment variable not set\n");
-        return ATHR_DEFAULT_NCOLS;
+        if (!failed_before)
+            fprintf(stderr, "TERM environment variable not set\n");
+        failed_before = 1;
+        goto done;
     }
 
     char const *const cterm_path = ctermid(NULL);
     if (!cterm_path || !cterm_path[0]) {
-        fprintf(stderr, "ctermid() failed\n");
+        if (!failed_before)
+            fprintf(stderr, "ctermid() failed\n");
         return ATHR_DEFAULT_NCOLS;
     }
 
     tty_fd = open(cterm_path, O_RDWR);
     if (tty_fd == -1) {
-        fprintf(stderr, "open(\"%s\") failed (%d): %s\n", cterm_path, errno,
-                strerror(errno));
-        return 0;
+        if (!failed_before)
+            fprintf(stderr, "open(\"%s\") failed (%d): %s\n", cterm_path, errno,
+                    strerror(errno));
+        failed_before = 1;
+        goto done;
     }
 
     int setupterm_err;
@@ -39,24 +46,32 @@ unsigned athr_get_term_width(void) {
     if (setupterm((char *)term, tty_fd, &setupterm_err) == ERR) {
         switch (setupterm_err) {
         case -1:
-            fprintf(stderr,
-                    "setupterm() failed: terminfo database not found\n");
+            if (!failed_before)
+                fprintf(stderr, "setupterm() failed: terminfo database not found\n");
+            failed_before = 1;
             goto done;
         case 0:
-            fprintf(stderr,
-                    "setupterm() failed: TERM=%s not found in database or too "
-                    "generic\n",
-                    term);
+            if (!failed_before)
+                fprintf(stderr,
+                        "setupterm() failed: TERM=%s not found in database or too "
+                        "generic\n",
+                        term);
+            failed_before = 1;
             goto done;
         case 1:
-            fprintf(stderr, "setupterm() failed: terminal is hardcopy\n");
+            if (!failed_before)
+                fprintf(stderr, "setupterm() failed: terminal is hardcopy\n");
+            failed_before = 1;
             goto done;
         } // err
     }
 
     cols = tigetnum((char *)"cols");
-    if (cols < 0)
-        fprintf(stderr, "tigetnum() failed (%d)\n", cols);
+    if (cols < 0) {
+        if (!failed_before)
+            fprintf(stderr, "tigetnum() failed (%d)\n", cols);
+        failed_before = 1;
+    }
 
     struct term *termp = set_curterm(NULL);
     (void)del_curterm(termp);
@@ -71,7 +86,8 @@ done:
 #else
 #ifdef WIN32
 #include <windows.h>
-unsigned athr_get_term_width(void) {
+unsigned athr_get_term_width(void)
+{
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hdl == INVALID_HANDLE_VALUE) {

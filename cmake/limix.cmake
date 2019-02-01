@@ -1,4 +1,4 @@
-# limix cmake module (1.0.6)
+# limix cmake module (1.1.1)
 #
 # Common configuration and handy functions for limix projects.
 #
@@ -62,6 +62,8 @@ macro(limix_config)
   endif()
 
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+
+  cmake_policy(SET CMP0075 NEW)
 endmacro(limix_config)
 
 macro(limix_process_default_dirs)
@@ -70,7 +72,7 @@ macro(limix_process_default_dirs)
   add_subdirectory(include)
 
   define_sources(src SOURCES)
-  define_public_headers(include HEADERS)
+  define_public_headers(include HEADERS PRIVATE_HEADERS)
 endmacro(limix_process_default_dirs)
 
 macro(limix_initialise)
@@ -95,7 +97,8 @@ function(easy_shared_install TARGET_NAME)
           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+          PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+          PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${TARGET_NAME})
 endfunction(easy_shared_install)
 
 function(easy_static_install TARGET_NAME)
@@ -127,7 +130,7 @@ function(limix_require_cmath_library)
   endif()
 endfunction()
 
-function(add_library_type TYPE NAME VERSION SOURCES PUBLIC_HEADERS LIBS)
+function(add_library_type TYPE NAME VERSION SOURCES PUBLIC_HEADERS PRIVATE_HEADERS LIBS)
   if(TYPE MATCHES "STATIC")
     set(NAME "${NAME}_static")
   endif()
@@ -136,11 +139,12 @@ function(add_library_type TYPE NAME VERSION SOURCES PUBLIC_HEADERS LIBS)
   easy_set_target_property(${NAME} VERSION ${VERSION})
   if(TYPE MATCHES "SHARED")
     easy_set_target_property(${NAME} PUBLIC_HEADER "${PUBLIC_HEADERS}")
-    
+    easy_set_target_property(${NAME} PRIVATE_HEADER "${PRIVATE_HEADERS}")
+
     string(REPLACE "." ";" VERSION_LIST ${VERSION})
     list(GET VERSION_LIST 0 VERSION_MAJOR)
     easy_set_target_property(${NAME} SOVERSION ${VERSION_MAJOR})
-    
+
     easy_shared_install(${NAME})
   else()
     easy_static_install(${NAME})
@@ -149,9 +153,11 @@ function(add_library_type TYPE NAME VERSION SOURCES PUBLIC_HEADERS LIBS)
   target_link_libraries(${NAME} "${LIBS}")
 endfunction(add_library_type)
 
-function(limix_add_library NAME VERSION SRCS HDRS LIBS)
-  add_library_type("SHARED" ${NAME} ${VERSION} "${SRCS}" "${HDRS}" "${LIBS}")
-  add_library_type("STATIC" ${NAME} ${VERSION} "${SRCS}" "${HDRS}" "${LIBS}")
+function(limix_add_library NAME VERSION SRCS HDRS PRIV_HDRS LIBS)
+  add_library_type("SHARED" ${NAME} ${VERSION} "${SRCS}" "${HDRS}" "${PRIV_HDRS}"
+      "${LIBS}")
+  add_library_type("STATIC" ${NAME} ${VERSION} "${SRCS}" "${HDRS}" "${PRIV_HDRS}"
+      "${LIBS}")
 endfunction(limix_add_library)
 
 macro(limix_add_test NAME LIBRARY SOURCES)

@@ -28,6 +28,6 @@ endif()
 limix_process_default_dirs()
 
 limix_add_library(${PROJECT_NAME} ${PROJECT_VERSION}
-  "${SOURCES}" "${HEADERS}" "${LIBS}")
+  "${SOURCES}" "${HEADERS}" "" "${LIBS}")
 
 add_subdirectory(test)
