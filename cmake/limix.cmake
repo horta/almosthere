@@ -63,7 +63,9 @@ macro(limix_config)
 
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-  cmake_policy(SET CMP0075 NEW)
+  if(POLICY CMP0075)
+    cmake_policy(SET CMP0075 NEW)
+  endif()
 endmacro(limix_config)
 
 macro(limix_process_default_dirs)
