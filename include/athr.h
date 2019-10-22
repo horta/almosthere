@@ -6,9 +6,9 @@
 /** Minor athr version. */
 #define ATHR_VERSION_MINOR 0
 /** Minor athr version. */
-#define ATHR_VERSION_PATCH 4
+#define ATHR_VERSION_PATCH 5
 /** Athr version. */
-#define ATHR_VERSION "1.0.4"
+#define ATHR_VERSION "1.0.5"
 
 #ifdef __cplusplus
 extern "C"
