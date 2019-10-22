@@ -47,7 +47,7 @@ int main() {
     return 0;
 }
 ```
-![Example 1](example1.gif)
+![Example 1](figures/example1.gif)
 
 ```c
 /* example2.c */
@@ -68,7 +68,7 @@ int main() {
     return 0;
 }
 ```
-![Example 2](example2.gif)
+![Example 2](figures/example2.gif)
 
 ```c
 /* example3.c */
@@ -89,7 +89,7 @@ int main() {
     return 0;
 }
 ```
-![Example 3](example3.gif)
+![Example 3](figures/example3.gif)
 
 ```c
 /* example4.c */
@@ -110,7 +110,7 @@ int main() {
     return 0;
 }
 ```
-![Example 4](example4.gif)
+![Example 4](figures/example4.gif)
 
 ## Manual installation
 
