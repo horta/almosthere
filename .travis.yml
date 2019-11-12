@@ -9,12 +9,16 @@ jobs:
       env:
         - GENERATOR="Unix Makefiles"
         - TARGET_TEST=test
+    # - os: windows
+    #   env:
+    #     - GENERATOR="Visual Studio 15 2017 Win64"
+    #     - TARGET_TEST=RUN_TESTS
     - os: windows
       env:
         - GENERATOR="Visual Studio 15 2017 Win64"
         - TARGET_TEST=RUN_TESTS
-      # before_install:
-      #   - choco install ninja --no-progress -y
+      before_install:
+        - choco install ninja --no-progress -y
 script:
   - cmake --version
   - cmake --help

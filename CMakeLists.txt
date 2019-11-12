@@ -52,8 +52,8 @@ set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(athr PRIVATE c_std_11)
 target_compile_definitions(athr PRIVATE ATHR_API_EXPORTS)
 target_compile_options(athr PRIVATE
-    $<$<BOOL:${WIN32}>:/W3>
-    $<$<NOT:$<BOOL:${WIN32}>>:-Wall -Wextra -pedantic -Wstrict-prototypes
+    $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
+    $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes
         -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
 )
 
