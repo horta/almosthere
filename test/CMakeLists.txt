@@ -1,7 +1,8 @@
 function(athr_add_test name)
     add_executable(test_${name} src/${name}.c)
     target_link_libraries(test_${name} PRIVATE ATHR::athr)
-    add_test(NAME ${name} COMMAND test_${name})
+    add_test(NAME ${name} COMMAND test_${name} -E environment)
+    set_tests_properties(${name} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR};$ENV{PATH}" )
 endfunction()
 
 athr_add_test(example1)
