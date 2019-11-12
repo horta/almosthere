@@ -1,6 +1,7 @@
 os:
   - linux
   - osx
+  - windows
 dist: trusty
 sudo: required
 language: c
@@ -18,10 +19,13 @@ script:
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-config.cmake
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets-release.cmake
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets.cmake
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    test -e $TRAVIS_BUILD_DIR/lib/libathr.so;
-    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    test -e $TRAVIS_BUILD_DIR/lib/libathr.dylib
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]
+    then
+      test -e $TRAVIS_BUILD_DIR/lib/libathr.so
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]
+    then
+      test -e $TRAVIS_BUILD_DIR/lib/libathr.dylib
     fi
   - cd $TRAVIS_BUILD_DIR
   - git clean -xdf
