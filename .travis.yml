@@ -6,9 +6,9 @@ jobs:
     - os: osx
       env: GENERATOR="Unix Makefiles"
     - os: windows
-      env: GENERATOR=Ninja
-      before_install:
-        - choco install ninja --no-progress -y
+      env: GENERATOR="Visual Studio 15 2017 Win64"
+      # before_install:
+      #   - choco install ninja --no-progress -y
 script:
   - cmake --version
   - cmake --help
