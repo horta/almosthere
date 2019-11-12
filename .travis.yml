@@ -6,7 +6,11 @@ jobs:
     - os: osx
       env: GENERATOR="Unix Makefiles"
     - os: windows
+      env: GENERATOR="Visual Studio 16 2019"
+    - os: windows
       env: GENERATOR="Visual Studio 15 2017 Win64"
+    - os: windows
+      env: GENERATOR="Visual Studio 14 2015 Win64"
     - os: windows
       env: GENERATOR=Ninja
       before_install:
@@ -22,14 +26,6 @@ script:
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-config.cmake
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets-release.cmake
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets.cmake
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "linux" ]]
-    then
-      test -e $TRAVIS_BUILD_DIR/lib/libathr.so
-    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]
-    then
-      test -e $TRAVIS_BUILD_DIR/lib/libathr.dylib
-    fi
   - cd $TRAVIS_BUILD_DIR
   - git clean -xdf
 notifications:

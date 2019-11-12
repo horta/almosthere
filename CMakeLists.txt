@@ -92,7 +92,6 @@ install(TARGETS athr EXPORT athr-targets
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include
 )
-# install(DIRECTORY include/ DESTINATION include)
 install(EXPORT athr-targets
     FILE athr-targets.cmake
     NAMESPACE ATHR::
