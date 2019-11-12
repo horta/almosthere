@@ -6,9 +6,8 @@ function(athr_add_test name)
     # Ugly hacky to make the tests work on Windows.
     file(TO_CMAKE_PATH "$ENV{PATH}" PATH)
     list(APPEND PATH $<TARGET_FILE_DIR:ATHR::athr>)
-    # string(REPLACE ";" "\\;" PATH "${PATH}")
-    set_tests_properties(${name} PROPERTIES ENVIRONMENT PATH=${PATH} )
-    # set_tests_properties(${name} PROPERTIES ENVIRONMENT "PATH=${PATH}" )
+    string(REPLACE ";" "\\;" PATH "${PATH}")
+    set_tests_properties(${name} PROPERTIES ENVIRONMENT "PATH=${PATH}" )
 endfunction()
 
 athr_add_test(example1)
