@@ -65,9 +65,11 @@ target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
 # the 2001 edition of the POSIX standard (IEEE Standard 1003.1-2001) is made available.
 target_compile_definitions(athr PRIVATE _POSIX_C_SOURCE=200112L)
 
-target_compile_definitions(athr PRIVATE $<$<BOOL:${CURSES_FOUND}>:CURSES_FOUND>)
-target_include_directories(athr PRIVATE $<$<BOOL:${CURSES_FOUND}>:${CURSES_INCLUDE_DIRS}>)
-target_link_libraries(athr PUBLIC $<$<BOOL:${CURSES_FOUND}>:${CURSES_LIBRARIES}>)
+if (CURSES_FOUND)
+    target_compile_definitions(athr PRIVATE CURSES_FOUND)
+    target_include_directories(athr PRIVATE ${CURSES_INCLUDE_DIRS})
+    target_link_libraries(athr PUBLIC ${CURSES_LIBRARIES})
+endif()
 
 target_link_libraries(athr PUBLIC Threads::Threads)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${CMAKE_USE_PTHREADS_INIT}>:USE_PTHREADS>)
