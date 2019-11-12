@@ -2,14 +2,14 @@
 #include "athr.h"
 #include "thread/thread.h"
 
-#ifdef __APPLE__
-#ifndef TIME_UTC
-#define TIME_UTC 1
-#endif
-#elif __linux__
-#include <unistd.h>
-#define POSIX_SYSTEM
-#endif
+/* #ifdef __APPLE__ */
+/* #ifndef TIME_UTC */
+/* #define TIME_UTC 1 */
+/* #endif */
+/* #elif __linux__ */
+/* #include <unistd.h> */
+/* #define POSIX_SYSTEM */
+/* #endif */
 
 static void sec_timespec(double seconds, struct timespec* ts);
 
@@ -21,10 +21,15 @@ double athr_timespec_sec(struct timespec* ts)
 
 int athr_timespec_get(struct timespec* ts)
 {
-#ifdef POSIX_SYSTEM
+#if HAVE_TIMESPEC_GET
+#ifndef TIME_UTC
+#define TIME_UTC 1
+#endif
+    return timespec_get(ts, TIME_UTC);
+#elif HAVE_CLOCK_GETTIME
     return clock_gettime(CLOCK_REALTIME, ts);
 #else
-    return timespec_get(ts, TIME_UTC);
+    return -1;
 #endif
 }
 

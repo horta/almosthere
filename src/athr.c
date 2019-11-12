@@ -76,7 +76,7 @@ ATHR_API void athr_finish(struct athr* at)
 ATHR_API void athr_sleep(long milliseconds)
 {
 #ifdef WIN32
-    Sleep(milliseconds);
+    Sleep((DWORD)milliseconds);
 #elif _POSIX_C_SOURCE >= 199309L
     struct timespec ts;
     ts.tv_sec = milliseconds / 1000;

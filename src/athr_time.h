@@ -9,8 +9,6 @@
 #include <unistd.h>
 #endif
 
-#include "thread/thread.h"
-
 double athr_timespec_sec(struct timespec* ts);
 int    athr_timespec_get(struct timespec* ts);
 void   athr_thread_sleep(double seconds);
