@@ -54,8 +54,7 @@ target_compile_definitions(athr PRIVATE ATHR_API_EXPORTS)
 target_compile_options(athr PRIVATE
     $<$<BOOL:${WIN32}>:/W4 /WX>
     $<$<NOT:$<BOOL:${WIN32}>>:-Wall -Wextra -pedantic -Wstrict-prototypes
-        -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter
-        -Wno-empty-translation-unit>
+        -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
 )
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
@@ -97,26 +96,3 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
 
 enable_testing()
 add_subdirectory(test)
-
-# cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
-# include(cmake/limix.cmake)
-# limix_initialise()
-# project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES C)
-# limix_config()
-
-
-# find_package(Threads)
-# if (THREADS_FOUND)
-#   list(APPEND LIBS ${CMAKE_THREAD_LIBS_INIT})
-# endif()
-
-# if (UNIX AND NOT APPLE)
-#   list(APPEND LIBS rt)
-# endif()
-
-# limix_process_default_dirs()
-
-# limix_add_library(${PROJECT_NAME} ${PROJECT_VERSION}
-#   "${SOURCES}" "${HEADERS}" "" "${LIBS}")
-
-# add_subdirectory(test)

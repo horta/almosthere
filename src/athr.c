@@ -180,7 +180,7 @@ static void update(struct athr* at)
     athr_timespec_diff(at->last_update, &curr, &diff);
     dlt = athr_timespec_sec(&diff);
 
-    frc_consumed = ((double)at->consumed) / at->volume;
+    frc_consumed = ((double)at->consumed) / ((double)at->volume);
 
     at->line->update(at->line, frc_consumed, at->speed, dlt);
 
@@ -202,7 +202,7 @@ static void update_speed(struct athr* at)
 
     if (dlt >= MIN_DLT) {
         if (consumed > at->consumed_start) {
-            rate = (consumed - at->consumed_start) / ((double)at->volume);
+            rate = ((double)(consumed - at->consumed_start)) / ((double)at->volume);
             at->speed = rate / dlt;
         } else {
             at->speed /= 2;

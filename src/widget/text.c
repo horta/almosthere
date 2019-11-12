@@ -29,7 +29,7 @@ struct widget* widget_text_create(const char* str)
     d->len = (int)len;
     d->str = malloc(((size_t)d->len) * sizeof(char));
 
-    memcpy(d->str, str, d->len);
+    memcpy(d->str, str, (size_t)d->len);
 
     w->data = d;
     w->finish = widget_text_finish;

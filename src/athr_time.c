@@ -15,7 +15,8 @@ static void sec_timespec(double seconds, struct timespec* ts);
 
 double athr_timespec_sec(struct timespec* ts)
 {
-    return ts->tv_sec + ts->tv_nsec / 1000.0 / 1000.0 / 1000.0;
+    double f = ((double)ts->tv_nsec) / 1000.0 / 1000.0 / 1000.0;
+    return ((double)ts->tv_sec) + f;
 }
 
 int athr_timespec_get(struct timespec* ts)
