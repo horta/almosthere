@@ -2,11 +2,17 @@ language: c
 jobs:
   include:
     - os: linux
-      env: GENERATOR="Unix Makefiles"
+      env:
+        - GENERATOR="Unix Makefiles"
+        - TARGET_TEST=test
     - os: osx
-      env: GENERATOR="Unix Makefiles"
+      env:
+        - GENERATOR="Unix Makefiles"
+        - TARGET_TEST=test
     - os: windows
-      env: GENERATOR="Visual Studio 15 2017 Win64"
+      env:
+        - GENERATOR="Visual Studio 15 2017 Win64"
+        - TARGET_TEST=RUN_TESTS
       # before_install:
       #   - choco install ninja --no-progress -y
 script:
@@ -17,7 +23,7 @@ script:
   - echo $GENERATOR
   - cmake -G"$GENERATOR" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR ..
   - cmake --build . --config Release
-  - cmake --build . --config Release --target test
+  - cmake --build . --config Release --target $TARGET_TEST
   - cmake --build . --config Release --target install
   - test -e $TRAVIS_BUILD_DIR/include/athr.h
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-config.cmake
