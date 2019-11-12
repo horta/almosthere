@@ -77,10 +77,14 @@ target_compile_definitions(athr PRIVATE $<$<BOOL:${CMAKE_USE_PTHREADS_INIT}>:USE
 include(CheckSymbolExists)
 
 check_symbol_exists(clock_gettime "time.h" HAVE_CLOCK_GETTIME)
-target_compile_definitions(athr PRIVATE HAVE_CLOCK_GETTIME=${HAVE_CLOCK_GETTIME})
+target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_CLOCK_GETTIME}>:HAVE_CLOCK_GETTIME>)
 
 check_symbol_exists(timespec_get "time.h" HAVE_TIMESPEC_GET)
-target_compile_definitions(athr PRIVATE HAVE_TIMESPEC_GET=${HAVE_TIMESPEC_GET})
+target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_TIMESPEC_GET}>:HAVE_TIMESPEC_GET>)
+
+if (NOT(HAVE_CLOCK_GETTIME OR HAVE_TIMESPEC_GET))
+    message(FATAL_ERROR "Neiher clock_gettime nor timespec_get could be found.")
+endif()
 
 install(TARGETS athr EXPORT athr-targets
     RUNTIME DESTINATION bin
