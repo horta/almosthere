@@ -1,10 +1,10 @@
-#ifndef ATHR_THREAD_H_
-#define ATHR_THREAD_H_
+#ifndef ATHR_THREAD_H
+#define ATHR_THREAD_H
 
-#if WIN32
-#include "thread/tinycthread.h"
-#else
+#if USE_PTHREADS
 #include "thread/c11threads.h"
+#else
+#include "thread/tinycthread.h"
 #endif
 
-#endif /* end of include guard: ATHR_THREAD_H_ */
+#endif

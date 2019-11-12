@@ -1,7 +1,4 @@
-#define ATHR_DEFAULT_NCOLS 80
-
 #include "terminal/terminal.h"
-#ifdef CURSES_FOUND
 #include <curses.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -11,13 +8,13 @@
 #include <term.h>
 #include <unistd.h>
 
-unsigned athr_get_term_width(void)
+int athr_get_term_width(void)
 {
     static int failed_before = 0;
-    int cols = -1;
-    int tty_fd = -1;
+    int        cols = -1;
+    int        tty_fd = -1;
 
-    char const *const term = getenv("TERM");
+    char const* const term = getenv("TERM");
     if (!term) {
         if (!failed_before)
             fprintf(stderr, "TERM environment variable not set\n");
@@ -25,7 +22,7 @@ unsigned athr_get_term_width(void)
         goto done;
     }
 
-    char const *const cterm_path = ctermid(NULL);
+    char const* const cterm_path = ctermid(NULL);
     if (!cterm_path || !cterm_path[0]) {
         if (!failed_before)
             fprintf(stderr, "ctermid() failed\n");
@@ -43,7 +40,7 @@ unsigned athr_get_term_width(void)
 
     int setupterm_err;
 
-    if (setupterm((char *)term, tty_fd, &setupterm_err) == ERR) {
+    if (setupterm((char*)term, tty_fd, &setupterm_err) == ERR) {
         switch (setupterm_err) {
         case -1:
             if (!failed_before)
@@ -66,14 +63,14 @@ unsigned athr_get_term_width(void)
         } // err
     }
 
-    cols = tigetnum((char *)"cols");
+    cols = tigetnum((char*)"cols");
     if (cols < 0) {
         if (!failed_before)
             fprintf(stderr, "tigetnum() failed (%d)\n", cols);
         failed_before = 1;
     }
 
-    struct term *termp = set_curterm(NULL);
+    struct term* termp = set_curterm(NULL);
     (void)del_curterm(termp);
 
 done:
@@ -82,23 +79,3 @@ done:
 
     return cols < 0 ? ATHR_DEFAULT_NCOLS : cols;
 }
-
-#else
-#ifdef WIN32
-#include <windows.h>
-unsigned athr_get_term_width(void)
-{
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hdl == INVALID_HANDLE_VALUE) {
-        return ATHR_DEFAULT_NCOLS;
-    }
-    if (GetConsoleScreenBufferInfo(hdl, &csbi) == 0) {
-        return ATHR_DEFAULT_NCOLS;
-    }
-    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
-}
-#else
-unsigned athr_get_term_width(void) { return ATHR_DEFAULT_NCOLS; }
-#endif
-#endif

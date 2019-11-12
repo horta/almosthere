@@ -1,5 +1,3 @@
-#define ATHR_API_EXPORTS
-
 #include "athr.h"
 #include "athr_time.h"
 #include "terminal/terminal.h"
@@ -13,78 +11,43 @@
 #include <stdlib.h>
 
 /* Minimum difference in seconds considered safe for computing speed. */
-static const double ATHR_MIN_DLT = 0.2;
+static const double MIN_DLT = 0.2;
 
-/* how often to update, in seconds */
-static const double ATHR_TIMESTEP = 1.0 / 30.0;
+/* How often to update, in seconds. */
+static const double TIMESTEP = 1.0 / 30.0;
 
 struct athr
 {
-    long volume;                  /* total size to be consumed */
-    long consumed;                /* how much have been consumed */
-    double speed;                 /* current consumption speed */
-    struct timespec *last_update; /* last timestamp of update call */
-    struct timespec delta_start;  /* last timestamp used as delta start */
-    long consumed_start;          /* how much was already consumed at delta_start */
+    long             volume;         /* total size to be consumed */
+    long             consumed;       /* how much have been consumed */
+    double           speed;          /* current consumption speed */
+    struct timespec* last_update;    /* last timestamp of update call */
+    struct timespec  delta_start;    /* last timestamp used as delta start */
+    long             consumed_start; /* how much was already consumed at delta_start */
 
-    thrd_t thr;      /* spawed thread to perfom update and draw */
-    int stop_thread; /* send stop thread signal */
+    thrd_t thr;         /* spawed thread to perfom update and draw */
+    int    stop_thread; /* send stop thread signal */
 
-    struct widget *line; /* root widget */
+    struct widget* line; /* root widget */
     enum ATHR_OPTS opts; /* display options */
 };
 
-void athr_update_speed(struct athr *at);
-int athr_thread_start(void *args);
-int athr_create_line(struct widget **line, const char *, enum ATHR_OPTS opts);
-void athr_update(struct athr *at);
+static int          create_line(struct widget** line, const char*, enum ATHR_OPTS opts);
+static int          thread_start(void* args);
+static struct athr* create_base(long volume, const char* desc, enum ATHR_OPTS opts);
+static void         update(struct athr* at);
+static void         update_speed(struct athr* at);
 
-struct athr *athr_create_base(long volume, const char *desc, enum ATHR_OPTS opts)
+ATHR_API struct athr* athr_create_var(athr_create_args in)
 {
-
-    struct athr *at = NULL;
-    int status;
-
-    if (desc == NULL)
-        desc = "";
-
-    at = malloc(sizeof(struct athr));
-
-    at->volume = volume;
-    at->consumed = 0;
-    at->speed = 0;
-    at->last_update = NULL;
-    athr_timespec_get(&at->delta_start);
-    at->consumed_start = 0;
-    at->opts = opts;
-
-    if (athr_create_line(&at->line, desc, opts))
-        goto err;
-
-    at->stop_thread = 0;
-    status = thrd_create(&at->thr, athr_thread_start, at);
-    if (status != thrd_success) {
-        fprintf(stderr, "Could not spawn a thread.\n");
-        goto err;
-    }
-
-    return at;
-err:
-    if (at != NULL)
-        free(at);
-    return NULL;
-}
-
-ATHR_API struct athr *athr_create_var(athr_create_args in)
-{
-    long volume_out = in.volume ? in.volume : 0;
-    const char *desc_out = in.desc ? in.desc : NULL;
+    long           volume_out = in.volume ? in.volume : 0;
+    const char*    desc_out = in.desc ? in.desc : NULL;
     enum ATHR_OPTS opts_out = in.opts ? in.opts : ATHR_BAR | ATHR_ETA | ATHR_PERC;
 
-    return athr_create_base(volume_out, desc_out, opts_out);
+    return create_base(volume_out, desc_out, opts_out);
 }
 
-ATHR_API void athr_consume(struct athr *at, long consume)
+ATHR_API void athr_consume(struct athr* at, long consume)
 {
     if (at->consumed + consume > at->volume) {
         fprintf(stderr, "Trying to consume more than the total volume.\n");
@@ -93,9 +56,8 @@ ATHR_API void athr_consume(struct athr *at, long consume)
         at->consumed += consume;
 }
 
-ATHR_API void athr_finish(struct athr *at)
+ATHR_API void athr_finish(struct athr* at)
 {
-
     at->stop_thread = 1;
     thrd_join(at->thr, NULL);
     if (at->last_update != NULL)
@@ -111,29 +73,25 @@ ATHR_API void athr_finish(struct athr *at)
     fprintf(stderr, "\n");
 }
 
-int athr_thread_start(void *args)
+ATHR_API void athr_sleep(long milliseconds)
 {
-
-    struct athr *at = (struct athr *)args;
-
-    athr_update(at);
-    while (at->stop_thread == 0) {
-        athr_thread_sleep(ATHR_TIMESTEP);
-        athr_update(at);
-    }
-    athr_update(at);
-
-    return 0;
+#ifdef WIN32
+    Sleep(milliseconds);
+#elif _POSIX_C_SOURCE >= 199309L
+    struct timespec ts;
+    ts.tv_sec = milliseconds / 1000;
+    ts.tv_nsec = (milliseconds % 1000) * 1000000;
+    nanosleep(&ts, NULL);
+#else
+    usleep(milliseconds * 1000);
+#endif
 }
 
-int athr_create_line(struct widget **line, const char *desc, enum ATHR_OPTS opts)
+static int create_line(struct widget** line, const char* desc, enum ATHR_OPTS opts)
 {
+    int            i = 0;
+    struct widget* widget[4];
 
-    size_t i = 0;
-    struct widget *widget[4];
-
-    // widget = malloc(4 * sizeof(struct widget *));
-    //
     widget[i++] = widget_text_create(desc);
     if (opts & ATHR_PERC) {
         widget[i++] = widget_perc_create();
@@ -156,38 +114,61 @@ int athr_create_line(struct widget **line, const char *desc, enum ATHR_OPTS opts
     return 0;
 }
 
-void athr_update_speed(struct athr *at)
+static int thread_start(void* args)
 {
-    struct timespec curr, diff;
-    long consumed;
-    double rate;
-    double dlt;
+    struct athr* at = (struct athr*)args;
 
-    athr_timespec_get(&curr);
-    consumed = at->consumed;
-    athr_timespec_diff(&at->delta_start, &curr, &diff);
-
-    dlt = athr_timespec_sec(&diff);
-
-    if (dlt >= ATHR_MIN_DLT) {
-        if (consumed > at->consumed_start) {
-            rate = (consumed - at->consumed_start) / ((double)at->volume);
-            at->speed = rate / dlt;
-        } else {
-            at->speed /= 2;
-        }
-        at->delta_start = curr;
-        at->consumed_start = consumed;
+    update(at);
+    while (at->stop_thread == 0) {
+        athr_thread_sleep(TIMESTEP);
+        update(at);
     }
+    update(at);
+
+    return 0;
 }
 
-void athr_update(struct athr *at)
+static struct athr* create_base(long volume, const char* desc, enum ATHR_OPTS opts)
 {
+    struct athr* at = NULL;
+    int          status;
 
+    if (desc == NULL)
+        desc = "";
+
+    at = malloc(sizeof(struct athr));
+
+    at->volume = volume;
+    at->consumed = 0;
+    at->speed = 0;
+    at->last_update = NULL;
+    athr_timespec_get(&at->delta_start);
+    at->consumed_start = 0;
+    at->opts = opts;
+
+    if (create_line(&at->line, desc, opts))
+        goto err;
+
+    at->stop_thread = 0;
+    status = thrd_create(&at->thr, thread_start, at);
+    if (status != thrd_success) {
+        fprintf(stderr, "Could not spawn a thread.\n");
+        goto err;
+    }
+
+    return at;
+err:
+    if (at != NULL)
+        free(at);
+    return NULL;
+}
+
+static void update(struct athr* at)
+{
     struct timespec curr, diff;
-    double dlt, frc_consumed;
+    double          dlt, frc_consumed;
 
-    athr_update_speed(at);
+    update_speed(at);
 
     athr_timespec_get(&curr);
 
@@ -204,4 +185,29 @@ void athr_update(struct athr *at)
     at->line->update(at->line, frc_consumed, at->speed, dlt);
 
     *at->last_update = curr;
+}
+
+static void update_speed(struct athr* at)
+{
+    struct timespec curr, diff;
+    long            consumed;
+    double          rate;
+    double          dlt;
+
+    athr_timespec_get(&curr);
+    consumed = at->consumed;
+    athr_timespec_diff(&at->delta_start, &curr, &diff);
+
+    dlt = athr_timespec_sec(&diff);
+
+    if (dlt >= MIN_DLT) {
+        if (consumed > at->consumed_start) {
+            rate = (consumed - at->consumed_start) / ((double)at->volume);
+            at->speed = rate / dlt;
+        } else {
+            at->speed /= 2;
+        }
+        at->delta_start = curr;
+        at->consumed_start = consumed;
+    }
 }

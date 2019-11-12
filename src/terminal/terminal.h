@@ -1,6 +1,8 @@
-#ifndef ATHR_TERMINAL_H_
-#define ATHR_TERMINAL_H_
+#ifndef ATHR_TERMINAL_H
+#define ATHR_TERMINAL_H
 
-unsigned athr_get_term_width(void);
+#define ATHR_DEFAULT_NCOLS 80
 
-#endif /* end of include guard: ATHR_TERMINAL_H_ */
+int athr_get_term_width(void);
+
+#endif

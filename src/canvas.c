@@ -3,13 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void canvas_create(struct canvas *canvas, int min_length)
+void canvas_create(struct canvas* canvas, int min_length)
 {
     int ncols;
 
     canvas->min_length = min_length;
 
-    ncols = (int)athr_get_term_width() + 1;
+    ncols = athr_get_term_width() + 1;
 #ifdef WIN32
     ncols--;
 #endif
@@ -19,19 +19,23 @@ void canvas_create(struct canvas *canvas, int min_length)
     else
         canvas->length = ncols;
 
-    canvas->buff = malloc(canvas->length * sizeof(char));
+    if (canvas->length < 0) {
+        fprintf(stderr, "canvas length is negative");
+        exit(1);
+    }
+    canvas->buff = malloc(((size_t)canvas->length) * sizeof(char));
 }
 
-void canvas_draw(struct canvas *canvas)
+void canvas_draw(struct canvas* canvas)
 {
     fprintf(stderr, "%.*s", canvas->length, canvas->buff);
     fflush(stderr);
 }
 
-void canvas_resize(struct canvas *canvas)
+void canvas_resize(struct canvas* canvas)
 {
 
-    int ncols = (int)athr_get_term_width() + 1;
+    int ncols = athr_get_term_width() + 1;
 #ifdef WIN32
     ncols--;
 #endif
@@ -39,13 +43,17 @@ void canvas_resize(struct canvas *canvas)
     if (ncols < canvas->min_length)
         ncols = canvas->min_length;
 
+    if (ncols < 0) {
+        fprintf(stderr, "ncols is negative");
+        exit(1);
+    }
     if (canvas->length != ncols) {
-        canvas->buff = realloc(canvas->buff, ncols);
+        canvas->buff = realloc(canvas->buff, (size_t)ncols);
         canvas->length = ncols;
     }
 }
 
-void canvas_clean(struct canvas *canvas)
+void canvas_clean(struct canvas* canvas)
 {
     int i;
     for (i = 0; i < canvas->length - 1; ++i)
@@ -53,4 +61,4 @@ void canvas_clean(struct canvas *canvas)
     canvas->buff[canvas->length - 1] = '\r';
 }
 
-void canvas_finish(struct canvas *canvas) { free(canvas->buff); }
+void canvas_finish(struct canvas* canvas) { free(canvas->buff); }

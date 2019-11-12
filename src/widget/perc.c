@@ -1,6 +1,5 @@
 #include "widget/perc.h"
 #include "snprintf.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,20 +8,19 @@
 
 struct perc_data
 {
-    char str[PERC_LEN + 1];
+    char   str[PERC_LEN + 1];
     double consumed;
 };
 
-void widget_perc_update(struct widget *, double, double, double);
-void widget_perc_finish(struct widget *);
-int widget_perc_get_min_length(struct widget *);
-int widget_perc_get_max_length(struct widget *);
+void widget_perc_update(struct widget*, double, double, double);
+void widget_perc_finish(struct widget*);
+int  widget_perc_get_min_length(struct widget*);
+int  widget_perc_get_max_length(struct widget*);
 
-struct widget *widget_perc_create(void)
+struct widget* widget_perc_create(void)
 {
-
-    struct perc_data *d = malloc(sizeof(struct perc_data));
-    struct widget *w = malloc(sizeof(struct widget));
+    struct perc_data* d = malloc(sizeof(struct perc_data));
+    struct widget*    w = malloc(sizeof(struct widget));
 
     w->data = d;
     w->finish = widget_perc_finish;
@@ -33,16 +31,16 @@ struct widget *widget_perc_create(void)
     return w;
 }
 
-void widget_perc_finish(struct widget *w)
+void widget_perc_finish(struct widget* w)
 {
     free(w->data);
     free(w);
 }
 
-void widget_perc_update(struct widget *w, double consumed, double speed, double dlt)
+void widget_perc_update(struct widget* w, double consumed, double speed, double dlt)
 {
-    struct perc_data *d = w->data;
-    int i, perc;
+    struct perc_data* d = w->data;
+    int               i, perc;
 
     perc = 0;
     d->consumed = consumed;
@@ -59,5 +57,5 @@ void widget_perc_update(struct widget *w, double consumed, double speed, double 
     }
 }
 
-int widget_perc_get_min_length(struct widget *w) { return PERC_LEN; }
-int widget_perc_get_max_length(struct widget *w) { return PERC_LEN; }
+int widget_perc_get_min_length(struct widget* w) { return PERC_LEN; }
+int widget_perc_get_max_length(struct widget* w) { return PERC_LEN; }

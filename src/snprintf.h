@@ -1,5 +1,5 @@
-#ifndef ATHR_SNPRINTF_H_
-#define ATHR_SNPRINTF_H_
+#ifndef ATHR_SNPRINTF_H
+#define ATHR_SNPRINTF_H
 
 #if defined(_MSC_VER) && _MSC_VER < 1900
 
@@ -9,7 +9,7 @@
 #define snprintf c99_snprintf
 #define vsnprintf c99_vsnprintf
 
-__inline int c99_vsnprintf(char *outBuf, size_t size, const char *format, va_list ap)
+__inline int c99_vsnprintf(char* outBuf, size_t size, const char* format, va_list ap)
 {
     int count = -1;
 
@@ -21,9 +21,9 @@ __inline int c99_vsnprintf(char *outBuf, size_t size, const char *format, va_lis
     return count;
 }
 
-__inline int c99_snprintf(char *outBuf, size_t size, const char *format, ...)
+__inline int c99_snprintf(char* outBuf, size_t size, const char* format, ...)
 {
-    int count;
+    int     count;
     va_list ap;
 
     va_start(ap, format);
@@ -35,4 +35,4 @@ __inline int c99_snprintf(char *outBuf, size_t size, const char *format, ...)
 
 #endif
 
-#endif /* end of include guard: ATHR_SNPRINTF_H_ */
+#endif

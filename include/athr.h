@@ -1,19 +1,5 @@
-#ifndef ATHR_H_
-#define ATHR_H_
-
-/** Major athr version. */
-#define ATHR_VERSION_MAJOR 1
-/** Minor athr version. */
-#define ATHR_VERSION_MINOR 0
-/** Minor athr version. */
-#define ATHR_VERSION_PATCH 5
-/** Athr version. */
-#define ATHR_VERSION "1.0.5"
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+#ifndef ATHR_H
+#define ATHR_H
 
 #ifdef _WIN32
 #ifdef ATHR_API_EXPORTS
@@ -23,6 +9,11 @@ extern "C"
 #endif
 #else
 #define ATHR_API
+#endif
+
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
     struct athr;
@@ -36,20 +27,20 @@ extern "C"
 
     typedef struct
     {
-        long volume;
-        const char *desc;
+        long           volume;
+        char const*    desc;
         enum ATHR_OPTS opts;
     } athr_create_args;
 
-    ATHR_API struct athr *athr_create_var(athr_create_args in);
+    ATHR_API struct athr* athr_create_var(athr_create_args in);
 #define athr_create(...) athr_create_var((athr_create_args){__VA_ARGS__});
 
-    ATHR_API void athr_consume(struct athr *at, long consume);
-    ATHR_API void athr_finish(struct athr *at);
+    ATHR_API void athr_consume(struct athr* at, long consume);
+    ATHR_API void athr_finish(struct athr* at);
     ATHR_API void athr_sleep(long milliseconds);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* end of include guard: ATHR_H_ */
+#endif
