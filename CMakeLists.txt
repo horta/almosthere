@@ -87,6 +87,16 @@ if (NOT(HAVE_CLOCK_GETTIME OR HAVE_TIMESPEC_GET))
     message(FATAL_ERROR "Neiher clock_gettime nor timespec_get could be found.")
 endif()
 
+include(CheckCSourceCompiles)
+check_c_source_compiles(
+    "
+        static void f(char const* err, ...) __attribute__((format(printf, 1, 2)));
+        int main(void) {return 0;}
+    "
+    HAVE_ATTR_FORMAT
+)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_ATTR_FORMAT}>:HAVE_ATTR_FORMAT>)
+
 install(TARGETS athr EXPORT athr-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
