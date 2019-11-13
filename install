@@ -78,6 +78,10 @@ function do_then_sudo
         # Preserve user's environment
         eval "sudo -E $@"
     fi
+    if [ $? != 0 ]; then
+        # Preserve user's environment
+        eval "sudo env \"PATH=$PATH\" $@"
+    fi
 }
 
 function run_ldconfig
