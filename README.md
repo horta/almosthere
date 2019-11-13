@@ -10,7 +10,7 @@ ATHR is a simple yet powerful progress indicator library that works on Windows, 
 
 On Linux or macOS, open a terminal and install it via
 ```bash
-curl -fsSL https://raw.githubusercontent.com/horta/almosthere/master/install | bash
+curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
 ```
 
 Similarly, on Windows, open a command prompt and install it via
