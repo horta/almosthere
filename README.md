@@ -4,7 +4,7 @@
 
 Progress indicator C library.
 
-ATHR is a simple yet powerful progress indicator library that works on Windows, Linux, and macOS. It is non-blocking as the progress update is done via a dedicated, lightweight thread, as to be impair the performance of the calling program.
+ATHR is a simple yet powerful progress indicator library that works on Windows, Linux, and macOS. It is non-blocking as the progress update is done via a dedicated, lightweight thread, as to not impair the performance of the calling program.
 
 ## Get started
 
@@ -127,10 +127,6 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 make && make test && make install
 ```
 
-## Project management through cmake
-
-If you use [cmake](https://cmake.org/) to manage your project, you can use [findATHR.cmake](findATHR.cmake) module to configure it with the `athr` library once it has been installed.
-
 ## Interface
 
 It consists in two functions
@@ -138,6 +134,7 @@ It consists in two functions
 void athr_consume(struct athr *at, long consume);
 void athr_finish(struct athr *at);
 ```
+
 a variadic macro
 
 ```c
@@ -173,7 +170,6 @@ struct athr *at5 = athr_create(100, .opts=ATHR_PERC);
 
 The first parameter is mandatory and specify the total volume from which we will consume through `athr_consume` calls.
 A `athr_finish` call then ends the process.
-
 
 ## Authors
 
