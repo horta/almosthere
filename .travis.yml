@@ -14,7 +14,7 @@ jobs:
     - os: linux
       name: Install
       sudo: required
-      before_script: test -e /usr/bin/cmake || ln -s $(which cmake) /usr/bin/cmake
+      before_script: test -e /usr/bin/cmake || sudo ln -s $(which cmake) /usr/bin/cmake
       script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
     - os: osx
       name: Install
