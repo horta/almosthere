@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(athr VERSION 1.0.6 LANGUAGES C)
+project(athr VERSION 1.0.6 LANGUAGES C
+    DESCRIPTION "Progress indicator library written in C.")
 
 # Generate compile_commands.json file
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

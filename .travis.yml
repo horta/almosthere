@@ -24,6 +24,9 @@ script:
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets.cmake
   - cd $TRAVIS_BUILD_DIR
   - git clean -xdf
+before_deploy:
+  - rm -rf figures
+  - rm install*
 notifications:
   email:
     recipients:
