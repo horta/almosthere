@@ -1,5 +1,6 @@
 #include "widget/line.h"
 #include "canvas.h"
+#include "report.h"
 #include "terminal/terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,10 +20,8 @@ static int  widget_line_dist_len(int nwidgets, struct widget** widget, int lengt
 
 struct widget* widget_line_create(int nwidgets, struct widget** widget)
 {
-    if (nwidgets < 0) {
-        fprintf(stderr, "nwidgets cannot be negative");
-        exit(1);
-    }
+    if (nwidgets < 0)
+        athr_fatal("nwidgets cannot be negative");
 
     if (!check_if_fit(nwidgets, widget)) {
         fprintf(stderr, "The widgets don't fit in the line widget.\n");

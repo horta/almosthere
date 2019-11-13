@@ -1,4 +1,5 @@
 #include "widget/text.h"
+#include "report.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,10 +22,9 @@ struct widget* widget_text_create(const char* str)
     struct widget*    w = malloc(sizeof(struct widget));
 
     size_t len = strlen(str);
-    if (len > INT_MAX) {
-        fprintf(stderr, "str is longer than INT_MAX");
-        exit(1);
-    }
+    if (len > INT_MAX)
+        athr_fatal("str is longer than INT_MAX");
+
     d->len = (int)len;
     d->str = malloc(((size_t)d->len) * sizeof(char));
 

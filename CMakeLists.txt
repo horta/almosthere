@@ -31,6 +31,7 @@ add_library(athr
     src/athr.c
     src/athr_time.c
     src/canvas.c
+    src/report.c
     src/widget/bar.c
     src/widget/eta.c
     src/widget/line.c

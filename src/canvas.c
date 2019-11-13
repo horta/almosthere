@@ -1,4 +1,5 @@
 #include "canvas.h"
+#include "report.h"
 #include "terminal/terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,10 +20,9 @@ void athr_canvas_create(struct canvas* canvas, int min_length)
     else
         canvas->length = ncols;
 
-    if (canvas->length < 0) {
-        fprintf(stderr, "canvas length is negative");
-        exit(1);
-    }
+    if (canvas->length < 0)
+        athr_fatal("canvas length is negative");
+
     canvas->buff = malloc(((size_t)canvas->length) * sizeof(char));
 }
 
@@ -43,10 +43,9 @@ void athr_canvas_resize(struct canvas* canvas)
     if (ncols < canvas->min_length)
         ncols = canvas->min_length;
 
-    if (ncols < 0) {
-        fprintf(stderr, "ncols is negative");
-        exit(1);
-    }
+    if (ncols < 0)
+        athr_fatal("ncols is negative");
+
     if (canvas->length != ncols) {
         canvas->buff = realloc(canvas->buff, (size_t)ncols);
         canvas->length = ncols;
