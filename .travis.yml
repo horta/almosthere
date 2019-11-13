@@ -11,10 +11,15 @@ jobs:
       env: GENERATOR=Ninja
       before_install:
         - choco install ninja --no-progress -y
+    - os: linux
+      sudo: required
+      script:
+        - curl -fsSL https://raw.githubusercontent.com/horta/almosthere/master/install | bash
 script:
+  - mkdir prefix
   - mkdir build
   - cd build
-  - cmake -G"$GENERATOR" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR
+  - cmake -G"$GENERATOR" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/prefix
     ..
   - cmake --build . --config Release
   - ctest --output-on-failure -C Release
@@ -24,10 +29,6 @@ script:
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets-release.cmake
   - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets.cmake
   - cd $TRAVIS_BUILD_DIR
-before_deploy:
-  - git clean -xdf
-  - rm -rf figures
-  - rm install*
 notifications:
   email:
     recipients:
