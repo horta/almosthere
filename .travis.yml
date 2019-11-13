@@ -14,7 +14,11 @@ jobs:
     - os: linux
       name: Install
       sudo: required
-      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere bash
+      env:
+        - GITHUB_USER=horta
+        - GITHUB_PROJECT=almosthere
+        - DO_CMD=sudo
+      script: curl -fsSL https://git.io/JerYI | bash
 script:
   - mkdir prefix
   - mkdir build
