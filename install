@@ -74,6 +74,10 @@ function do_then_sudo
     if [ $? != 0 ]; then
         eval "sudo $@"
     fi
+    if [ $? != 0 ]; then
+        # Preserve user's environment
+        eval "sudo -E $@"
+    fi
 }
 
 function run_ldconfig
