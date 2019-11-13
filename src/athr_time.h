@@ -2,6 +2,7 @@
 #define ATHR_TIME_H
 
 #include <time.h>
+#include "hide.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -9,9 +10,9 @@
 #include <unistd.h>
 #endif
 
-double athr_timespec_sec(struct timespec* ts);
-int    athr_timespec_get(struct timespec* ts);
-void   athr_thread_sleep(double seconds);
-void athr_timespec_diff(struct timespec* start, struct timespec* stop, struct timespec* diff);
+HIDE double athr_timespec_sec(struct timespec* ts);
+HIDE int    athr_timespec_get(struct timespec* ts);
+HIDE void   athr_thread_sleep(double seconds);
+HIDE void athr_timespec_diff(struct timespec* start, struct timespec* stop, struct timespec* diff);
 
 #endif

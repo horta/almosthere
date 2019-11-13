@@ -1,8 +1,9 @@
-#ifndef ATHR_PERC_H_
-#define ATHR_PERC_H_
+#ifndef ATHR_PERC_H
+#define ATHR_PERC_H
 
+#include "hide.h"
 #include "widget/widget.h"
 
-struct widget *widget_perc_create(void);
+HIDE struct widget *widget_perc_create(void);
 
-#endif /* end of include guard: ATHR_PERC_H_ */
+#endif

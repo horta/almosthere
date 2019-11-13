@@ -1,9 +1,9 @@
-#ifndef ATHR_BAR_H_
-#define ATHR_BAR_H_
+#ifndef ATHR_BAR_H
+#define ATHR_BAR_H
 
+#include "hide.h"
 #include "widget/widget.h"
 
-struct widget *widget_bar_create(void);
-void widget_bar_finish(struct widget *);
+HIDE struct widget* widget_bar_create(void);
 
-#endif /* end of include guard: ATHR_BAR_H_ */
+#endif

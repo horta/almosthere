@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void canvas_create(struct canvas* canvas, int min_length)
+void athr_canvas_create(struct canvas* canvas, int min_length)
 {
     int ncols;
 
@@ -26,13 +26,13 @@ void canvas_create(struct canvas* canvas, int min_length)
     canvas->buff = malloc(((size_t)canvas->length) * sizeof(char));
 }
 
-void canvas_draw(struct canvas* canvas)
+void athr_canvas_draw(struct canvas* canvas)
 {
     fprintf(stderr, "%.*s", canvas->length, canvas->buff);
     fflush(stderr);
 }
 
-void canvas_resize(struct canvas* canvas)
+void athr_canvas_resize(struct canvas* canvas)
 {
 
     int ncols = athr_get_term_width() + 1;
@@ -53,7 +53,7 @@ void canvas_resize(struct canvas* canvas)
     }
 }
 
-void canvas_clean(struct canvas* canvas)
+void athr_canvas_clean(struct canvas* canvas)
 {
     int i;
     for (i = 0; i < canvas->length - 1; ++i)
@@ -61,4 +61,4 @@ void canvas_clean(struct canvas* canvas)
     canvas->buff[canvas->length - 1] = '\r';
 }
 
-void canvas_finish(struct canvas* canvas) { free(canvas->buff); }
+void athr_canvas_finish(struct canvas* canvas) { free(canvas->buff); }

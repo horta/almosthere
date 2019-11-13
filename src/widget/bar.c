@@ -8,14 +8,14 @@ struct bar_data
     double consumed;
 };
 
-void        widget_bar_update(struct widget*, double, double, double);
-int         widget_bar_get_min_length(struct widget*);
-int         widget_bar_get_max_length(struct widget*);
+static void widget_bar_finish(struct widget* w);
+static void widget_bar_update(struct widget*, double, double, double);
+static int  widget_bar_get_min_length(struct widget*);
+static int  widget_bar_get_max_length(struct widget*);
 static void bar_draw(struct bar_data* data, struct canvas* canvas);
 
 struct widget* widget_bar_create(void)
 {
-
     struct bar_data* d = malloc(sizeof(struct bar_data));
     struct widget*   w = malloc(sizeof(struct widget));
     d->consumed = -1.0;
@@ -27,13 +27,13 @@ struct widget* widget_bar_create(void)
     return w;
 }
 
-void widget_bar_finish(struct widget* w)
+static void widget_bar_finish(struct widget* w)
 {
     free(w->data);
     free(w);
 }
 
-void widget_bar_update(struct widget* w, double consumed, double speed, double dlt)
+static void widget_bar_update(struct widget* w, double consumed, double speed, double dlt)
 {
     struct bar_data* d = w->data;
     d->consumed = consumed;
@@ -45,9 +45,7 @@ int widget_bar_get_max_length(struct widget* widget) { return ATHR_MAX_STR_LEN; 
 
 static void bar_draw(struct bar_data* data, struct canvas* canvas)
 {
-
-    int i;
-    for (i = 1; i < (int)(data->consumed * (canvas->length - 1)); ++i) {
+    for (int i = 1; i < (int)(data->consumed * (canvas->length - 1)); ++i) {
         canvas->buff[i] = '=';
     }
     canvas->buff[0] = '|';

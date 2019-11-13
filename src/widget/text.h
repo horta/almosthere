@@ -1,8 +1,9 @@
-#ifndef ATHR_TEXT_H_
-#define ATHR_TEXT_H_
+#ifndef ATHR_TEXT_H
+#define ATHR_TEXT_H
 
+#include "hide.h"
 #include "widget/widget.h"
 
-struct widget *widget_text_create(const char *);
+HIDE struct widget* widget_text_create(const char*);
 
-#endif /* end of include guard: ATHR_TEXT_H_ */
+#endif

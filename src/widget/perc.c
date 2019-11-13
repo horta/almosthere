@@ -12,10 +12,10 @@ struct perc_data
     double consumed;
 };
 
-void widget_perc_update(struct widget*, double, double, double);
-void widget_perc_finish(struct widget*);
-int  widget_perc_get_min_length(struct widget*);
-int  widget_perc_get_max_length(struct widget*);
+static void widget_perc_update(struct widget*, double, double, double);
+static void widget_perc_finish(struct widget*);
+static int  widget_perc_get_min_length(struct widget*);
+static int  widget_perc_get_max_length(struct widget*);
 
 struct widget* widget_perc_create(void)
 {
@@ -31,18 +31,17 @@ struct widget* widget_perc_create(void)
     return w;
 }
 
-void widget_perc_finish(struct widget* w)
+static void widget_perc_finish(struct widget* w)
 {
     free(w->data);
     free(w);
 }
 
-void widget_perc_update(struct widget* w, double consumed, double speed, double dlt)
+static void widget_perc_update(struct widget* w, double consumed, double speed, double dlt)
 {
     struct perc_data* d = w->data;
-    int               i, perc;
 
-    perc = 0;
+    int perc = 0;
     d->consumed = consumed;
 
     if (d->consumed == 1.0)
@@ -52,10 +51,11 @@ void widget_perc_update(struct widget* w, double consumed, double speed, double 
 
     snprintf(d->str, PERC_LEN + 1, " %3d%%", perc);
 
-    for (i = 0; i < PERC_LEN; ++i) {
+    for (int i = 0; i < PERC_LEN; ++i) {
         w->canvas.buff[i] = d->str[i];
     }
 }
 
-int widget_perc_get_min_length(struct widget* w) { return PERC_LEN; }
-int widget_perc_get_max_length(struct widget* w) { return PERC_LEN; }
+static int widget_perc_get_min_length(struct widget* w) { return PERC_LEN; }
+
+static int widget_perc_get_max_length(struct widget* w) { return PERC_LEN; }

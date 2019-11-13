@@ -6,11 +6,7 @@ jobs:
     - os: osx
       env: GENERATOR="Unix Makefiles"
     - os: windows
-      env: GENERATOR="Visual Studio 16 2019"
-    - os: windows
       env: GENERATOR="Visual Studio 15 2017 Win64"
-    - os: windows
-      env: GENERATOR="Visual Studio 14 2015 Win64"
     - os: windows
       env: GENERATOR=Ninja
       before_install:
@@ -34,12 +30,3 @@ notifications:
       - danilo.horta@pm.me
     on_success: never
     on_failure: always
-deploy:
-  provider: releases
-  api_key:
-    secure: okLPMGEkUGKgNKtfQLVc9qjm1u1tV2LAOimTkX3NScX6aANUQDxlxMeNnqRvfi+pFVfRddCWgOPR7OHJOx+3xdBNR+zWo7NWtYY3grevRFWczwl+U/GTiB+64U6bUxKlTb3P3d6a1eSGGPMMPXef5LutLIfsy/4QSWDWyXQp/iH94r1KmaW2b1sovrhq9J+/2XYfYnH52UFAifcODU+K1sFqlKLzK8Jth95IMPeuTWed28v7VbBkuyOtwqIDtkuEx6qGtwNqtVZFBn12lfBtRC06vRHjYZa8//BezJxC1Ewahq/y+rNnWHjyv/JLI55zTtPRo5svCIuALasxB3qs5yAWRxCdap+j0M0L0oZJsNmlWcsKWPnMEYFlJtH/Qd+wq75u2zfkMJWKCL3Kby2QZjTiT5On0U1hN8S/mFc9JqAEwbooX1YKMjNHvOxwDf9gXd0sBetPsdNJ5whZA6IVmMZsPELa0FJU+AjRAOXdfUWSMYMDct4B/F0c3CSg6UjklpkqeGZBVbXIfwtnO010h9f2f6K+7D7EzL/95+xcEm+fpe2iDM5g/UjtgkKs/+OIrXWgrJ0i8NLjOH/Jr2jzX3WcM4I3aUOzfR86n07OOIQQ512SQbLwRBEoNhjCb5NeLvf1pN0KqCBGHiHHemnXKRqkwnout5KWX+3yJxTOacg=
-  on:
-    repo: horta/almosthere
-    tags: true
-    branch: master
-    skip_existing: true

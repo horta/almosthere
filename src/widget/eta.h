@@ -1,8 +1,9 @@
-#ifndef ATHR_ETA_H_
-#define ATHR_ETA_H_
+#ifndef ATHR_ETA_H
+#define ATHR_ETA_H
 
+#include "hide.h"
 #include "widget/widget.h"
 
-struct widget *widget_eta_create(void);
+HIDE struct widget *widget_eta_create(void);
 
-#endif /* end of include guard: ATHR_ETA_H_ */
+#endif

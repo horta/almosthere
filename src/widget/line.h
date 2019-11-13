@@ -1,8 +1,9 @@
-#ifndef ATHR_LINE_H_
-#define ATHR_LINE_H_
+#ifndef ATHR_LINE_H
+#define ATHR_LINE_H
 
+#include "hide.h"
 #include "widget/widget.h"
 
-struct widget *widget_line_create(int, struct widget **);
+HIDE struct widget* widget_line_create(int, struct widget**);
 
-#endif /* end of include guard: ATHR_LINE_H_ */
+#endif

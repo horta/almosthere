@@ -10,14 +10,13 @@ struct text_data
     int   len;
 };
 
-void widget_text_update(struct widget*, double, double, double);
-void widget_text_finish(struct widget*);
-int  widget_text_get_min_length(struct widget*);
-int  widget_text_get_max_length(struct widget*);
+static void widget_text_update(struct widget*, double, double, double);
+static void widget_text_finish(struct widget*);
+static int  widget_text_get_min_length(struct widget*);
+static int  widget_text_get_max_length(struct widget*);
 
 struct widget* widget_text_create(const char* str)
 {
-
     struct text_data* d = malloc(sizeof(struct text_data));
     struct widget*    w = malloc(sizeof(struct widget));
 
@@ -40,7 +39,7 @@ struct widget* widget_text_create(const char* str)
     return w;
 }
 
-void widget_text_finish(struct widget* w)
+static void widget_text_finish(struct widget* w)
 {
     struct text_data* d = w->data;
     free(d->str);
@@ -48,22 +47,22 @@ void widget_text_finish(struct widget* w)
     free(w);
 }
 
-void widget_text_update(struct widget* w, double consumed, double speed, double dlt)
+static void widget_text_update(struct widget* w, double consumed, double speed, double dlt)
 {
     struct text_data* d = w->data;
-    int               i;
 
-    for (i = 0; i < w->canvas.length; ++i) {
+    for (int i = 0; i < w->canvas.length; ++i) {
         w->canvas.buff[i] = d->str[i];
     }
 }
 
-int widget_text_get_min_length(struct widget* w)
+static int widget_text_get_min_length(struct widget* w)
 {
     struct text_data* d = w->data;
     return d->len;
 }
-int widget_text_get_max_length(struct widget* w)
+
+static int widget_text_get_max_length(struct widget* w)
 {
     struct text_data* d = w->data;
     return d->len;
