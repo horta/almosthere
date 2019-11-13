@@ -13,9 +13,9 @@ On Linux or macOS, open a terminal and install it via
 curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
 ```
 
-Similarly, on Windows, open a command prompt and install it via
+Similarly, on Windows, open a bash terminal and run
 ```powershell
-powershell -Command "(New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/horta/almosthere/master/install.bat', 'install.bat')" && install.bat
+curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere bash
 ```
 
 The above commands will download the latest library version, compile it to create static and dynamic library objects and copy the C/C++ header into the appropriate directory. (For a more manual approach, see the section [Manual installation](#manual-installation) in this document.)
