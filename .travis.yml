@@ -17,7 +17,9 @@ jobs:
       script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
     - os: osx
       name: Install
-      sudo: required
+      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
+    - os: windows
+      name: Install
       script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
 script:
   - mkdir prefix
