@@ -12,6 +12,7 @@ jobs:
       before_install:
         - choco install ninja --no-progress -y
     - os: linux
+      name: Install
       sudo: required
       script:
         - curl -fsSL https://raw.githubusercontent.com/horta/almosthere/master/install | bash
@@ -24,10 +25,10 @@ script:
   - cmake --build . --config Release
   - ctest --output-on-failure -C Release
   - cmake --build . --config Release --target install
-  - test -e $TRAVIS_BUILD_DIR/include/athr.h
-  - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-config.cmake
-  - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets-release.cmake
-  - test -e $TRAVIS_BUILD_DIR/lib/cmake/athr/athr-targets.cmake
+  - test -e $TRAVIS_BUILD_DIR/prefix/include/athr.h
+  - test -e $TRAVIS_BUILD_DIR/prefix/lib/cmake/athr/athr-config.cmake
+  - test -e $TRAVIS_BUILD_DIR/prefix/lib/cmake/athr/athr-targets-release.cmake
+  - test -e $TRAVIS_BUILD_DIR/prefix/lib/cmake/athr/athr-targets.cmake
   - cd $TRAVIS_BUILD_DIR
 notifications:
   email:
