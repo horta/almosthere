@@ -15,7 +15,7 @@ jobs:
       name: Install
       sudo: required
       script:
-        - curl -fsSL https://raw.githubusercontent.com/horta/almosthere/master/install | bash
+        - curl -fsSL https://raw.githubusercontent.com/horta/almosthere/$TRAVIS_BRANCH/install | bash
 script:
   - mkdir prefix
   - mkdir build
