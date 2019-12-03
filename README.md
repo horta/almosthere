@@ -18,7 +18,7 @@ Similarly, on Windows, open a bash terminal and run
 curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere bash
 ```
 
-The above commands will download the latest library version, compile it to create static and dynamic library objects and copy the C/C++ header into the appropriate directory. (For a more manual approach, see the section [Manual installation](#manual-installation) in this document.)
+The above commands will download the latest library version, compile it to create a dynamic library and copy the C header into the appropriate directory. (For a more manual approach, see the section [Manual installation](#manual-installation) in this document.)
 
 It is now ready to be linked into in your C/C++ project. Suppose you have a file `example.c` that makes use of this library. Using `gcc` compiler, you can do
 ```bash
@@ -123,7 +123,7 @@ cd almosthere
 Create a `build` folder to not clutter the project and proceed with cmake steps
 ```bash
 mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
 make && make test && make install
 ```
 
