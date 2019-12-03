@@ -61,11 +61,13 @@ target_compile_options(athr PRIVATE
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
 # X/Open and POSIX standards.
-target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
+# target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
+add_compile_definitions(_XOPEN_SOURCE=500)
 
 # If you define this macro to a value greater than or equal to 200112L, then the functionality from
 # the 2001 edition of the POSIX standard (IEEE Standard 1003.1-2001) is made available.
-target_compile_definitions(athr PRIVATE _POSIX_C_SOURCE=200112L)
+# target_compile_definitions(athr PRIVATE _POSIX_C_SOURCE=200112L)
+add_compile_definitions(_POSIX_C_SOURCE=200112L)
 
 if (CURSES_FOUND)
     target_compile_definitions(athr PRIVATE CURSES_FOUND)
@@ -88,19 +90,11 @@ target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_ATTR_FORMAT}>:HAVE_ATTR_
 
 include(CheckSymbolExists)
 
-function(clock_gettime)
-    set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS};$<TARGET_PROPERTY:athr,COMPILE_DEFINITIONS>)
-    check_symbol_exists(clock_gettime "time.h" HAVE_CLOCK_GETTIME)
-    target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_CLOCK_GETTIME}>:HAVE_CLOCK_GETTIME>)
-endfunction()
-clock_gettime()
+check_symbol_exists(clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_CLOCK_GETTIME}>:HAVE_CLOCK_GETTIME>)
 
-function(check_timespec_get)
-    set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS};$<TARGET_PROPERTY:athr,COMPILE_DEFINITIONS>)
-    check_symbol_exists(timespec_get "time.h" HAVE_TIMESPEC_GET)
-    target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_TIMESPEC_GET}>:HAVE_TIMESPEC_GET>)
-endfunction()
-check_timespec_get()
+check_symbol_exists(timespec_get "time.h" HAVE_TIMESPEC_GET)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_TIMESPEC_GET}>:HAVE_TIMESPEC_GET>)
 
 if (NOT(HAVE_CLOCK_GETTIME OR HAVE_TIMESPEC_GET))
     message(FATAL_ERROR "Neiher clock_gettime nor timespec_get could be found.")
