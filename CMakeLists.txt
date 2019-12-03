@@ -52,7 +52,7 @@ set_target_properties(athr PROPERTIES PUBLIC_HEADER include/athr.h)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(athr PRIVATE c_std_11)
-target_compile_definitions(athr PRIVATE ATHR_API_EXPORTS)
+set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
     $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes

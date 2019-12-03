@@ -2,7 +2,7 @@
 #define ATHR_H
 
 #ifdef _WIN32
-#ifdef ATHR_API_EXPORTS
+#ifdef ATHR_EXPORTS
 #define ATHR_API __declspec(dllexport)
 #else
 #define ATHR_API __declspec(dllimport)
