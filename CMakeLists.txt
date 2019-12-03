@@ -61,13 +61,13 @@ target_compile_options(athr PRIVATE
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
 # X/Open and POSIX standards.
-# target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
-add_compile_definitions(_XOPEN_SOURCE=500)
+target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
+set(CMAKE_REQUIRED_DEFINITIONS -D_XOPEN_SOURCE=500)
 
 # If you define this macro to a value greater than or equal to 200112L, then the functionality from
 # the 2001 edition of the POSIX standard (IEEE Standard 1003.1-2001) is made available.
-# target_compile_definitions(athr PRIVATE _POSIX_C_SOURCE=200112L)
-add_compile_definitions(_POSIX_C_SOURCE=200112L)
+target_compile_definitions(athr PRIVATE _POSIX_C_SOURCE=200112L)
+set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS};-D_POSIX_C_SOURCE=200112L)
 
 if (CURSES_FOUND)
     target_compile_definitions(athr PRIVATE CURSES_FOUND)
