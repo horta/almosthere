@@ -1,5 +1,6 @@
 #include "athr_time.h"
 #include "athr.h"
+#include "clock_gettime.h"
 #include "thread/thread.h"
 
 static void sec_timespec(double seconds, struct timespec* ts);
@@ -15,9 +16,9 @@ int athr_timespec_get(struct timespec* ts)
 #if defined(HAVE_TIMESPEC_GET)
     return timespec_get(ts, 1);
 #elif defined(HAVE_CLOCK_GETTIME)
-    return clock_gettime(CLOCK_REALTIME, ts);
+    return clock_gettime(ATHR_CLOCK_TYPE, ts);
 #else
-    return -1;
+    return athr_clock_gettime(ts);
 #endif
 }
 

@@ -28,7 +28,12 @@ endif()
 
 find_package(LibRt)
 
+include(CheckSymbolExists)
+
+check_symbol_exists(gettimeofday sys/time.h HAVE_GETTIMEOFDAY)
+
 add_library(athr
+    $<$<BOOL:${HAVE_GETTIMEOFDAY}>:src/clock_gettime.c>
     $<$<BOOL:${TERMINAL_CURSES}>:src/terminal/curses.c>
     $<$<BOOL:${TERMINAL_DUMMY}>:src/terminal/dummy.c>
     $<$<BOOL:${TERMINAL_WIN32}>:src/terminal/win32.c>
@@ -99,16 +104,22 @@ target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_ATTR_FORMAT}>:HAVE_ATTR_
 
 include(CheckFunctionExists)
 include(CheckLibraryExists)
-include(CheckSymbolExists)
+include(CheckIncludeFile)
 
-check_symbol_exists(timespec_get "time.h" HAVE_TIMESPEC_GET)
+check_include_file(windows.h HAVE_WINDOWS_H)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_WINDOWS_H}>:HAVE_WINDOWS_H>)
+
+check_include_file(unistd.h HAVE_UNISTD_H)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_UNISTD_H}>:HAVE_UNISTD_H>)
+
+check_symbol_exists(timespec_get time.h HAVE_TIMESPEC_GET)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_TIMESPEC_GET}>:HAVE_TIMESPEC_GET>)
 
-check_symbol_exists(clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+check_symbol_exists(clock_gettime time.h HAVE_CLOCK_GETTIME)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_CLOCK_GETTIME}>:HAVE_CLOCK_GETTIME>)
 
 if (NOT(HAVE_CLOCK_GETTIME OR HAVE_TIMESPEC_GET))
-    message(FATAL_ERROR "Neiher clock_gettime nor timespec_get could be found.")
+    message(WARNING "Neiher clock_gettime nor timespec_get could be found.")
 endif()
 
 install(TARGETS athr EXPORT athr-targets
