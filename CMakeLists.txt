@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.8.2 FATAL_ERROR)
 project(athr VERSION 1.0.8 LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
