@@ -5,6 +5,8 @@ project(athr VERSION 1.0.7 LANGUAGES C
 # Generate compile_commands.json file
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 find_package(Threads REQUIRED)
 
 # We use curses to fetch terminal width.
@@ -23,6 +25,8 @@ else ()
     set(TERMINAL_DUMMY TRUE)
     set(TERMINAL_WIN32 FALSE)
 endif()
+
+find_package(LibRt)
 
 add_library(athr
     $<$<BOOL:${TERMINAL_CURSES}>:src/terminal/curses.c>
@@ -62,12 +66,12 @@ target_compile_options(athr PRIVATE
 # It tells your compiler to include definitions for some extra functions that are defined in the
 # X/Open and POSIX standards.
 target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
-# set(CMAKE_REQUIRED_DEFINITIONS -D_XOPEN_SOURCE=500)
+set(CMAKE_REQUIRED_DEFINITIONS -D_XOPEN_SOURCE=500)
 
 # If you define this macro to a value greater than or equal to 200112L, then the functionality from
 # the 2001 edition of the POSIX standard (IEEE Standard 1003.1-2001) is made available.
 target_compile_definitions(athr PRIVATE _POSIX_C_SOURCE=200112L)
-# set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS};-D_POSIX_C_SOURCE=200112L)
+set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS};-D_POSIX_C_SOURCE=200112L)
 
 if (CURSES_FOUND)
     target_compile_definitions(athr PRIVATE CURSES_FOUND)
@@ -77,6 +81,7 @@ endif()
 
 target_link_libraries(athr PUBLIC Threads::Threads)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${CMAKE_USE_PTHREADS_INIT}>:USE_PTHREADS>)
+target_link_libraries(athr PUBLIC $<$<BOOL:${LIBRT_FOUND}>:LIBRT::LIBRT>)
 
 include(CheckCSourceCompiles)
 check_c_source_compiles(
@@ -95,8 +100,12 @@ include(CheckSymbolExists)
 check_symbol_exists(timespec_get "time.h" HAVE_TIMESPEC_GET)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_TIMESPEC_GET}>:HAVE_TIMESPEC_GET>)
 
-# check_symbol_exists(clock_gettime "time.h" HAVE_CLOCK_GETTIME)
-check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+check_symbol_exists(clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+if (NOT(HAVE_CLOCK_GETTIME))
+    if (LIBRT_FOUND)
+        check_library_exists(${LIBRT_LIBRARIES} clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+    endif()
+endif()
 if (NOT(HAVE_CLOCK_GETTIME))
     # might also be in libc
     check_library_exists(c clock_gettime "" HAVE_CLOCK_GETTIME)
