@@ -1,6 +1,7 @@
 #include "clock_gettime.h"
 #include <stddef.h>
 #include <sys/time.h>
+#include <stdio.h>
 
 // clock_gettime is not implemented on older versions of OS X (< 10.12).
 int athr_clock_gettime(struct timespec* t)
