@@ -1,30 +1,39 @@
 language: c
 jobs:
   include:
-    - os: linux
+    - name: Build on linux-default
+      os: linux
       env: GENERATOR="Unix Makefiles"
-    - os: osx
+    - name: Build on linux-trusty
+      os: linux
       env: GENERATOR="Unix Makefiles"
-    - os: osx
-      osx_image: xcode8.3
+      dist: trusty
+    - name: Build on osx-default
+      os: osx
       env: GENERATOR="Unix Makefiles"
-    - os: windows
+    - name: Build on osx-xcode7.3
+      os: osx
+      osx_image: xcode7.3
+      env: GENERATOR="Unix Makefiles"
+    - name: Build on windows
+      os: windows
       env: GENERATOR="Visual Studio 15 2017 Win64"
-    - os: windows
+    - name: Build on windows
+      os: windows
       env: GENERATOR=Ninja
       before_install:
         - choco install ninja --no-progress -y
-    - os: linux
-      name: Install
+    - name: Install on linux-default
+      os: linux
       sudo: required
       before_script: test -e /usr/bin/cmake || sudo ln -s $(which cmake) /usr/bin/cmake
-      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
-    - os: osx
-      name: Install
-      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere DO_CMD=sudo bash
-    - os: windows
-      name: Install
-      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=almosthere bash
+      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=logaddexp DO_CMD=sudo bash
+    - name: Install on osx-default
+      os: osx
+      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=logaddexp DO_CMD=sudo bash
+    - name: Install on windows
+      os: windows
+      script: curl -fsSL https://git.io/JerYI | GITHUB_USER=horta GITHUB_PROJECT=logaddexp bash
 script:
   - mkdir prefix
   - mkdir build

@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.8.2 FATAL_ERROR)
-project(athr VERSION 1.0.9 LANGUAGES C
-    DESCRIPTION "Progress indicator library written in C.")
+cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
+project(athr VERSION 1.0.9 LANGUAGES C)
+set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
 # Generate compile_commands.json file
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -60,7 +60,8 @@ target_include_directories(athr
 set_target_properties(athr PROPERTIES PUBLIC_HEADER include/athr.h)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
-target_compile_features(athr PRIVATE c_std_11)
+# target_compile_features(athr PRIVATE c_std_11)
+set_target_properties(athr PROPERTIES C_STANDARD 99)
 set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
