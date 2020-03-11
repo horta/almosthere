@@ -144,7 +144,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
     DESTINATION lib/cmake/athr
 )
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
-    DESTINATION lib/cmake/athr
+    DESTINATION lib/cmake/athr/librt
 )
 
 enable_testing()
