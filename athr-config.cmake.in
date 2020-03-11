@@ -4,7 +4,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/librt")
 
 include(CMakeFindDependencyMacro)
 find_dependency(Threads)
-find_dependency(LibRt)
+
+if (UNIX AND NOT APPLE)
+    find_dependency(LibRt)
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/athr-targets.cmake")
 check_required_components(Threads)
-check_required_components(LibRt)
+
+if (UNIX AND NOT APPLE)
+    check_required_components(LibRt)
+endif()

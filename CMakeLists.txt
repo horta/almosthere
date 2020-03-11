@@ -26,7 +26,9 @@ else ()
     set(TERMINAL_WIN32 FALSE)
 endif()
 
-find_package(LibRt)
+if (UNIX AND NOT APPLE)
+    find_package(LibRt)
+endif()
 
 include(CheckSymbolExists)
 
