@@ -88,7 +88,7 @@ target_compile_options(athr PRIVATE
         -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
 )
 
-if(${ATHR_USE_OLD_EXPORT})
+if(NOT ${ATHR_USE_OLD_EXPORT})
     # Write out mytools_export.h to the current binary directory
     # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
     # search path.
