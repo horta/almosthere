@@ -89,7 +89,7 @@ target_compile_options(athr PRIVATE
         -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
 )
 
-if(NOT ${USE_OLD_EXPORT})
+if(NOT USE_OLD_EXPORT)
     # Write out mytools_export.h to the current binary directory
     # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
     # search path.
@@ -175,7 +175,7 @@ install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
     DESTINATION lib/cmake/athr/librt
 )
 
-if(NOT ${USE_OLD_EXPORT})
+if(NOT USE_OLD_EXPORT)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr_export.h
         DESTINATION include
     )
