@@ -19,9 +19,8 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12.0")
     # Hide things by default
     set(CMAKE_C_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
-    set(ATHR_USE_OLD_EXPORT 1)
 else()
-    set(ATHR_USE_OLD_EXPORT 0)
+    set(ATHR_USE_OLD_EXPORT 1)
 endif()
 
 find_package(Threads REQUIRED)
@@ -82,7 +81,7 @@ set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 set_target_properties(athr PROPERTIES C_STANDARD 99)
 set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
-target_compile_definitions(athr PRIVATE $<ATHR_USE_OLD_EXPORT:ATHR_USE_OLD_EXPORT>)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${ATHR_USE_OLD_EXPORT}>:ATHR_USE_OLD_EXPORT>)
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
     $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes
