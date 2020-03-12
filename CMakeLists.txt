@@ -47,9 +47,12 @@ if (UNIX AND NOT APPLE)
     find_package(LibRt)
 endif()
 
+message("PONTO 3")
 include(CheckSymbolExists)
 
+message("PONTO 4")
 check_symbol_exists(gettimeofday sys/time.h HAVE_GETTIMEOFDAY)
+message("PONTO 5")
 
 add_library(athr
     $<$<BOOL:${HAVE_GETTIMEOFDAY}>:src/clock_gettime.c>
@@ -68,6 +71,7 @@ add_library(athr
     src/widget/text.c
 )
 add_library(ATHR::athr ALIAS athr)
+message("PONTO 6")
 
 target_include_directories(athr
     PUBLIC
@@ -77,10 +81,10 @@ target_include_directories(athr
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
+message("PONTO 6")
 set_target_properties(athr PROPERTIES PUBLIC_HEADER include/athr.h)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
-# target_compile_features(athr PRIVATE c_std_11)
 set_target_properties(athr PROPERTIES C_STANDARD 99)
 set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
 target_compile_options(athr PRIVATE

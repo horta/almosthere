@@ -1,7 +1,6 @@
 #ifndef CLOCK_GETTIME_H
 #define CLOCK_GETTIME_H
 
-#include "hide.h"
 #include <time.h>
 
 #ifdef HAVE_UNISTD_H
@@ -22,6 +21,6 @@
 
 struct timespec;
 
-HIDE int athr_clock_gettime(struct timespec* t);
+int athr_clock_gettime(struct timespec* t);
 
 #endif
