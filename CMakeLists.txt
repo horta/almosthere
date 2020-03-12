@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.6.2 FATAL_ERROR)
 project(athr VERSION 1.0.14 LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
@@ -81,7 +81,7 @@ target_include_directories(athr
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-message("PONTO 6")
+message("PONTO 7")
 set_target_properties(athr PROPERTIES PUBLIC_HEADER include/athr.h)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
@@ -92,17 +92,20 @@ target_compile_options(athr PRIVATE
     $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes
         -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
 )
+message("PONTO 8")
 
 # Write out mytools_export.h to the current binary directory
 # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
 # search path.
 include(GenerateExportHeader)
 generate_export_header(athr)
+message("PONTO 9")
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
 # X/Open and POSIX standards.
 target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
 set(CMAKE_REQUIRED_DEFINITIONS -D_XOPEN_SOURCE=500)
+message("PONTO 10")
 
 # If you define this macro to a value greater than or equal to 200112L, then the functionality from
 # the 2001 edition of the POSIX standard (IEEE Standard 1003.1-2001) is made available.
