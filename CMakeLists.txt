@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
-project(athr VERSION 1.0.13 LANGUAGES C)
+project(athr VERSION 1.0.14 LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
 # Generate compile_commands.json file
@@ -15,7 +15,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 # Hide things by default
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_C_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 
 find_package(Threads REQUIRED)
