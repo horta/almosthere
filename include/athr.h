@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#ifdef ATHR_USE_OLD_EXPORT
+#ifdef USE_OLD_EXPORT
 #ifdef _WIN32
 #ifdef ATHR_EXPORTS
 #define ATHR_EXPORT __declspec(dllexport)
