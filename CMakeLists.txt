@@ -24,7 +24,6 @@ else()
     set(USE_OLD_EXPORT 1)
 endif()
 
-message(STATUS "USE_OLD_EXPORT: ${USE_OLD_EXPORT}")
 find_package(Threads REQUIRED)
 
 # We use curses to fetch terminal width.
@@ -84,8 +83,7 @@ set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 set_target_properties(athr PROPERTIES C_STANDARD 99)
 set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
 if(USE_OLD_EXPORT)
-    message("DEFINING USE_OLD_EXPORT TO 1!!!!!!!!!!!!!!!!!!!")
-    target_compile_definitions(athr PRIVATE USE_OLD_EXPORT=1)
+    target_compile_definitions(athr PUBLIC USE_OLD_EXPORT=1)
 endif()
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
