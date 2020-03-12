@@ -14,14 +14,14 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-message("PONTO 1")
 # merge request fix: https://gitlab.kitware.com/cmake/cmake/-/merge_requests/1799
-if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12.0") 
-    message("CMAKE VERSION: ${CMAKE_VERSION}")
-    message("PONTO 2")
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12.0")
     # Hide things by default
     set(CMAKE_C_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+    set(ATHR_USE_OLD_EXPORT 1)
+else()
+    set(ATHR_USE_OLD_EXPORT 0)
 endif()
 
 find_package(Threads REQUIRED)
@@ -47,12 +47,9 @@ if (UNIX AND NOT APPLE)
     find_package(LibRt)
 endif()
 
-message("PONTO 3")
 include(CheckSymbolExists)
 
-message("PONTO 4")
 check_symbol_exists(gettimeofday sys/time.h HAVE_GETTIMEOFDAY)
-message("PONTO 5")
 
 add_library(athr
     $<$<BOOL:${HAVE_GETTIMEOFDAY}>:src/clock_gettime.c>
@@ -71,7 +68,6 @@ add_library(athr
     src/widget/text.c
 )
 add_library(ATHR::athr ALIAS athr)
-message("PONTO 6")
 
 target_include_directories(athr
     PUBLIC
@@ -81,31 +77,30 @@ target_include_directories(athr
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-message("PONTO 7")
 set_target_properties(athr PROPERTIES PUBLIC_HEADER include/athr.h)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 set_target_properties(athr PROPERTIES C_STANDARD 99)
 set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
+target_compile_definitions(athr PRIVATE $<ATHR_USE_OLD_EXPORT:ATHR_USE_OLD_EXPORT>)
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
     $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes
         -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
 )
-message("PONTO 8")
 
-# Write out mytools_export.h to the current binary directory
-# Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
-# search path.
-include(GenerateExportHeader)
-generate_export_header(athr)
-message("PONTO 9")
+if(${ATHR_USE_OLD_EXPORT})
+    # Write out mytools_export.h to the current binary directory
+    # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
+    # search path.
+    include(GenerateExportHeader)
+    generate_export_header(athr)
+endif()
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
 # X/Open and POSIX standards.
 target_compile_definitions(athr PRIVATE _XOPEN_SOURCE=500)
 set(CMAKE_REQUIRED_DEFINITIONS -D_XOPEN_SOURCE=500)
-message("PONTO 10")
 
 # If you define this macro to a value greater than or equal to 200112L, then the functionality from
 # the 2001 edition of the POSIX standard (IEEE Standard 1003.1-2001) is made available.
@@ -179,9 +174,11 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
     DESTINATION lib/cmake/athr/librt
 )
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr_export.h
-    DESTINATION include
-)
+if(NOT ${ATHR_USE_OLD_EXPORT})
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr_export.h
+        DESTINATION include
+    )
+endif()
 
 enable_testing()
 add_subdirectory(test)

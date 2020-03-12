@@ -1,11 +1,23 @@
 #ifndef ATHR_H
 #define ATHR_H
 
-#include "athr_export.h"
-
 #ifdef __cplusplus
 extern "C"
 {
+#endif
+
+#ifdef ATHR_USE_OLD_EXPORT
+#ifdef _WIN32
+#ifdef ATHR_EXPORTS
+#define ATHR_EXPORT __declspec(dllexport)
+#else
+#define ATHR_EXPORT __declspec(dllimport)
+#endif
+#else
+#define ATHR_EXPORT
+#endif
+#else
+#include "athr_export.h"
 #endif
 
     struct athr;
