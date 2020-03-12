@@ -81,14 +81,13 @@ set_target_properties(athr PROPERTIES PUBLIC_HEADER include/athr.h)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 set_target_properties(athr PROPERTIES C_STANDARD 99)
-set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
 if(ATHR_USE_OLD_EXPORT)
     target_compile_definitions(athr PUBLIC ATHR_USE_OLD_EXPORT=1)
 endif()
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
     $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes
-        -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
+        -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter -Wsign-conversion>
 )
 
 if(NOT ATHR_USE_OLD_EXPORT)
@@ -96,7 +95,7 @@ if(NOT ATHR_USE_OLD_EXPORT)
     # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
     # search path.
     include(GenerateExportHeader)
-    generate_export_header(athr)
+    generate_export_header(athr BASE_NAME ATHR)
 endif()
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
