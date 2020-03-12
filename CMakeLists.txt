@@ -15,7 +15,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 # merge request fix: https://gitlab.kitware.com/cmake/cmake/-/merge_requests/1799
-if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12.0")
+if(CMAKE_VERSION VERSION_GREATER "3.12.0")
     # Hide things by default
     set(CMAKE_C_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
