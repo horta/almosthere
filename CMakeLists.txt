@@ -82,7 +82,9 @@ set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 set_target_properties(athr PROPERTIES C_STANDARD 99)
 set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
-target_compile_definitions(athr PRIVATE $<${USE_OLD_EXPORT}:USE_OLD_EXPORT>)
+if(USE_OLD_EXPORT)
+    target_compile_definitions(athr PRIVATE USE_OLD_EXPORT=1)
+endif()
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
     $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes
