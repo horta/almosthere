@@ -14,6 +14,10 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+# Hide things by default
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+
 find_package(Threads REQUIRED)
 
 # We use curses to fetch terminal width.
@@ -161,6 +165,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
 )
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
     DESTINATION lib/cmake/athr/librt
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr_export.h
+    DESTINATION include
 )
 
 enable_testing()
