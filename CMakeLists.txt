@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 project(athr VERSION 1.0.14 LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
@@ -14,9 +14,12 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-# Hide things by default
-set(CMAKE_C_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+# merge request fix: https://gitlab.kitware.com/cmake/cmake/-/merge_requests/1799
+if(${CMAKE_VERSION} VERSION_GREATER "3.12.0") 
+    # Hide things by default
+    set(CMAKE_C_VISIBILITY_PRESET hidden)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+endif()
 
 find_package(Threads REQUIRED)
 
