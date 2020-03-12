@@ -19,9 +19,9 @@ if(CMAKE_VERSION VERSION_GREATER 3.12.0)
     # Hide things by default
     set(CMAKE_C_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
-    set(USE_OLD_EXPORT 0)
+    set(ATHR_USE_OLD_EXPORT 0)
 else()
-    set(USE_OLD_EXPORT 1)
+    set(ATHR_USE_OLD_EXPORT 1)
 endif()
 
 find_package(Threads REQUIRED)
@@ -82,8 +82,8 @@ set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 set_target_properties(athr PROPERTIES C_STANDARD 99)
 set_target_properties(athr PROPERTIES DEFINE_SYMBOL "ATHR_EXPORTS")
-if(USE_OLD_EXPORT)
-    target_compile_definitions(athr PUBLIC USE_OLD_EXPORT=1)
+if(ATHR_USE_OLD_EXPORT)
+    target_compile_definitions(athr PUBLIC ATHR_USE_OLD_EXPORT=1)
 endif()
 target_compile_options(athr PRIVATE
     $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
@@ -91,7 +91,7 @@ target_compile_options(athr PRIVATE
         -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter>
 )
 
-if(NOT USE_OLD_EXPORT)
+if(NOT ATHR_USE_OLD_EXPORT)
     # Write out mytools_export.h to the current binary directory
     # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
     # search path.
@@ -177,7 +177,7 @@ install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
     DESTINATION lib/cmake/athr/librt
 )
 
-if(NOT USE_OLD_EXPORT)
+if(NOT ATHR_USE_OLD_EXPORT)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr_export.h
         DESTINATION include
     )
