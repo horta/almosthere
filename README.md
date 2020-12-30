@@ -178,4 +178,4 @@ A `athr_finish` call then ends the process.
 
 ## License
 
-This project is licensed under the [MIT License](https://raw.githubusercontent.com/horta/almosthere/master/LICENSE.md).
+This project is licensed under the [MIT License](https://raw.githubusercontent.com/horta/almosthere/main/LICENSE.md).
