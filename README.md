@@ -1,7 +1,5 @@
 # athr
 
-[![Travis](https://img.shields.io/travis/com/horta/almosthere.svg)](https://travis-ci.com/horta/almosthere)
-
 Progress indicator C library.
 
 ATHR is a simple yet powerful progress indicator library that works on Windows, Linux, and macOS. It is non-blocking as the progress update is done via a dedicated, lightweight thread, as to not impair the performance of the calling program.
