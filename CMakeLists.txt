@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 project(athr VERSION 1.0.15 LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
@@ -118,6 +118,8 @@ target_link_libraries(athr PUBLIC Threads::Threads)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${CMAKE_USE_PTHREADS_INIT}>:USE_PTHREADS>)
 target_link_libraries(athr PUBLIC $<$<BOOL:${LIBRT_FOUND}>:LIBRT::LIBRT>)
 
+# Include file check macros honor CMAKE_REQUIRED_LIBRARIES
+cmake_policy(SET CMP0075 NEW)
 if (LIBRT_FOUND)
     set(CMAKE_REQUIRED_LIBRARIES ${LIBRT_LIBRARIES})
 endif()
