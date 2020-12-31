@@ -52,4 +52,6 @@ jobs:
     - name: Install
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: sudo cmake --build . --target install --config $BUILD_TYPE
+      run: $SUDO cmake --build . --target install --config $BUILD_TYPE
+      env:
+        SUDO: "${{ '${{matrix.os}}' == 'windows-latest' && '' || 'sudo' }}"
