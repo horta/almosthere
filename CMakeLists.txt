@@ -168,9 +168,11 @@ install(TARGETS athr EXPORT athr-targets
     PUBLIC_HEADER DESTINATION include
 )
 install(DIRECTORY include/ DESTINATION include)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
-    DESTINATION include/athr
-)
+if(NOT ATHR_USE_OLD_EXPORT)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
+        DESTINATION include/athr
+    )
+endif()
 install(EXPORT athr-targets
     FILE athr-targets.cmake
     NAMESPACE ATHR::
@@ -188,12 +190,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
     DESTINATION lib/cmake/athr/librt
 )
-
-if(NOT ATHR_USE_OLD_EXPORT)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/export.h
-        DESTINATION include
-    )
-endif()
 
 enable_testing()
 add_subdirectory(test)
