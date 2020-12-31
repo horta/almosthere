@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
-project(athr VERSION 1.0.15 LANGUAGES C)
+project(athr VERSION 2.0.0 LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
 # Generate compile_commands.json file
@@ -19,9 +19,6 @@ if(CMAKE_VERSION VERSION_GREATER 3.12.0)
     # Hide things by default
     set(CMAKE_C_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
-    set(ATHR_USE_OLD_EXPORT 0)
-else()
-    set(ATHR_USE_OLD_EXPORT 1)
 endif()
 
 find_package(Threads REQUIRED)
@@ -90,20 +87,15 @@ target_include_directories(athr
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(athr PRIVATE c_std_99)
-if(ATHR_USE_OLD_EXPORT)
-    target_compile_definitions(athr PUBLIC ATHR_USE_OLD_EXPORT=1)
-endif()
 
-if(NOT ATHR_USE_OLD_EXPORT)
-    # Write out mytools_export.h to the current binary directory
-    # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
-    # search path.
-    include(GenerateExportHeader)
-    generate_export_header(athr BASE_NAME ATHR
-        INCLUDE_GUARD_NAME ATHR_EXPORT_H
-        EXPORT_MACRO_NAME ATHR_API
-        EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h)
-endif()
+# Write out mytools_export.h to the current binary directory
+# Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
+# search path.
+include(GenerateExportHeader)
+generate_export_header(athr BASE_NAME ATHR
+    INCLUDE_GUARD_NAME ATHR_EXPORT_H
+    EXPORT_MACRO_NAME ATHR_API
+    EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h)
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
 # X/Open and POSIX standards.
@@ -168,11 +160,9 @@ install(TARGETS athr EXPORT athr-targets
     PUBLIC_HEADER DESTINATION include
 )
 install(DIRECTORY include/ DESTINATION include)
-if(NOT ATHR_USE_OLD_EXPORT)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
-        DESTINATION include/athr
-    )
-endif()
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
+    DESTINATION include/athr
+)
 install(EXPORT athr-targets
     FILE athr-targets.cmake
     NAMESPACE ATHR::

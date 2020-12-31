@@ -6,19 +6,7 @@ extern "C"
 {
 #endif
 
-#ifdef ATHR_USE_OLD_EXPORT
-#ifdef _WIN32
-#ifdef ATHR_EXPORTS
-#define ATHR_API __declspec(dllexport)
-#else
-#define ATHR_API __declspec(dllimport)
-#endif
-#else
-#define ATHR_API
-#endif
-#else
 #include "athr/export.h"
-#endif
 
     struct athr;
 
