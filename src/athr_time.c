@@ -1,5 +1,5 @@
 #include "athr_time.h"
-#include "athr.h"
+#include "athr/athr.h"
 #include "clock_gettime.h"
 #include "thread/thread.h"
 

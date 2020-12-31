@@ -1,4 +1,4 @@
-#include "athr.h"
+#include "athr/athr.h"
 #include "athr_time.h"
 #include "terminal/terminal.h"
 #include "thread/thread.h"
@@ -38,7 +38,7 @@ static struct athr* create_base(long volume, const char* desc, enum ATHR_OPTS op
 static void         update(struct athr* at);
 static void         update_speed(struct athr* at);
 
- struct athr* athr_create_var(athr_create_args in)
+struct athr* athr_create_var(athr_create_args in)
 {
     long           volume_out = in.volume ? in.volume : 0;
     const char*    desc_out = in.desc ? in.desc : NULL;
@@ -47,7 +47,7 @@ static void         update_speed(struct athr* at);
     return create_base(volume_out, desc_out, opts_out);
 }
 
- void athr_consume(struct athr* at, long consume)
+void athr_consume(struct athr* at, long consume)
 {
     if (at->consumed + consume > at->volume) {
         fprintf(stderr, "Trying to consume more than the total volume.\n");
@@ -56,7 +56,7 @@ static void         update_speed(struct athr* at);
         at->consumed += consume;
 }
 
- void athr_finish(struct athr* at)
+void athr_finish(struct athr* at)
 {
     at->stop_thread = 1;
     thrd_join(at->thr, NULL);
@@ -73,7 +73,7 @@ static void         update_speed(struct athr* at);
     fprintf(stderr, "\n");
 }
 
- void athr_sleep(long milliseconds)
+void athr_sleep(long milliseconds)
 {
 #ifdef WIN32
     Sleep((DWORD)milliseconds);

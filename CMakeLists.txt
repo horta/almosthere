@@ -69,6 +69,16 @@ add_library(athr
 )
 add_library(ATHR::athr ALIAS athr)
 
+if(${CMAKE_C_COMPILER_ID} MATCHES "MSVC")
+    set(WARNING_FLAGS /W3)
+else()
+    set(WARNING_FLAGS -Wall -Wextra -pedantic -Wstrict-prototypes -Wshadow
+        -Wconversion -Wmissing-prototypes -Wno-unused-parameter -Wsign-conversion
+        -Wno-unused-function # TODO: added only to please clangd for now
+        -Wno-empty-translation-unit # TODO: added only to please clangd for now
+    )
+endif()
+
 target_include_directories(athr
     PUBLIC
         $<INSTALL_INTERFACE:include>
@@ -77,25 +87,22 @@ target_include_directories(athr
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-set_target_properties(athr PROPERTIES PUBLIC_HEADER include/athr.h)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
-set_target_properties(athr PROPERTIES C_STANDARD 99)
+target_compile_features(athr PRIVATE c_std_99)
 if(ATHR_USE_OLD_EXPORT)
     target_compile_definitions(athr PUBLIC ATHR_USE_OLD_EXPORT=1)
 endif()
-target_compile_options(athr PRIVATE
-    $<$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>:/W3>
-    $<$<NOT:$<STREQUAL:${CMAKE_C_COMPILER_ID},MSVC>>:-Wall -Wextra -pedantic -Wstrict-prototypes
-        -Wshadow -Wconversion -Wmissing-prototypes -Wno-unused-parameter -Wsign-conversion>
-)
 
 if(NOT ATHR_USE_OLD_EXPORT)
     # Write out mytools_export.h to the current binary directory
     # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
     # search path.
     include(GenerateExportHeader)
-    generate_export_header(athr BASE_NAME ATHR)
+    generate_export_header(athr BASE_NAME ATHR
+        INCLUDE_GUARD_NAME ATHR_EXPORT_H
+        EXPORT_MACRO_NAME ATHR_API
+        EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h)
 endif()
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
@@ -160,6 +167,10 @@ install(TARGETS athr EXPORT athr-targets
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include
 )
+install(DIRECTORY include/ DESTINATION include)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
+    DESTINATION include/athr
+)
 install(EXPORT athr-targets
     FILE athr-targets.cmake
     NAMESPACE ATHR::
@@ -179,7 +190,7 @@ install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
 )
 
 if(NOT ATHR_USE_OLD_EXPORT)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr_export.h
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/export.h
         DESTINATION include
     )
 endif()
