@@ -17,12 +17,12 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build -E make_directory ${{runner.workspace}}/prefix
+      run: cmake -E make_directory '${{runner.workspace}}/build' -E make_directory '${{runner.workspace}}/prefix'
 
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/prefix
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX='${{runner.workspace}}/prefix'
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
