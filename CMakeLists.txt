@@ -19,6 +19,8 @@ if(CMAKE_VERSION VERSION_GREATER 3.12.0)
     # Hide things by default
     set(CMAKE_C_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+else()
+    set(GCC_TOO_OLD TRUE)
 endif()
 
 find_package(Threads REQUIRED)
@@ -92,10 +94,16 @@ target_compile_features(athr PRIVATE c_std_99)
 # Must include ${CMAKE_CURRENT_BINARY_DIR} in the target's
 # search path.
 include(GenerateExportHeader)
-generate_export_header(athr BASE_NAME ATHR
-    INCLUDE_GUARD_NAME ATHR_EXPORT_H
-    EXPORT_MACRO_NAME ATHR_API
-    EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h)
+if(CMAKE_VERSION VERSION_GREATER 3.12.0)
+    generate_export_header(athr BASE_NAME ATHR
+        INCLUDE_GUARD_NAME ATHR_EXPORT_H
+        EXPORT_MACRO_NAME ATHR_API
+        EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h)
+else()
+    generate_export_header(athr BASE_NAME ATHR
+        EXPORT_MACRO_NAME ATHR_API
+        EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h)
+endif()
 
 # It tells your compiler to include definitions for some extra functions that are defined in the
 # X/Open and POSIX standards.
@@ -118,7 +126,9 @@ target_compile_definitions(athr PRIVATE $<$<BOOL:${CMAKE_USE_PTHREADS_INIT}>:USE
 target_link_libraries(athr PUBLIC $<$<BOOL:${LIBRT_FOUND}>:LIBRT::LIBRT>)
 
 # Include file check macros honor CMAKE_REQUIRED_LIBRARIES
-cmake_policy(SET CMP0075 NEW)
+if(CMAKE_VERSION VERSION_GREATER 3.12.0)
+    cmake_policy(SET CMP0075 NEW)
+endif()
 if (LIBRT_FOUND)
     set(CMAKE_REQUIRED_LIBRARIES ${LIBRT_LIBRARIES})
 endif()
