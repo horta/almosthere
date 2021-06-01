@@ -256,6 +256,7 @@ static inline void call_once(once_flag *flag, void (*func)(void))
 	pthread_once(flag, func);
 }
 
+#ifndef HAVE_TIMESPEC_GET
 #if __STDC_VERSION__ < 201112L || defined(C11THREADS_NO_TIMED_MUTEX)
 /* TODO take base into account */
 static inline int timespec_get(struct timespec *ts, int base)
@@ -269,5 +270,6 @@ static inline int timespec_get(struct timespec *ts, int base)
 	return base;
 }
 #endif	/* not C11 */
+#endif
 
 #endif	/* C11THREADS_H_ */
