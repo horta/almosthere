@@ -5,12 +5,9 @@
 extern "C" {
 #endif
 
-#if !defined(ATHR_DISABLE_DEPRECATED_API)
-#include "athr/deprecated.h"
-#endif
-
 #include "athr/canvas.h"
 #include "athr/canvas_view.h"
+#include "athr/deprecated.h"
 #include "athr/ema.h"
 #include "athr/error.h"
 #include "athr/export.h"
@@ -26,7 +23,7 @@ extern "C" {
 struct athr
 {
     unsigned long total;
-    unsigned long consumed;
+    atomic_ulong consumed;
     struct athr_ema speed;
     struct elapsed elapsed;
 
