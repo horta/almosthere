@@ -4,15 +4,12 @@
 #include "athr/canvas.h"
 #include "athr/canvas_view.h"
 
-/* maximum string number for preventing catastrophic mistakes */
-#define ATHR_MAX_STR_LEN 1048576
-
 struct athr_widget;
 
 typedef void(athr_widget_update_t)(struct athr_widget *, double, double,
                                    double);
-typedef unsigned(athr_widget_min_size_t)(struct athr_widget *);
-typedef unsigned(athr_widget_max_size_t)(struct athr_widget *);
+typedef unsigned(athr_widget_min_size_t)(struct athr_widget const *);
+typedef unsigned(athr_widget_max_size_t)(struct athr_widget const *);
 
 struct athr_widget_vtable
 {

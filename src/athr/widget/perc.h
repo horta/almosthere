@@ -3,12 +3,13 @@
 
 #include "athr/widget/widget.h"
 
-#define ATHR_WIDGET_PERC_LEN 5
+#define ATHR_WIDGET_PERC_EXAMPLE " 100%"
+#define ATHR_WIDGET_PERC_SIZE (sizeof(ATHR_WIDGET_PERC_EXAMPLE) - 1)
 
 struct athr_widget_perc
 {
     struct athr_widget super;
-    char str[ATHR_WIDGET_PERC_LEN + 1];
+    char str[ATHR_WIDGET_PERC_SIZE];
     double consumed;
 };
 

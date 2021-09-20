@@ -9,7 +9,7 @@ struct athr_widget_text
 {
     struct athr_widget super;
     char str[ATHR_WIDGET_TEXT_MAX_SIZE];
-    unsigned len;
+    unsigned size;
 };
 
 #define ATHR_WIDGET_TEXT_INIT                                                  \

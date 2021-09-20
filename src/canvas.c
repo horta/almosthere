@@ -1,6 +1,5 @@
 #include "athr/canvas.h"
 #include "common.h"
-#include "report.h"
 #include "terminal/terminal.h"
 #include <stdio.h>
 #include <stdlib.h>

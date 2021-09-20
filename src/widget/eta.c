@@ -1,5 +1,4 @@
 #include "athr/widget/eta.h"
-#include "snprintf.h"
 #include "widget/widget.h"
 
 #include <stdio.h>
@@ -51,18 +50,11 @@ static void update(struct athr_widget *w, double consumed, double speed,
         w->canvas.buff[i] = eta->str[i];
 }
 
-static unsigned min_length(struct athr_widget *w)
-{
-    return ATHR_WIDGET_ETA_SIZE;
-}
+static unsigned min_size(struct athr_widget *w) { return ATHR_WIDGET_ETA_SIZE; }
 
-static unsigned max_length(struct athr_widget *w)
-{
-    return ATHR_WIDGET_ETA_SIZE;
-}
+static unsigned max_size(struct athr_widget *w) { return ATHR_WIDGET_ETA_SIZE; }
 
-static struct athr_widget_vtable const vtable = {update, min_length,
-                                                 max_length};
+static struct athr_widget_vtable const vtable = {update, min_size, max_size};
 
 void widget_eta_create(struct athr_widget_eta *eta)
 {

@@ -1,16 +1,14 @@
 #include "athr/widget/main.h"
 #include "athr/canvas.h"
 #include "athr/widget/widget.h"
-#include "report.h"
 #include "terminal/terminal.h"
 #include "widget/widget.h"
 #include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 static void update(struct athr_widget *, double, double, double);
 
-static unsigned min_length(struct athr_widget *widget)
+static unsigned min_size(struct athr_widget const *widget)
 {
     struct athr_widget_main *main = (struct athr_widget_main *)widget->derived;
     unsigned s = 1;
@@ -19,59 +17,60 @@ static unsigned min_length(struct athr_widget *widget)
     return s;
 }
 
-static unsigned max_length(struct athr_widget *widget)
+static unsigned max_size(struct athr_widget const *widget)
 {
-    return ATHR_MAX_STR_LEN;
+    return ATHR_CANVAS_MAX_SIZE;
 }
 
 static unsigned widget_line_dist_len(unsigned nwidgets,
                                      struct athr_widget **widget,
                                      unsigned length);
 
-static struct athr_widget_vtable const vtable = {update, min_length,
-                                                 max_length};
+static struct athr_widget_vtable const vtable = {update, min_size, max_size};
 
 void widget_main_assert_that_fits(struct athr_widget_main const *main)
 {
-    unsigned len = 0;
+    unsigned size = 0;
     for (unsigned i = 0; i < main->nwidgets; ++i)
-        len += main->children[i]->vtable->min_length(main->children[i]);
-    assert(len < max_length(NULL));
+        size += main->children[i]->vtable->min_length(main->children[i]);
+    assert(size <= ATHR_CANVAS_MAX_SIZE);
 }
 
 struct athr_widget_bar *widget_main_setup_bar(struct athr_widget_main *main)
 {
-    assert(main->nwidgets < 4);
+    assert(main->nwidgets < ATHR_WIDGET_MAIN_MAX_CHILDREN);
     main->children[main->nwidgets++] = (struct athr_widget *)&main->bar;
     return &main->bar;
 }
 
 struct athr_widget_eta *widget_main_setup_eta(struct athr_widget_main *main)
 {
-    assert(main->nwidgets < 4);
+    assert(main->nwidgets < ATHR_WIDGET_MAIN_MAX_CHILDREN);
     main->children[main->nwidgets++] = (struct athr_widget *)&main->eta;
     return &main->eta;
 }
 
 struct athr_widget_perc *widget_main_setup_perc(struct athr_widget_main *main)
 {
-    assert(main->nwidgets < 4);
+    assert(main->nwidgets < ATHR_WIDGET_MAIN_MAX_CHILDREN);
     main->children[main->nwidgets++] = (struct athr_widget *)&main->perc;
     return &main->perc;
 }
 
 struct athr_widget_text *widget_main_setup_text(struct athr_widget_main *main)
 {
-    assert(main->nwidgets < 4);
+    assert(main->nwidgets < ATHR_WIDGET_MAIN_MAX_CHILDREN);
     main->children[main->nwidgets++] = (struct athr_widget *)&main->text;
     return &main->text;
 }
 
 void widget_main_setup(struct athr_widget_main *main)
 {
-    main->nwidgets = 0;
     widget_setup((struct athr_widget *)main, &vtable);
-    athr_canvas_create(&main->canvas, min_length(&main->super));
+    athr_canvas_create(&main->canvas, min_size(&main->super));
+    main->nwidgets = 0;
+    for (unsigned i = 0; i < ATHR_WIDGET_MAIN_MAX_CHILDREN; ++i)
+        main->children[i] = NULL;
 }
 
 static void update(struct athr_widget *widget, double consumed, double speed,

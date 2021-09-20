@@ -7,12 +7,14 @@
 #include "athr/widget/text.h"
 #include "athr/widget/widget.h"
 
+#define ATHR_WIDGET_MAIN_MAX_CHILDREN 4
+
 struct athr_widget_main
 {
     struct athr_widget super;
     struct athr_canvas canvas;
     unsigned nwidgets;
-    struct athr_widget *children[4];
+    struct athr_widget *children[ATHR_WIDGET_MAIN_MAX_CHILDREN];
     struct athr_widget_bar bar;
     struct athr_widget_eta eta;
     struct athr_widget_perc perc;

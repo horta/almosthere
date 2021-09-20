@@ -88,7 +88,6 @@ add_library(
   src/canvas.c
   src/deprecated.c
   src/error.c
-  src/report.c
   src/thr.c
   src/widget/bar.c
   src/widget/eta.c

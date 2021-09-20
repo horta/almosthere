@@ -17,4 +17,6 @@
         _a <= _b ? _a : _b;                                                    \
     })
 
+#define UNUSED(x) (void)(x)
+
 #endif
