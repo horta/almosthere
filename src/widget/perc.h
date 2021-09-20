@@ -1,8 +1,8 @@
-#ifndef ATHR_PERC_H
-#define ATHR_PERC_H
+#ifndef WIDGET_PERC_H
+#define WIDGET_PERC_H
 
-#include "widget/widget.h"
+struct athr_widget_perc;
 
-struct widget *widget_perc_create(void);
+void widget_perc_setup(struct athr_widget_perc *);
 
 #endif

@@ -1,8 +1,8 @@
-#ifndef ATHR_ETA_H
-#define ATHR_ETA_H
+#ifndef WIDGET_ETA_H
+#define WIDGET_ETA_H
 
-#include "widget/widget.h"
+struct athr_widget_eta;
 
-struct widget *widget_eta_create(void);
+void widget_eta_create(struct athr_widget_eta *);
 
 #endif

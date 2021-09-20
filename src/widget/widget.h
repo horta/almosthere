@@ -1,26 +1,13 @@
-#ifndef ATHR_WIDGET_H_
-#define ATHR_WIDGET_H_
+#ifndef WIDGET_WIDGET_H
+#define WIDGET_WIDGET_H
 
-#include "canvas.h"
+#include "athr/widget/widget.h"
 
-/* maximum string number for preventing catastrophic mistakes */
-#define ATHR_MAX_STR_LEN 1048576
-
-struct widget;
-
-typedef void (*widget_finish)(struct widget *);
-typedef void (*widget_update)(struct widget *, double, double, double);
-typedef int (*widget_get_min_length)(struct widget *);
-typedef int (*widget_get_max_length)(struct widget *);
-
-struct widget
+static inline void widget_setup(struct athr_widget *widget,
+                                struct athr_widget_vtable const *vtable)
 {
-    widget_finish finish;
-    widget_update update;
-    widget_get_min_length get_min_length;
-    widget_get_max_length get_max_length;
-    void *data;
-    struct canvas canvas;
-};
+    widget->derived = widget;
+    widget->vtable = vtable;
+}
 
-#endif /* end of include guard: ATHR_WIDGET_H_ */
+#endif

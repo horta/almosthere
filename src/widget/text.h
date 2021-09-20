@@ -1,8 +1,8 @@
-#ifndef ATHR_TEXT_H
-#define ATHR_TEXT_H
+#ifndef WIDGET_TEXT_H
+#define WIDGET_TEXT_H
 
-#include "widget/widget.h"
+struct athr_widget_text;
 
-struct widget* widget_text_create(const char*);
+void widget_text_create(struct athr_widget_text *, char const *);
 
 #endif

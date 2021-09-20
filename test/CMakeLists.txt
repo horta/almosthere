@@ -1,7 +1,7 @@
 function(athr_add_test name)
-    add_executable(test_${name} src/${name}.c)
-    target_link_libraries(test_${name} PRIVATE ATHR::athr)
-    add_test(NAME ${name} COMMAND test_${name} -E environment)
+    add_executable(${name} ${name}.c)
+    target_link_libraries(${name} PRIVATE ATHR::athr)
+    add_test(NAME ${name} COMMAND ${name} -E environment)
 
     # Ugly hacky to make the tests work on Windows.
     file(TO_CMAKE_PATH "$ENV{PATH}" PATH)
@@ -14,3 +14,4 @@ athr_add_test(example1)
 athr_add_test(example2)
 athr_add_test(example3)
 athr_add_test(example4)
+athr_add_test(deprecated)

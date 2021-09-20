@@ -1,69 +1,40 @@
-#include "widget/text.h"
+#include "athr/widget/text.h"
 #include "report.h"
+#include "widget/widget.h"
+#include <assert.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-struct text_data
+static void update(struct athr_widget *w, double consumed, double speed,
+                   double dlt)
 {
-    char* str;
-    int   len;
-};
+    struct athr_widget_text *text = w->derived;
 
-static void widget_text_update(struct widget*, double, double, double);
-static void widget_text_finish(struct widget*);
-static int  widget_text_get_min_length(struct widget*);
-static int  widget_text_get_max_length(struct widget*);
-
-struct widget* widget_text_create(const char* str)
-{
-    struct text_data* d = malloc(sizeof(struct text_data));
-    struct widget*    w = malloc(sizeof(struct widget));
-
-    size_t len = strlen(str);
-    if (len > INT_MAX)
-        athr_fatal("str is longer than INT_MAX");
-
-    d->len = (int)len;
-    d->str = malloc(((size_t)d->len) * sizeof(char));
-
-    memcpy(d->str, str, (size_t)d->len);
-
-    w->data = d;
-    w->finish = widget_text_finish;
-    w->update = widget_text_update;
-    w->get_min_length = widget_text_get_min_length;
-    w->get_max_length = widget_text_get_max_length;
-
-    return w;
+    for (unsigned i = 0; i < w->canvas.size; ++i)
+        w->canvas.buff[i] = text->str[i];
 }
 
-static void widget_text_finish(struct widget* w)
+static unsigned min_length(struct athr_widget *w)
 {
-    struct text_data* d = w->data;
-    free(d->str);
-    free(w->data);
-    free(w);
+    struct athr_widget_text *text = w->derived;
+    return text->len;
 }
 
-static void widget_text_update(struct widget* w, double consumed, double speed, double dlt)
+static unsigned max_length(struct athr_widget *w)
 {
-    struct text_data* d = w->data;
-
-    for (int i = 0; i < w->canvas.length; ++i) {
-        w->canvas.buff[i] = d->str[i];
-    }
+    struct athr_widget_text *text = w->derived;
+    return text->len;
 }
 
-static int widget_text_get_min_length(struct widget* w)
-{
-    struct text_data* d = w->data;
-    return d->len;
-}
+static struct athr_widget_vtable const vtable = {update, min_length,
+                                                 max_length};
 
-static int widget_text_get_max_length(struct widget* w)
+void widget_text_create(struct athr_widget_text *text, char const *str)
 {
-    struct text_data* d = w->data;
-    return d->len;
+    text->len = (unsigned)strlen(str);
+    assert(text->len < ATHR_WIDGET_TEXT_MAX_SIZE);
+    strlcpy(text->str, str, ATHR_WIDGET_TEXT_MAX_SIZE);
+    widget_setup((struct athr_widget *)text, &vtable);
 }

@@ -1,63 +1,48 @@
-#include "canvas.h"
+#include "athr/canvas.h"
+#include "common.h"
 #include "report.h"
 #include "terminal/terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-void athr_canvas_create(struct canvas* canvas, int min_length)
+void athr_canvas_create(struct athr_canvas *canvas, unsigned min_size)
 {
-    int ncols;
-
-    canvas->min_length = min_length;
-
-    ncols = athr_get_term_width() + 1;
+    canvas->min_size = min_size;
+    unsigned ncols = athr_get_term_width() + 1;
 #ifdef WIN32
+    assert(ncols > 0);
     ncols--;
 #endif
 
-    if (ncols < canvas->min_length)
-        canvas->length = canvas->min_length;
+    if (ncols < canvas->min_size)
+        canvas->size = canvas->min_size;
     else
-        canvas->length = ncols;
-
-    if (canvas->length < 0)
-        athr_fatal("canvas length is negative");
-
-    canvas->buff = malloc(((size_t)canvas->length) * sizeof(char));
+        canvas->size = ncols;
+    canvas->size = MIN(canvas->size, ATHR_CANVAS_MAX_SIZE);
 }
 
-void athr_canvas_draw(struct canvas* canvas)
+void athr_canvas_draw(struct athr_canvas const *canvas)
 {
-    fprintf(stderr, "%.*s", canvas->length, canvas->buff);
+    fprintf(stderr, "%.*s", canvas->size, canvas->buff);
     fflush(stderr);
 }
 
-void athr_canvas_resize(struct canvas* canvas)
+void athr_canvas_resize(struct athr_canvas *canvas)
 {
-
-    int ncols = athr_get_term_width() + 1;
+    unsigned ncols = athr_get_term_width() + 1;
 #ifdef WIN32
+    assert(ncols > 0);
     ncols--;
 #endif
 
-    if (ncols < canvas->min_length)
-        ncols = canvas->min_length;
-
-    if (ncols < 0)
-        athr_fatal("ncols is negative");
-
-    if (canvas->length != ncols) {
-        canvas->buff = realloc(canvas->buff, (size_t)ncols);
-        canvas->length = ncols;
-    }
+    if (ncols < canvas->min_size) ncols = canvas->min_size;
+    canvas->size = ncols;
+    canvas->size = MIN(canvas->size, ATHR_CANVAS_MAX_SIZE);
 }
 
-void athr_canvas_clean(struct canvas* canvas)
+void athr_canvas_clean(struct athr_canvas *canvas)
 {
-    int i;
-    for (i = 0; i < canvas->length - 1; ++i)
+    for (unsigned i = 0; i < canvas->size - 1; ++i)
         canvas->buff[i] = ' ';
-    canvas->buff[canvas->length - 1] = '\r';
+    canvas->buff[canvas->size - 1] = '\r';
 }
-
-void athr_canvas_finish(struct canvas* canvas) { free(canvas->buff); }

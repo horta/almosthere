@@ -1,8 +1,8 @@
-#ifndef ATHR_BAR_H
-#define ATHR_BAR_H
+#ifndef WIDGET_BAR_H
+#define WIDGET_BAR_H
 
-#include "widget/widget.h"
+struct athr_widget_bar;
 
-struct widget* widget_bar_create(void);
+void widget_bar_create(struct athr_widget_bar *);
 
 #endif
