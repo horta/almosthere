@@ -14,7 +14,7 @@ static bool force_fallback_use = false;
 
 void athr_terminal_set_fallback(unsigned width) { fallback_width = width; }
 
-void athr_terminal_use_fallback(void) { force_fallback_use = true; }
+void athr_terminal_force_fallback_use(bool v) { force_fallback_use = v; }
 
 unsigned terminal_width(void)
 {

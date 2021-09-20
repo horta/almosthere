@@ -45,3 +45,9 @@ void athr_canvas_clean(struct athr_canvas *canvas)
         canvas->buff[i] = ' ';
     canvas->buff[canvas->size - 1] = '\r';
 }
+
+void canvas_close(struct athr_canvas *canvas)
+{
+    fprintf(stderr, "\n");
+    fflush(stderr);
+}

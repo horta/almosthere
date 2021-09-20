@@ -30,6 +30,7 @@ void athr_canvas_create(struct athr_canvas *canvas, unsigned min_size);
  */
 void athr_canvas_draw(struct athr_canvas const *canvas);
 void athr_canvas_clean(struct athr_canvas *canvas);
+void canvas_close(struct athr_canvas *canvas);
 /**
  * Resize canvas according to terminal width and minimum size.
  * @param canvas Canvas object.

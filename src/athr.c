@@ -84,4 +84,5 @@ void athr_stop(struct athr *at)
 {
     atomic_store(&at->stop, true);
     update(at);
+    canvas_close(&at->main.canvas);
 }

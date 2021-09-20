@@ -1,7 +1,6 @@
 #include "athr/athr.h"
-#include <stdlib.h>
 
-int main()
+static int example1(void)
 {
     struct athr at = ATHR_INIT;
     if (athr_start(&at, 14, "", ATHR_BAR)) return EXIT_FAILURE;
@@ -13,5 +12,24 @@ int main()
     }
 
     athr_stop(&at);
+    return EXIT_SUCCESS;
+}
+
+int main()
+{
+    if (example1()) return EXIT_FAILURE;
+
+    athr_terminal_force_fallback_use(true);
+    if (example1()) return EXIT_FAILURE;
+
+    athr_terminal_set_fallback(3);
+    if (example1()) return EXIT_FAILURE;
+
+    athr_terminal_set_fallback(2);
+    if (example1()) return EXIT_FAILURE;
+
+    athr_terminal_force_fallback_use(false);
+    if (example1()) return EXIT_FAILURE;
+
     return EXIT_SUCCESS;
 }

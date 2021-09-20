@@ -2,8 +2,9 @@
 #define ATHR_TERMINAL_H
 
 #include "athr/export.h"
+#include <stdbool.h>
 
 ATHR_API void athr_terminal_set_fallback(unsigned width);
-ATHR_API void athr_terminal_use_fallback(void);
+ATHR_API void athr_terminal_force_fallback_use(bool v);
 
 #endif

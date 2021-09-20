@@ -22,11 +22,7 @@ static void update(struct athr_widget *w, double consumed, double speed,
     int n = snprintf(str, ATHR_WIDGET_PERC_SIZE + 1, " %3d%%", perc);
     assert(n == ATHR_WIDGET_PERC_SIZE);
     UNUSED(n);
-
-    for (unsigned i = 0; i < ATHR_WIDGET_PERC_SIZE; ++i)
-        w->canvas.buff[i] = eta->str[i];
-
-    memcpy(w->canvas.buff, eta->str, ATHR_WIDGET_PERC_SIZE);
+    memcpy(w->canvas.buff, str, ATHR_WIDGET_PERC_SIZE);
 }
 
 static unsigned min_size(struct athr_widget const *w)

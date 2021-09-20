@@ -7,7 +7,8 @@ static void update(struct athr_widget *w, double consumed, double speed,
                    double dlt)
 {
     struct athr_widget_text *text = w->derived;
-    memcpy(w->canvas.buff, text->str, w->canvas.size);
+    assert(w->canvas.size == text->size);
+    memcpy(w->canvas.buff, text->str, text->size);
 }
 
 static unsigned min_size(struct athr_widget const *w)
