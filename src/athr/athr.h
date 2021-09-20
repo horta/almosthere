@@ -13,6 +13,7 @@ extern "C" {
 #include "athr/export.h"
 #include "athr/option.h"
 #include "athr/rc.h"
+#include "athr/terminal.h"
 #include "athr/thr.h"
 #include "athr/widget/main.h"
 #include "athr/widget/widget.h"

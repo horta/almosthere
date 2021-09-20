@@ -50,9 +50,15 @@ static void update(struct athr_widget *w, double consumed, double speed,
         w->canvas.buff[i] = eta->str[i];
 }
 
-static unsigned min_size(struct athr_widget *w) { return ATHR_WIDGET_ETA_SIZE; }
+static unsigned min_size(struct athr_widget const *w)
+{
+    return ATHR_WIDGET_ETA_SIZE;
+}
 
-static unsigned max_size(struct athr_widget *w) { return ATHR_WIDGET_ETA_SIZE; }
+static unsigned max_size(struct athr_widget const *w)
+{
+    return ATHR_WIDGET_ETA_SIZE;
+}
 
 static struct athr_widget_vtable const vtable = {update, min_size, max_size};
 

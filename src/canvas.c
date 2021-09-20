@@ -1,13 +1,13 @@
 #include "athr/canvas.h"
 #include "common.h"
-#include "terminal/terminal.h"
+#include "terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 void athr_canvas_create(struct athr_canvas *canvas, unsigned min_size)
 {
     canvas->min_size = min_size;
-    unsigned ncols = athr_get_term_width() + 1;
+    unsigned ncols = terminal_width() + 1;
 #ifdef WIN32
     assert(ncols > 0);
     ncols--;
@@ -28,7 +28,7 @@ void athr_canvas_draw(struct athr_canvas const *canvas)
 
 void athr_canvas_resize(struct athr_canvas *canvas)
 {
-    unsigned ncols = athr_get_term_width() + 1;
+    unsigned ncols = terminal_width() + 1;
 #ifdef WIN32
     assert(ncols > 0);
     ncols--;

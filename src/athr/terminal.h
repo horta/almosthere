@@ -1,0 +1,9 @@
+#ifndef ATHR_TERMINAL_H
+#define ATHR_TERMINAL_H
+
+#include "athr/export.h"
+
+ATHR_API void athr_terminal_set_fallback(unsigned width);
+ATHR_API void athr_terminal_use_fallback(void);
+
+#endif

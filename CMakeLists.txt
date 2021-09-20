@@ -63,15 +63,12 @@ find_package(Curses)
 
 if(CURSES_FOUND)
   set(TERMINAL_CURSES TRUE)
-  set(TERMINAL_DUMMY FALSE)
   set(TERMINAL_WIN32 FALSE)
 elseif(WIN32)
   set(TERMINAL_CURSES FALSE)
-  set(TERMINAL_DUMMY FALSE)
   set(TERMINAL_WIN32 TRUE)
 else()
   set(TERMINAL_CURSES FALSE)
-  set(TERMINAL_DUMMY TRUE)
   set(TERMINAL_WIN32 FALSE)
 endif()
 
@@ -81,13 +78,13 @@ endif()
 
 add_library(
   athr
-  $<$<BOOL:${TERMINAL_CURSES}>:src/terminal/curses.c>
-  $<$<BOOL:${TERMINAL_DUMMY}>:src/terminal/dummy.c>
-  $<$<BOOL:${TERMINAL_WIN32}>:src/terminal/win32.c>
+  $<$<BOOL:${TERMINAL_CURSES}>:src/term_curses.c>
+  $<$<BOOL:${TERMINAL_WIN32}>:src/term_win32.c>
   src/athr.c
   src/canvas.c
   src/deprecated.c
   src/error.c
+  src/terminal.c
   src/thr.c
   src/widget/bar.c
   src/widget/eta.c
@@ -123,6 +120,8 @@ target_include_directories(
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(athr PRIVATE c_std_11)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${TERMINAL_CURSES}>:TERMINAL_CURSES>)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${TERMINAL_WIN32}>:TERMINAL_WIN32>)
 
 # Write out athr/export.h to the current binary directory.
 include(GenerateExportHeader)

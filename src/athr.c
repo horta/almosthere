@@ -1,7 +1,6 @@
 #include "athr/athr.h"
 #include "athr/widget/main.h"
 #include "ema.h"
-#include "terminal/terminal.h"
 #include "thr.h"
 #include "widget/bar.h"
 #include "widget/eta.h"

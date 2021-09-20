@@ -1,7 +1,7 @@
 #include "athr/widget/main.h"
 #include "athr/canvas.h"
 #include "athr/widget/widget.h"
-#include "terminal/terminal.h"
+#include "terminal.h"
 #include "widget/widget.h"
 #include <assert.h>
 #include <stdlib.h>

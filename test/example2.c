@@ -11,6 +11,7 @@ int main()
         athr_consume(&at, 1);
     }
 
+    elapsed_sleep(1.05); /* some time-consuming task */
     athr_stop(&at);
     return EXIT_SUCCESS;
 }
