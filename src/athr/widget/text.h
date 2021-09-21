@@ -4,6 +4,7 @@
 #include "athr/widget/widget.h"
 
 #define ATHR_WIDGET_TEXT_MAX_SIZE 64
+#define ATHR_WIDGET_TEXT_MIN_SIZE 0
 
 struct athr_widget_text
 {

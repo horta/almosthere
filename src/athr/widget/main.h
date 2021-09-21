@@ -1,6 +1,7 @@
 #ifndef ATHR_WIDGET_MAIN_H
 #define ATHR_WIDGET_MAIN_H
 
+#include "athr/canvas.h"
 #include "athr/widget/bar.h"
 #include "athr/widget/eta.h"
 #include "athr/widget/perc.h"
@@ -28,12 +29,12 @@ struct athr_widget_main
             ATHR_WIDGET_ETA_INIT, ATHR_WIDGET_PERC_INIT, ATHR_WIDGET_TEXT_INIT \
     }
 
+void widget_main_create(struct athr_widget_main *);
 void widget_main_setup(struct athr_widget_main *);
-void widget_main_assert_that_fits(struct athr_widget_main const *main);
 
-struct athr_widget_bar *widget_main_setup_bar(struct athr_widget_main *main);
-struct athr_widget_eta *widget_main_setup_eta(struct athr_widget_main *main);
-struct athr_widget_perc *widget_main_setup_perc(struct athr_widget_main *main);
+struct athr_widget_bar *widget_main_add_bar(struct athr_widget_main *main);
+struct athr_widget_eta *widget_main_add_eta(struct athr_widget_main *main);
+struct athr_widget_perc *widget_main_add_perc(struct athr_widget_main *main);
 struct athr_widget_text *widget_main_setup_text(struct athr_widget_main *main);
 
 #endif

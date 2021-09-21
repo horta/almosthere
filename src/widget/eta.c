@@ -62,7 +62,7 @@ static unsigned max_size(struct athr_widget const *w)
 
 static struct athr_widget_vtable const vtable = {update, min_size, max_size};
 
-void widget_eta_create(struct athr_widget_eta *eta)
+void widget_eta_setup(struct athr_widget_eta *eta)
 {
     widget_setup((struct athr_widget *)eta, &vtable);
 }

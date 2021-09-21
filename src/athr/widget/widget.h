@@ -1,7 +1,6 @@
 #ifndef ATHR_WIDGET_WIDGET_H
 #define ATHR_WIDGET_WIDGET_H
 
-#include "athr/canvas.h"
 #include "athr/canvas_view.h"
 
 struct athr_widget;

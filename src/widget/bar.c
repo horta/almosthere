@@ -1,8 +1,7 @@
 #include "athr/widget/bar.h"
+#include "athr/canvas.h"
 #include "widget/widget.h"
 #include <string.h>
-
-#define SMALLEST_BAR "|=|"
 
 static void draw(struct athr_widget_bar *bar, struct athr_canvas_view *canvas)
 {
@@ -23,7 +22,7 @@ static void update(struct athr_widget *w, double consumed, double speed,
 
 static unsigned min_size(struct athr_widget const *widget)
 {
-    return strlen(SMALLEST_BAR);
+    return ATHR_WIDGET_BAR_MIN_SIZE;
 }
 
 static unsigned max_size(struct athr_widget const *widget)
@@ -33,7 +32,7 @@ static unsigned max_size(struct athr_widget const *widget)
 
 static struct athr_widget_vtable const vtable = {update, min_size, max_size};
 
-void widget_bar_create(struct athr_widget_bar *bar)
+void widget_bar_setup(struct athr_widget_bar *bar)
 {
     widget_setup((struct athr_widget *)bar, &vtable);
     bar->consumed = 0;

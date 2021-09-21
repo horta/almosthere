@@ -51,6 +51,7 @@ ATHR_API enum athr_rc athr_start(struct athr *at, unsigned long total,
                                  char const *desc, enum athr_option opts);
 ATHR_API void athr_eat(struct athr *at, unsigned long amount);
 ATHR_API void athr_stop(struct athr *at);
+ATHR_API void athr_disable_threading(bool disable);
 
 #ifdef __cplusplus
 }

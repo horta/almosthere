@@ -9,6 +9,6 @@ struct athr_ema
 };
 
 #define ATHR_EMA_INIT                                                          \
-    (struct athr_ema) { 0.0f, 1 }
+    (struct athr_ema) { 0.0f, 0 }
 
 #endif

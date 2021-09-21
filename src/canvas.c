@@ -3,10 +3,14 @@
 #include "terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void athr_canvas_create(struct athr_canvas *canvas, unsigned min_size)
+void athr_canvas_create(struct athr_canvas *canvas)
 {
-    canvas->min_size = min_size;
+    canvas->size = 0;
+    canvas->min_size = 0;
+    canvas->max_size = 0;
+#if 0
     unsigned ncols = terminal_width() + 1;
 #ifdef WIN32
     assert(ncols > 0);
@@ -18,6 +22,7 @@ void athr_canvas_create(struct athr_canvas *canvas, unsigned min_size)
     else
         canvas->size = ncols;
     canvas->size = MIN(canvas->size, ATHR_CANVAS_MAX_SIZE);
+#endif
 }
 
 void athr_canvas_draw(struct athr_canvas const *canvas)
@@ -26,7 +31,7 @@ void athr_canvas_draw(struct athr_canvas const *canvas)
     fflush(stderr);
 }
 
-void athr_canvas_resize(struct athr_canvas *canvas)
+bool athr_canvas_resize(struct athr_canvas *canvas)
 {
     unsigned ncols = terminal_width() + 1;
 #ifdef WIN32
@@ -35,18 +40,28 @@ void athr_canvas_resize(struct athr_canvas *canvas)
 #endif
 
     if (ncols < canvas->min_size) ncols = canvas->min_size;
+
+    unsigned prev_size = canvas->size;
     canvas->size = ncols;
-    canvas->size = MIN(canvas->size, ATHR_CANVAS_MAX_SIZE);
+    canvas->size = MIN(canvas->size, canvas->max_size);
+    canvas->size = MAX(canvas->size, canvas->min_size);
+    return prev_size != canvas->size;
+}
+
+void athr_canvas_setup(struct athr_canvas *canvas, unsigned min_size,
+                       unsigned max_size)
+{
+    canvas->min_size = min_size;
+    canvas->max_size = max_size;
 }
 
 void athr_canvas_clean(struct athr_canvas *canvas)
 {
-    for (unsigned i = 0; i < canvas->size - 1; ++i)
-        canvas->buff[i] = ' ';
+    memset(canvas->buff, ' ', canvas->size - 1);
     canvas->buff[canvas->size - 1] = '\r';
 }
 
-void canvas_close(struct athr_canvas *canvas)
+void athr_canvas_close(struct athr_canvas *canvas)
 {
     fprintf(stderr, "\n");
     fflush(stderr);

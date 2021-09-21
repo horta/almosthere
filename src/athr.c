@@ -12,15 +12,17 @@
 /* How often to update, in seconds. */
 static double const TIMESTEP = 1.0 / 30.0;
 
+static atomic_bool disable_threading = false;
+
 static void setup_widget(struct athr_widget_main *main, const char *desc,
                          enum athr_option opts)
 {
-    widget_main_setup(main);
+    widget_main_create(main);
     widget_text_create(widget_main_setup_text(main), desc);
-    if (opts & ATHR_PERC) widget_perc_setup(widget_main_setup_perc(main));
-    if (opts & ATHR_BAR) widget_bar_create(widget_main_setup_bar(main));
-    if (opts & ATHR_ETA) widget_eta_create(widget_main_setup_eta(main));
-    widget_main_assert_that_fits(main);
+    if (opts & ATHR_PERC) widget_perc_setup(widget_main_add_perc(main));
+    if (opts & ATHR_BAR) widget_bar_setup(widget_main_add_bar(main));
+    if (opts & ATHR_ETA) widget_eta_setup(widget_main_add_eta(main));
+    widget_main_setup(main);
 }
 
 static void lock(struct athr *at)
@@ -48,7 +50,7 @@ static void update(struct athr *at)
 static void thread_start(void *args)
 {
     struct athr *at = (struct athr *)args;
-    while (!atomic_load(&at->stop))
+    while (!atomic_load(&at->stop) && !atomic_load(&disable_threading))
     {
         update(at);
         elapsed_sleep(TIMESTEP);
@@ -60,9 +62,6 @@ enum athr_rc athr_start(struct athr *at, unsigned long total, const char *desc,
                         enum athr_option opts)
 {
     if (desc == NULL) desc = "";
-    assert(strlen(desc) < ATHR_CANVAS_MAX_SIZE);
-    assert(strlen(desc) < ATHR_WIDGET_TEXT_MAX_SIZE);
-
     at->total = total;
     at->consumed = 0;
     at->speed = ATHR_EMA_INIT;
@@ -72,17 +71,31 @@ enum athr_rc athr_start(struct athr *at, unsigned long total, const char *desc,
     setup_widget(&at->main, desc, opts);
 
     atomic_store(&at->stop, false);
-    return thr_create(&at->thr, thread_start, at);
+
+    if (!atomic_load(&disable_threading))
+        return thr_create(&at->thr, thread_start, at);
+
+    return ATHR_SUCCESS;
 }
 
 void athr_eat(struct athr *at, unsigned long amount)
 {
     atomic_fetch_add(&at->consumed, amount);
+    if (atomic_load(&disable_threading))
+    {
+        update(at);
+        elapsed_sleep(TIMESTEP);
+    }
 }
 
 void athr_stop(struct athr *at)
 {
     atomic_store(&at->stop, true);
     update(at);
-    canvas_close(&at->main.canvas);
+    athr_canvas_close(&at->main.canvas);
+}
+
+void athr_disable_threading(bool disable)
+{
+    atomic_store(&disable_threading, disable);
 }

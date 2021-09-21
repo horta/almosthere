@@ -7,7 +7,7 @@ static int example1(void)
 
     for (unsigned i = 0; i < 14; ++i)
     {
-        elapsed_sleep(0.05); /* some time-consuming task */
+        elapsed_sleep(0.0001); /* some time-consuming task */
         athr_consume(&at, 1);
     }
 
@@ -17,19 +17,16 @@ static int example1(void)
 
 int main()
 {
+    athr_disable_threading(true);
     if (example1()) return EXIT_FAILURE;
 
     athr_terminal_force_fallback_use(true);
     if (example1()) return EXIT_FAILURE;
 
-    athr_terminal_set_fallback(3);
-    if (example1()) return EXIT_FAILURE;
-
-    athr_terminal_set_fallback(2);
-    if (example1()) return EXIT_FAILURE;
-
-    athr_terminal_force_fallback_use(false);
-    if (example1()) return EXIT_FAILURE;
-
+    for (unsigned i = 0; i < 1024; ++i)
+    {
+        athr_terminal_set_fallback(i);
+        if (example1()) return EXIT_FAILURE;
+    }
     return EXIT_SUCCESS;
 }
