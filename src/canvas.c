@@ -1,9 +1,14 @@
 #include "athr/canvas.h"
 #include "common.h"
 #include "terminal.h"
+#include <stdatomic.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+static atomic_bool use_stderr = false;
+
+void athr_canvas_use_stderr(bool use) { atomic_store(&use_stderr, use); }
 
 void athr_canvas_create(struct athr_canvas *canvas)
 {
@@ -27,8 +32,16 @@ void athr_canvas_create(struct athr_canvas *canvas)
 
 void athr_canvas_draw(struct athr_canvas const *canvas)
 {
-    fprintf(stderr, "%.*s", canvas->size, canvas->buff);
-    fflush(stderr);
+    if (use_stderr)
+    {
+        fprintf(stderr, "%.*s", canvas->size, canvas->buff);
+        fflush(stderr);
+    }
+    else
+    {
+        fprintf(stdout, "%.*s", canvas->size, canvas->buff);
+        fflush(stdout);
+    }
 }
 
 bool athr_canvas_resize(struct athr_canvas *canvas)
@@ -61,6 +74,14 @@ void athr_canvas_clean(struct athr_canvas *canvas)
 
 void athr_canvas_close(struct athr_canvas *canvas)
 {
-    fprintf(stderr, "\n");
-    fflush(stderr);
+    if (use_stderr)
+    {
+        fprintf(stderr, "\n");
+        fflush(stderr);
+    }
+    else
+    {
+        fprintf(stdout, "\n");
+        fflush(stderr);
+    }
 }

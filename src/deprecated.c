@@ -3,6 +3,7 @@
 
 struct athr *athr_create_var(athr_create_args in)
 {
+    athr_canvas_use_stderr(true);
     long volume_out = in.volume ? in.volume : 0;
     const char *desc_out = in.desc ? in.desc : NULL;
     enum ATHR_OPTS opts_out =

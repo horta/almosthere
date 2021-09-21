@@ -10,6 +10,7 @@ function(athr_add_test name)
     set_tests_properties(${name} PROPERTIES ENVIRONMENT "PATH=${PATH}")
 endfunction()
 
+athr_add_test(brake)
 athr_add_test(example1)
 athr_add_test(example2)
 athr_add_test(example3)

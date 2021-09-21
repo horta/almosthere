@@ -18,7 +18,7 @@ int test_example1(void)
 
     for (i = 0; i < 14; ++i)
     {
-        athr_sleep(50); /* some time-consuming task */
+        athr_sleep(10); /* some time-consuming task */
         athr_consume(at, 1);
     }
 
@@ -34,7 +34,7 @@ int test_example2(void)
 
     for (i = 0; i < 9; ++i)
     {
-        athr_sleep(50); /* some time-consuming task */
+        athr_sleep(10); /* some time-consuming task */
         athr_consume(at, 1);
     }
 
@@ -50,7 +50,7 @@ int test_example3(void)
 
     for (i = 0; i < 11; ++i)
     {
-        athr_sleep(50); /* some time-consuming task */
+        athr_sleep(10); /* some time-consuming task */
         athr_consume(at, 1);
     }
 
@@ -66,7 +66,7 @@ int test_example4(void)
 
     for (i = 0; i < 10; ++i)
     {
-        athr_sleep(50); /* some time-consuming task */
+        athr_sleep(10); /* some time-consuming task */
         athr_consume(at, 1);
     }
 
