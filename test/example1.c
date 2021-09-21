@@ -7,7 +7,7 @@ static int example1(void)
 
     for (unsigned i = 0; i < 14; ++i)
     {
-        elapsed_sleep(0.0001); /* some time-consuming task */
+        /* elapsed_sleep(0.00000001); /1* some time-consuming task *1/ */
         athr_consume(&at, 1);
     }
 
@@ -25,7 +25,7 @@ int main()
 
     for (unsigned i = 0; i < 1024; ++i)
     {
-        athr_terminal_set_fallback(i);
+        athr_terminal_set_fallback_width(i);
         if (example1()) return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

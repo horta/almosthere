@@ -12,7 +12,10 @@
 static unsigned fallback_width = 80;
 static bool force_fallback_use = false;
 
-void athr_terminal_set_fallback(unsigned width) { fallback_width = width; }
+void athr_terminal_set_fallback_width(unsigned width)
+{
+    fallback_width = width;
+}
 
 void athr_terminal_force_fallback_use(bool v) { force_fallback_use = v; }
 

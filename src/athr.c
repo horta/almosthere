@@ -81,11 +81,7 @@ enum athr_rc athr_start(struct athr *at, unsigned long total, const char *desc,
 void athr_eat(struct athr *at, unsigned long amount)
 {
     atomic_fetch_add(&at->consumed, amount);
-    if (atomic_load(&disable_threading))
-    {
-        update(at);
-        elapsed_sleep(TIMESTEP);
-    }
+    if (atomic_load(&disable_threading)) update(at);
 }
 
 void athr_stop(struct athr *at)

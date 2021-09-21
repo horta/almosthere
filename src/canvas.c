@@ -39,8 +39,6 @@ bool athr_canvas_resize(struct athr_canvas *canvas)
     ncols--;
 #endif
 
-    if (ncols < canvas->min_size) ncols = canvas->min_size;
-
     unsigned prev_size = canvas->size;
     canvas->size = ncols;
     canvas->size = MIN(canvas->size, canvas->max_size);
@@ -52,7 +50,7 @@ void athr_canvas_setup(struct athr_canvas *canvas, unsigned min_size,
                        unsigned max_size)
 {
     canvas->min_size = min_size;
-    canvas->max_size = max_size;
+    canvas->max_size = MIN(max_size, ATHR_CANVAS_MAX_SIZE);
 }
 
 void athr_canvas_clean(struct athr_canvas *canvas)
