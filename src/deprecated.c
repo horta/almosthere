@@ -1,4 +1,5 @@
 #include "athr/deprecated.h"
+#include "athr.h"
 #include "athr/athr.h"
 
 struct athr *athr_create_var(athr_create_args in)
@@ -19,6 +20,10 @@ struct athr *athr_create_var(athr_create_args in)
 
 void athr_consume(struct athr *at, long consume) { athr_eat(at, consume); }
 
-void athr_finish(struct athr *at) { athr_stop(at); }
+void athr_finish(struct athr *at)
+{
+    athr_stop_wait(at);
+    free(at);
+}
 
 void athr_sleep(long milliseconds) { elapsed_sleep(milliseconds / 1000.); }

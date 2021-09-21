@@ -48,3 +48,16 @@ _Noreturn void thr_exit(void)
     pthread_exit(0);
 #endif
 }
+
+enum athr_rc thr_join(struct athr_thr *thr)
+{
+#if defined(_WIN32)
+    DWORD dwRes;
+    if (WaitForSingleObject(thr, INFINITE) == WAIT_FAILED) return ATHR_FAILURE;
+    CloseHandle(thr);
+#else
+    void *pres = NULL;
+    if (pthread_join(thr->handle, &pres) != 0) return ATHR_FAILURE;
+#endif
+    return ATHR_SUCCESS;
+}

@@ -89,6 +89,15 @@ void athr_stop(struct athr *at)
     atomic_store(&at->stop, true);
     update(at);
     athr_canvas_close(&at->main.canvas);
+    thr_detach(&at->thr);
+}
+
+void athr_stop_wait(struct athr *at)
+{
+    atomic_store(&at->stop, true);
+    update(at);
+    athr_canvas_close(&at->main.canvas);
+    thr_join(&at->thr);
 }
 
 void athr_disable_threading(bool disable)
