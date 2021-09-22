@@ -73,7 +73,7 @@ enum athr_rc athr_start(struct athr *at, unsigned long total, const char *desc,
 
     atomic_store(&at->stop, false);
 
-    if (!atomic_load(&disable_threading))
+    if (!atomic_load_bool(&disable_threading))
         return thr_create(&at->thr, thread_start, at);
 
     return ATHR_SUCCESS;

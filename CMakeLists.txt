@@ -93,24 +93,6 @@ add_library(
   src/widget/text.c)
 add_library(ATHR::athr ALIAS athr)
 
-if(${CMAKE_C_COMPILER_ID} MATCHES "MSVC")
-  set(WARNING_FLAGS /W3)
-else()
-  set(WARNING_FLAGS
-      -Wall
-      -Wextra
-      -pedantic
-      -Wstrict-prototypes
-      -Wshadow
-      -Wconversion
-      -Wmissing-prototypes
-      -Wno-unused-parameter
-      -Wsign-conversion
-      -Wno-unused-function # TODO: added only to please clangd for now
-      -Wno-empty-translation-unit # TODO: added only to please clangd for now
-  )
-endif()
-
 target_include_directories(
     athr
     PUBLIC $<INSTALL_INTERFACE:include>
@@ -122,6 +104,7 @@ set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(athr PRIVATE c_std_11)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${TERMINAL_CURSES}>:TERMINAL_CURSES>)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${TERMINAL_WIN32}>:TERMINAL_WIN32>)
+target_compile_options(athr PRIVATE ${WARNING_FLAGS})
 
 # Write out athr/export.h to the current binary directory.
 include(GenerateExportHeader)
