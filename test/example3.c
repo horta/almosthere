@@ -8,7 +8,7 @@ int main()
     for (unsigned i = 0; i < 11; ++i)
     {
         elapsed_sleep(0.005); /* some time-consuming task */
-        athr_consume(&at, 1);
+        athr_eat(&at, 1);
     }
 
     athr_stop(&at);
