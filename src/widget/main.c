@@ -131,8 +131,8 @@ static unsigned increase_size(unsigned nwidgets, struct athr_widget **widget,
     for (unsigned i = 0; i < nwidgets; ++i)
     {
         unsigned max_size = widget[i]->vtable->max_length(widget[i]);
-        unsigned amount = MIN(size, max_size - widget[i]->canvas.size);
-        amount = MIN(amount, remain);
+        unsigned amount = minu(size, max_size - widget[i]->canvas.size);
+        amount = minu(amount, remain);
         widget[i]->canvas.size += amount;
         remain -= amount;
     }

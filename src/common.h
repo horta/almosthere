@@ -3,19 +3,9 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
-#define MAX(a, b)                                                              \
-    ({                                                                         \
-        __typeof__(a) _a = (a);                                                \
-        __typeof__(b) _b = (b);                                                \
-        _a > _b ? _a : _b;                                                     \
-    })
+static inline unsigned maxu(unsigned a, unsigned b) { return a > b ? a : b; }
 
-#define MIN(a, b)                                                              \
-    ({                                                                         \
-        __typeof__(a) _a = (a);                                                \
-        __typeof__(b) _b = (b);                                                \
-        _a <= _b ? _a : _b;                                                    \
-    })
+static inline unsigned minu(unsigned a, unsigned b) { return a <= b ? a : b; }
 
 #define UNUSED(x) (void)(x)
 

@@ -16,7 +16,7 @@ static float const factor[15] = {
 static inline void ema_add(struct athr_ema *ema, float x)
 {
     ema->last = SMOOTHING * x + (1 - SMOOTHING) * ema->last;
-    ema->calls = MIN(ema->calls + 1, ARRAY_SIZE(factor));
+    ema->calls = minu(ema->calls + 1, ARRAY_SIZE(factor));
 }
 
 static inline float ema_get(struct athr_ema const *ema)
