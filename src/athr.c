@@ -39,7 +39,7 @@ static void update(struct athr *at)
     double elapsed = elapsed_stop(&at->elapsed);
     ema_add(&at->speed, (float)elapsed);
 
-    double ratio = ((double)atomic_load(&at->consumed)) / ((double)at->total);
+    double ratio = atomic_load_ul(&at->consumed) / ((double)at->total);
     at->main.super.vtable->update(&at->main.super, ratio, ema_get(&at->speed),
                                   elapsed);
 
@@ -50,7 +50,8 @@ static void update(struct athr *at)
 static void thread_start(void *args)
 {
     struct athr *at = (struct athr *)args;
-    while (!atomic_load(&at->stop) && !atomic_load(&disable_threading))
+    while (!atomic_load_bool(&at->stop) &&
+           !atomic_load_bool(&disable_threading))
     {
         update(at);
         elapsed_sleep(TIMESTEP);
@@ -81,7 +82,7 @@ enum athr_rc athr_start(struct athr *at, unsigned long total, const char *desc,
 void athr_eat(struct athr *at, unsigned long amount)
 {
     atomic_fetch_add(&at->consumed, amount);
-    if (atomic_load(&disable_threading)) update(at);
+    if (atomic_load_bool(&disable_threading)) update(at);
 }
 
 void athr_stop(struct athr *at)

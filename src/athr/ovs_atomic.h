@@ -20,6 +20,12 @@
 #include "athr/ovs_atomic_msvc.h"
 #else
 #include <stdatomic.h>
+#include <stdbool.h>
+static inline bool atomic_load_bool(atomic_bool *x) { return atomic_load(x); }
+static inline unsigned long atomic_load_ul(atomic_ulong *x)
+{
+    return atomic_load(x);
+}
 #endif
 
 #endif

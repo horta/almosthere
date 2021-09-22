@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 /* This header implements atomic operation primitives for MSVC
  * on i586 or greater platforms (32 bit). */
@@ -218,6 +219,8 @@ static inline void atomic_signal_fence(memory_order order)
 #elif _M_X64
 /* 64 bit reads are atomic on amd64 if 64 bit aligned. */
 #define atomic_read64(SRC, DST, ORDER) *(DST) = *(SRC);
+#else
+#error Neither _M_IX86 nor _M_X64 is set
 #endif
 
 #define atomic_read(SRC, DST)                                                  \
@@ -532,5 +535,19 @@ typedef ATOMIC(uintmax_t) atomic_uintmax_t;
 
 typedef ATOMIC(intptr_t) atomic_intptr_t;
 typedef ATOMIC(uintptr_t) atomic_uintptr_t;
+
+static inline bool atomic_load_bool(atomic_bool *x)
+{
+    bool y;
+    atomic_read_explicit(x, &y, memory_order_seq_cst);
+    return y;
+}
+
+static inline unsigned long atomic_load_ul(atomic_ulong *x)
+{
+    unsigned long y;
+    atomic_read_explicit(x, &y, memory_order_seq_cst);
+    return y;
+}
 
 #endif

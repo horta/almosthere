@@ -52,7 +52,6 @@ _Noreturn void thr_exit(void)
 enum athr_rc thr_join(struct athr_thr *thr)
 {
 #if defined(_WIN32)
-    DWORD dwRes;
     if (WaitForSingleObject(thr, INFINITE) == WAIT_FAILED) return ATHR_FAILURE;
     CloseHandle(thr);
 #else
