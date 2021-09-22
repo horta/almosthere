@@ -1,7 +1,7 @@
 #include "athr/canvas.h"
+#include "athr/ovs_atomic.h"
 #include "common.h"
 #include "terminal.h"
-#include <stdatomic.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

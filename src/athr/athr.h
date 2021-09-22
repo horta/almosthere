@@ -12,6 +12,7 @@ extern "C" {
 #include "athr/error.h"
 #include "athr/export.h"
 #include "athr/option.h"
+#include "athr/ovs_atomic.h"
 #include "athr/rc.h"
 #include "athr/terminal.h"
 #include "athr/thr.h"
@@ -19,7 +20,6 @@ extern "C" {
 #include "athr/widget/widget.h"
 #include "elapsed/elapsed.h"
 #include <stdatomic.h>
-#include <stdbool.h>
 
 struct athr
 {
