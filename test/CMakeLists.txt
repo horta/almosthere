@@ -1,13 +1,16 @@
+macro(inject_dll_to_please_windows test_name)
+  file(TO_CMAKE_PATH "$ENV{PATH}" PATH)
+  list(APPEND PATH $<TARGET_FILE_DIR:ELAPSED::elapsed>)
+  list(APPEND PATH $<TARGET_FILE_DIR:ATHR::athr>)
+  string(REPLACE ";" "\\;" PATH "${PATH}")
+  set_tests_properties(${test_name} PROPERTIES ENVIRONMENT "PATH=${PATH}")
+endmacro()
+
 function(athr_add_test name)
     add_executable(${name} ${name}.c)
     target_link_libraries(${name} PRIVATE ATHR::athr)
     add_test(NAME ${name} COMMAND ${name} -E environment)
-
-    # Ugly hacky to make the tests work on Windows.
-    file(TO_CMAKE_PATH "$ENV{PATH}" PATH)
-    list(APPEND PATH $<TARGET_FILE_DIR:ATHR::athr>)
-    string(REPLACE ";" "\\;" PATH "${PATH}")
-    set_tests_properties(${name} PROPERTIES ENVIRONMENT "PATH=${PATH}")
+    inject_dll_to_please_windows(${name})
 endfunction()
 
 athr_add_test(brake)
