@@ -2,7 +2,7 @@
 #define ATHR_THR_H
 
 #if defined(_WIN32)
-#include <processthreadsapi.h>
+#include <windows.h>
 typedef HANDLE athr_thr_handle;
 #else
 #include <pthread.h>
