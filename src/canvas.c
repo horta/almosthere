@@ -48,7 +48,6 @@ bool athr_canvas_resize(struct athr_canvas *canvas)
 {
     unsigned ncols = terminal_width() + 1;
 #ifdef WIN32
-    assert(ncols > 0);
     ncols--;
 #endif
 
