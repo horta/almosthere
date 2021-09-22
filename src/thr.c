@@ -22,7 +22,7 @@ enum athr_rc thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
 
 #if defined(_WIN32)
     thr->handle = CreateThread(NULL, 0, __thr_wrapper, (LPVOID)thr, 0, NULL);
-    if (!thr->thrd) return ATHR_FAILURE;
+    if (!thr->handle) return ATHR_FAILURE;
 #else
     if (pthread_create(&thr->handle, 0, __thr_wrapper, (void *)thr))
         return ATHR_FAILURE;
