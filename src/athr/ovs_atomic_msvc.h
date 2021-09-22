@@ -16,7 +16,6 @@
 #ifndef ATHR_OVS_ATOMIC_MSVC_H
 #define ATHR_OVS_ATOMIC_MSVC_H
 
-#define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
 
 #include <limits.h>
