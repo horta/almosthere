@@ -538,15 +538,23 @@ typedef ATOMIC(uintptr_t) atomic_uintptr_t;
 
 static inline bool atomic_load_bool(atomic_bool *x)
 {
-    bool y;
+    volatile bool y;
     atomic_read_explicit(x, &y, memory_order_seq_cst);
     return y;
 }
 
 static inline unsigned long atomic_load_ul(atomic_ulong *x)
 {
-    unsigned long y;
+    volatile unsigned long y;
     atomic_read_explicit(x, &y, memory_order_seq_cst);
+    return y;
+}
+
+static inline unsigned long atomic_fetch_add_ul(atomic_ulong *x,
+                                                unsigned long arg)
+{
+    volatile unsigned long y;
+    atomic_add_explicit(x, arg, &y, memory_order_seq_cst);
     return y;
 }
 

@@ -1,5 +1,6 @@
 #include "athr/widget/bar.h"
 #include "athr/canvas.h"
+#include "widget/bar.h"
 #include "widget/widget.h"
 #include <string.h>
 

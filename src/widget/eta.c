@@ -1,6 +1,6 @@
 #include "athr/widget/eta.h"
+#include "widget/eta.h"
 #include "widget/widget.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,4 +1,5 @@
 #include "athr/widget/text.h"
+#include "widget/text.h"
 #include "widget/widget.h"
 #include <assert.h>
 #include <string.h>

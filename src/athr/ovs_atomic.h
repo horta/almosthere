@@ -26,6 +26,12 @@ static inline unsigned long atomic_load_ul(atomic_ulong *x)
 {
     return atomic_load(x);
 }
+
+static inline unsigned long atomic_fetch_add_ul(atomic_ulong *x,
+                                                unsigned long arg)
+{
+    return atomic_fetch_add(x, arg);
+}
 #endif
 
 #endif

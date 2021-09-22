@@ -14,11 +14,15 @@ struct athr *athr_create_var(athr_create_args in)
 
     struct athr *at = malloc(sizeof *at);
     *at = ATHR_INIT;
-    athr_start(at, volume_out, desc_out, (enum athr_option)opts_out);
+    athr_start(at, (unsigned long)volume_out, desc_out,
+               (enum athr_option)opts_out);
     return at;
 }
 
-void athr_consume(struct athr *at, long consume) { athr_eat(at, consume); }
+void athr_consume(struct athr *at, long consume)
+{
+    athr_eat(at, (unsigned long)consume);
+}
 
 void athr_finish(struct athr *at)
 {
@@ -26,4 +30,7 @@ void athr_finish(struct athr *at)
     free(at);
 }
 
-void athr_sleep(long milliseconds) { elapsed_sleep(milliseconds / 1000.); }
+void athr_sleep(long milliseconds)
+{
+    elapsed_sleep((double)milliseconds / 1000.);
+}

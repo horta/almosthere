@@ -1,4 +1,5 @@
 #include "athr/athr.h"
+#include "athr.h"
 #include "athr/widget/main.h"
 #include "ema.h"
 #include "thr.h"
@@ -81,7 +82,7 @@ enum athr_rc athr_start(struct athr *at, unsigned long total, const char *desc,
 
 void athr_eat(struct athr *at, unsigned long amount)
 {
-    atomic_fetch_add(&at->consumed, amount);
+    atomic_fetch_add_ul(&at->consumed, amount);
     if (atomic_load_bool(&disable_threading)) update(at);
 }
 

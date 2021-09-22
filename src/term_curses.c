@@ -1,3 +1,4 @@
+#include "term_curses.h"
 #include "terminal.h"
 #include <curses.h>
 #include <errno.h>
@@ -82,5 +83,5 @@ unsigned term_curses_width(void)
 done:
     if (tty_fd != -1) close(tty_fd);
 
-    return cols < 0 ? terminal_fallback_width() : cols;
+    return cols < 0 ? terminal_fallback_width() : (unsigned)cols;
 }
