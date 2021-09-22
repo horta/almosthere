@@ -19,7 +19,6 @@ extern "C" {
 #include "athr/widget/main.h"
 #include "athr/widget/widget.h"
 #include "elapsed/elapsed.h"
-#include <stdatomic.h>
 
 struct athr
 {
