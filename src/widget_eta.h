@@ -3,6 +3,6 @@
 
 struct athr_widget_eta;
 
-void widget_eta_setup(struct athr_widget_eta *);
+void widget_eta_create(struct athr_widget_eta *);
 
 #endif

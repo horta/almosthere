@@ -55,7 +55,7 @@ static char const *huge_desc = "Morbi ac cursus sem."
 int main()
 {
     athr_disable_threading(true);
-    athr_terminal_force_fallback_use(true);
+    athr_term_force_fallback_use(true);
 
     enum athr_option options[8] = {
         ATHR_NONE,
@@ -77,19 +77,19 @@ int main()
     {
         for (unsigned w = 0; w < 1024; ++w)
         {
-            athr_terminal_set_fallback_width(w);
+            athr_term_set_fallback_width(w);
             if (brake("Desc", options[i])) return EXIT_FAILURE;
         }
     }
 
-    athr_terminal_force_fallback_use(false);
+    athr_term_force_fallback_use(false);
     if (brake(huge_desc, options[7])) return EXIT_FAILURE;
 
-    athr_terminal_force_fallback_use(true);
-    athr_terminal_set_fallback_width(25);
+    athr_term_force_fallback_use(true);
+    athr_term_set_fallback_width(25);
     if (brake(huge_desc, options[7])) return EXIT_FAILURE;
 
-    athr_terminal_set_fallback_width(256);
+    athr_term_set_fallback_width(256);
     if (brake(huge_desc, options[7])) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;

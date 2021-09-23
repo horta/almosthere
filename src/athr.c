@@ -1,30 +1,22 @@
 #include "athr/athr.h"
 #include "athr.h"
-#include "athr/widget/main.h"
+#include "athr/widget_main.h"
 #include "ema.h"
+#include "error.h"
 #include "thr.h"
-#include "widget/bar.h"
-#include "widget/eta.h"
-#include "widget/text.h"
+#include "widget_bar.h"
+#include "widget_eta.h"
+#include "widget_main.h"
+#include "widget_perc.h"
+#include "widget_text.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* How often to update, in seconds. */
-static double const TIMESTEP = 1.0 / 30.0;
+/* How often to update, in milliseconds. */
+static uint64_t const TIMESTEP = 300;
 
-static atomic_bool disable_threading = false;
-
-static void setup_widget(struct athr_widget_main *main, const char *desc,
-                         enum athr_option opts)
-{
-    widget_main_create(main);
-    widget_text_create(widget_main_setup_text(main), desc);
-    if (opts & ATHR_PERC) widget_perc_setup(widget_main_add_perc(main));
-    if (opts & ATHR_BAR) widget_bar_setup(widget_main_add_bar(main));
-    if (opts & ATHR_ETA) widget_eta_setup(widget_main_add_eta(main));
-    widget_main_setup(main);
-}
+static atomic_bool disable_thread = false;
 
 static void lock(struct athr *at)
 {
@@ -37,53 +29,61 @@ static void unlock(struct athr *at) { atomic_flag_clear(&at->lock); }
 static void update(struct athr *at)
 {
     lock(at);
-    double elapsed = elapsed_stop(&at->elapsed);
-    ema_add(&at->speed, (float)elapsed);
+    if (elapsed_stop(&at->elapsed)) error(at, "failed to elapsed_stop");
 
-    double ratio = atomic_load_ul(&at->consumed) / ((double)at->total);
-    at->main.super.vtable->update(&at->main.super, ratio, ema_get(&at->speed),
-                                  elapsed);
+    double sec = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
+    ema_add(&at->speed, sec);
 
-    elapsed_start(&at->elapsed);
+    double r = ((double)atomic_load_ul(&at->consumed)) / ((double)at->total);
+    at->main.super.vtable->update(&at->main.super, r, ema_get(&at->speed), sec);
+
+    if (elapsed_start(&at->elapsed)) error(at, "failed to elapsed_start");
     unlock(at);
 }
 
 static void thread_start(void *args)
 {
     struct athr *at = (struct athr *)args;
-    while (!atomic_load_bool(&at->stop) &&
-           !atomic_load_bool(&disable_threading))
+    while (!atomic_load_bool(&at->stop) && !atomic_load_bool(&disable_thread))
     {
         update(at);
-        elapsed_sleep(TIMESTEP);
+        if (athr_sleep(TIMESTEP)) error(at, "failed to sleep");
     }
-    thr_exit();
 }
 
-enum athr_rc athr_start(struct athr *at, unsigned long total, const char *desc,
-                        enum athr_option opts)
+int athr_start(struct athr *at, unsigned long total, const char *desc,
+               enum athr_option opts)
 {
     if (desc == NULL) desc = "";
     at->total = total;
     at->consumed = 0;
     at->speed = ATHR_EMA_INIT;
-    elapsed_start(&at->elapsed);
+    if (elapsed_start(&at->elapsed))
+    {
+        error(at, "failed to elapsed_start");
+        return 1;
+    }
 
     at->opts = opts;
-    setup_widget(&at->main, desc, opts);
+    widget_main_create(&at->main);
+    widget_text_create(widget_main_add_text(&at->main), desc);
+    if (opts & ATHR_PERC) widget_perc_create(widget_main_add_perc(&at->main));
+    if (opts & ATHR_BAR) widget_bar_create(widget_main_add_bar(&at->main));
+    if (opts & ATHR_ETA) widget_eta_create(widget_main_add_eta(&at->main));
+    widget_main_setup(&at->main);
 
     atomic_store(&at->stop, false);
 
-    if (!atomic_load_bool(&disable_threading))
+    if (!atomic_load_bool(&disable_thread))
         return thr_create(&at->thr, thread_start, at);
 
-    return ATHR_SUCCESS;
+    return 0;
 }
 
 void athr_eat(struct athr *at, unsigned long amount)
 {
     atomic_fetch_add_ul(&at->consumed, amount);
-    if (atomic_load_bool(&disable_threading)) update(at);
+    if (atomic_load_bool(&disable_thread)) update(at);
 }
 
 void athr_stop(struct athr *at)
@@ -104,5 +104,10 @@ void athr_stop_wait(struct athr *at)
 
 void athr_disable_threading(bool disable)
 {
-    atomic_store(&disable_threading, disable);
+    atomic_store(&disable_thread, disable);
+}
+
+int athr_sleep(unsigned milliseconds)
+{
+    return elapsed_sleep((unsigned)milliseconds);
 }

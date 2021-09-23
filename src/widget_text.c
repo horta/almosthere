@@ -1,6 +1,6 @@
-#include "athr/widget/text.h"
-#include "widget/text.h"
-#include "widget/widget.h"
+#include "athr/widget_text.h"
+#include "widget.h"
+#include "widget_text.h"
 #include <assert.h>
 #include <string.h>
 

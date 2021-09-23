@@ -2,11 +2,11 @@
 #define ATHR_WIDGET_MAIN_H
 
 #include "athr/canvas.h"
-#include "athr/widget/bar.h"
-#include "athr/widget/eta.h"
-#include "athr/widget/perc.h"
-#include "athr/widget/text.h"
-#include "athr/widget/widget.h"
+#include "athr/widget.h"
+#include "athr/widget_bar.h"
+#include "athr/widget_eta.h"
+#include "athr/widget_perc.h"
+#include "athr/widget_text.h"
 
 #define ATHR_WIDGET_MAIN_MAX_CHILDREN 4
 
@@ -28,13 +28,5 @@ struct athr_widget_main
         ATHR_WIDGET_INIT, ATHR_CANVAS_INIT, 0, {0}, ATHR_WIDGET_BAR_INIT,      \
             ATHR_WIDGET_ETA_INIT, ATHR_WIDGET_PERC_INIT, ATHR_WIDGET_TEXT_INIT \
     }
-
-void widget_main_create(struct athr_widget_main *);
-void widget_main_setup(struct athr_widget_main *);
-
-struct athr_widget_bar *widget_main_add_bar(struct athr_widget_main *main);
-struct athr_widget_eta *widget_main_add_eta(struct athr_widget_main *main);
-struct athr_widget_perc *widget_main_add_perc(struct athr_widget_main *main);
-struct athr_widget_text *widget_main_setup_text(struct athr_widget_main *main);
 
 #endif

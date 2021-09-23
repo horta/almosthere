@@ -86,11 +86,11 @@ add_library(
   src/error.c
   src/terminal.c
   src/thr.c
-  src/widget/bar.c
-  src/widget/eta.c
-  src/widget/main.c
-  src/widget/perc.c
-  src/widget/text.c)
+  src/widget_bar.c
+  src/widget_eta.c
+  src/widget_main.c
+  src/widget_perc.c
+  src/widget_text.c)
 add_library(ATHR::athr ALIAS athr)
 
 target_include_directories(
@@ -153,9 +153,9 @@ include(CheckFunctionExists)
 include(CheckLibraryExists)
 include(CheckIncludeFile)
 
-check_include_file(windows.h HAVE_WINDOWS_H)
+check_include_file(stdnoreturn.h HAVE_STDNORETURN_H)
 target_compile_definitions(athr
-                           PRIVATE $<$<BOOL:${HAVE_WINDOWS_H}>:HAVE_WINDOWS_H>)
+                           PRIVATE $<$<BOOL:${HAVE_STDNORETURN_H}>:HAVE_STDNORETURN_H>)
 
 check_include_file(unistd.h HAVE_UNISTD_H)
 target_compile_definitions(athr

@@ -7,7 +7,7 @@ int main()
 
     for (unsigned i = 0; i < 14; ++i)
     {
-        elapsed_sleep(0.005); /* some time-consuming task */
+        athr_sleep(100);
         athr_eat(&at, 1);
     }
 

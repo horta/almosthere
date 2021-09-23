@@ -15,19 +15,6 @@ void athr_canvas_create(struct athr_canvas *canvas)
     canvas->size = 0;
     canvas->min_size = 0;
     canvas->max_size = 0;
-#if 0
-    unsigned ncols = terminal_width() + 1;
-#ifdef WIN32
-    assert(ncols > 0);
-    ncols--;
-#endif
-
-    if (ncols < canvas->min_size)
-        canvas->size = canvas->min_size;
-    else
-        canvas->size = ncols;
-    canvas->size = MIN(canvas->size, ATHR_CANVAS_MAX_SIZE);
-#endif
 }
 
 void athr_canvas_draw(struct athr_canvas const *canvas)

@@ -1,9 +1,10 @@
-#include "athr/widget/main.h"
+#include "athr/widget_main.h"
 #include "athr/canvas.h"
-#include "athr/widget/widget.h"
+#include "athr/widget.h"
 #include "common.h"
 #include "terminal.h"
-#include "widget/widget.h"
+#include "widget.h"
+#include "widget_main.h"
 #include <assert.h>
 #include <stdlib.h>
 
@@ -58,7 +59,7 @@ struct athr_widget_perc *widget_main_add_perc(struct athr_widget_main *main)
     return &main->perc;
 }
 
-struct athr_widget_text *widget_main_setup_text(struct athr_widget_main *main)
+struct athr_widget_text *widget_main_add_text(struct athr_widget_main *main)
 {
     main->children[main->nwidgets++] = (struct athr_widget *)&main->text;
     return &main->text;
@@ -78,6 +79,7 @@ void widget_main_setup(struct athr_widget_main *main)
     athr_canvas_setup(&main->canvas, min_size(&main->super),
                       max_size(&main->super));
     assert_that_fits(main);
+    partition(main->nwidgets, main->children, main->canvas.size - 1);
 }
 
 static void update(struct athr_widget *widget, double consumed, double speed,

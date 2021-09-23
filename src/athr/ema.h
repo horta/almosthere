@@ -4,11 +4,11 @@
 /* Exponential moving average */
 struct athr_ema
 {
-    float last;
+    double last;
     unsigned calls;
 };
 
 #define ATHR_EMA_INIT                                                          \
-    (struct athr_ema) { 0.0f, 0 }
+    (struct athr_ema) { 0., 0 }
 
 #endif

@@ -3,6 +3,6 @@
 
 struct athr_widget_perc;
 
-void widget_perc_setup(struct athr_widget_perc *);
+void widget_perc_create(struct athr_widget_perc *);
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef ATHR_WIDGET_ETA_H
 #define ATHR_WIDGET_ETA_H
 
-#include "athr/widget/widget.h"
+#include "athr/widget.h"
 
 #define ATHR_WIDGET_ETA_SIZE 9
 

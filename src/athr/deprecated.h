@@ -26,6 +26,5 @@ ATHR_API struct athr *athr_create_var(athr_create_args in);
 
 ATHR_API void athr_consume(struct athr *at, long consume);
 ATHR_API void athr_finish(struct athr *at);
-ATHR_API void athr_sleep(long milliseconds);
 
 #endif

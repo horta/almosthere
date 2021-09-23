@@ -1,7 +1,7 @@
-#ifndef ATHR_TEXT_H
-#define ATHR_TEXT_H
+#ifndef ATHR_WIDGET_TEXT_H
+#define ATHR_WIDGET_TEXT_H
 
-#include "athr/widget/widget.h"
+#include "athr/widget.h"
 
 #define ATHR_WIDGET_TEXT_MAX_SIZE 64
 #define ATHR_WIDGET_TEXT_MIN_SIZE 0

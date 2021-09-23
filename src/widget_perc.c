@@ -1,6 +1,7 @@
-#include "athr/widget/perc.h"
+#include "athr/widget_perc.h"
 #include "common.h"
-#include "widget/widget.h"
+#include "widget.h"
+#include "widget_perc.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -37,7 +38,7 @@ static unsigned max_size(struct athr_widget const *w)
 
 static struct athr_widget_vtable const vtable = {update, min_size, max_size};
 
-void widget_perc_setup(struct athr_widget_perc *perc)
+void widget_perc_create(struct athr_widget_perc *perc)
 {
     widget_setup((struct athr_widget *)perc, &vtable);
 }

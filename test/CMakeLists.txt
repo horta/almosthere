@@ -22,6 +22,7 @@ function(athr_add_test name)
 endfunction()
 
 athr_add_test(brake)
+athr_add_test(example0)
 athr_add_test(example1)
 athr_add_test(example2)
 athr_add_test(example3)

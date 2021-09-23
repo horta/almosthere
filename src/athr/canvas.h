@@ -2,11 +2,12 @@
 #define ATHR_CANVAS_H
 
 #include "athr/export.h"
-#include "athr/widget/total.h"
 #include <stdbool.h>
 
 #define ATHR_CANVAS_MAX_SIZE 512
-#define ATHR_CANVAS_MIN_SIZE ATHR_WIDGET_TOTAL_MIN_SIZE
+#define ATHR_CANVAS_MIN_SIZE                                                   \
+    (ATHR_WIDGET_BAR_MIN_SIZE + ATHR_WIDGET_ETA_SIZE + ATHR_WIDGET_PERC_SIZE + \
+     ATHR_WIDGET_TEXT_MIN_SIZE)
 
 struct athr_canvas
 {

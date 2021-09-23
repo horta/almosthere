@@ -29,8 +29,3 @@ void athr_finish(struct athr *at)
     athr_stop_wait(at);
     free(at);
 }
-
-void athr_sleep(long milliseconds)
-{
-    elapsed_sleep((double)milliseconds / 1000.);
-}

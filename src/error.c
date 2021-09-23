@@ -1,16 +1,12 @@
 #include "error.h"
-#include "athr/error.h"
-#include <assert.h>
-#include <stdarg.h>
-#include <stddef.h>
+#include "athr/athr.h"
 #include <stdio.h>
 
-enum athr_rc error(char *dst, char const *fmt, ...)
+void __error(struct athr *at, char const *msg)
 {
-    va_list ap;
-    va_start(ap, fmt);
-    int n = vsnprintf(dst, ATHR_ERROR_SIZE, fmt, ap);
-    va_end(ap);
-    assert(n >= 0);
-    return ATHR_FAILURE;
+    at->error = msg;
+#ifndef NDEBUG
+    fprintf(stderr, "%s\n", msg);
+    fflush(stderr);
+#endif
 }

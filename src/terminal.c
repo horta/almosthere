@@ -1,5 +1,5 @@
 #include "terminal.h"
-#include "athr/terminal.h"
+#include "athr/term.h"
 
 #if defined(TERMINAL_CURSES)
 #include "term_curses.h"
@@ -12,12 +12,9 @@
 static unsigned fallback_width = 80;
 static bool force_fallback_use = false;
 
-void athr_terminal_set_fallback_width(unsigned width)
-{
-    fallback_width = width;
-}
+void athr_term_set_fallback_width(unsigned width) { fallback_width = width; }
 
-void athr_terminal_force_fallback_use(bool v) { force_fallback_use = v; }
+void athr_term_force_fallback_use(bool v) { force_fallback_use = v; }
 
 unsigned terminal_width(void)
 {

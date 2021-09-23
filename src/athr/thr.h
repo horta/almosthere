@@ -1,7 +1,9 @@
 #ifndef ATHR_THR_H
 #define ATHR_THR_H
 
-#if defined(_WIN32)
+#include "athr/os.h"
+
+#ifdef ATHR_WINDOWS
 #include <windows.h>
 typedef HANDLE athr_thr_handle;
 #else
