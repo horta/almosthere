@@ -71,6 +71,10 @@ if(LIBRT_FOUND)
   set(CMAKE_REQUIRED_LIBRARIES ${LIBRT_LIBRARIES})
 endif()
 
+if(WIN32)
+  set(CMAKE_REQUIRED_INCLUDES "windows.h")
+endif()
+
 include(CheckFunctionExists)
 include(CheckLibraryExists)
 include(CheckIncludeFile)
