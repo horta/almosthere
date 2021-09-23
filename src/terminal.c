@@ -9,6 +9,10 @@
 #include "term_win32.h"
 #endif
 
+#if defined(TERMINAL_IOCTL)
+#include "term_ioctl.h"
+#endif
+
 static unsigned fallback_width = 80;
 static bool force_fallback_use = false;
 
@@ -23,6 +27,8 @@ unsigned terminal_width(void)
     return term_curses_width();
 #elif defined(TERMINAL_WIN32)
     return term_win32_width();
+#elif defined(TERMINAL_IOCTL)
+    return term_ioctl_width();
 #else
     return terminal_fallback_width();
 #endif
