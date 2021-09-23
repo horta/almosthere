@@ -545,7 +545,7 @@ static inline bool atomic_load_bool(atomic_bool *x)
 
 static inline unsigned long atomic_load_ul(atomic_ulong *x)
 {
-    atomic_long y;
+    LONG64 y;
     atomic_read_explicit((atomic_long *)x, &y, memory_order_seq_cst);
     return (unsigned long)y;
 }
@@ -553,7 +553,7 @@ static inline unsigned long atomic_load_ul(atomic_ulong *x)
 static inline unsigned long atomic_fetch_add_ul(atomic_ulong *x,
                                                 unsigned long arg)
 {
-    atomic_long y;
+    LONG64 y;
     atomic_add_explicit((atomic_long *)x, arg, &y, memory_order_seq_cst);
     return (unsigned long)y;
 }
