@@ -16,13 +16,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install dependencies
+      run: sudo ./install-deps
+
     - name: Create Build Environment
-      run: cmake -E make_directory '${{runner.workspace}}/build' -E make_directory '${{runner.workspace}}/prefix'
+      run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
-      working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX='${{runner.workspace}}/prefix'
+      working-directory: ${{runner.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCI_BUILD=ON
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
@@ -32,9 +35,9 @@ jobs:
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: ctest -C $BUILD_TYPE
+      run: ctest -C $BUILD_TYPE --output-on-failure
 
     - name: Install
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --target install --config $BUILD_TYPE
+      run: sudo cmake --build . --target install --config $BUILD_TYPE
