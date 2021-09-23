@@ -29,7 +29,15 @@ jobs:
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
+    # https://techinplanet.com/how-to-update-windows-sdk-on-windows-latest-on-github-action/
     - name: Configure CMake
+      if: runner.os == 'Windows'
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCI_BUILD=ON -DCMAKE_SYSTEM_VERSION=10.0.19041.0
+
+    - name: Configure CMake
+      if: runner.os != 'Windows'
       shell: bash
       working-directory: ${{runner.workspace}}/build
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCI_BUILD=ON
