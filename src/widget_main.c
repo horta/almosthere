@@ -146,6 +146,10 @@ static void partition(unsigned nwidgets, struct athr_widget **widget,
 {
     unsigned remain = assign_minimum_size(nwidgets, widget, size);
     unsigned npart = remaining_widgets(nwidgets, widget);
-    remain = increase_size(nwidgets, widget, remain / npart, remain);
-    remain = increase_size(nwidgets, widget, remain, remain);
+    if (npart > 0)
+    {
+        remain = increase_size(nwidgets, widget, remain / npart, remain);
+        if (remain > 0)
+            remain = increase_size(nwidgets, widget, remain, remain);
+    }
 }

@@ -47,7 +47,7 @@ static void thread_start(void *args)
     while (!atomic_load_bool(&at->stop) && !atomic_load_bool(&disable_thread))
     {
         update(at);
-        if (athr_sleep(TIMESTEP)) error(at, "failed to sleep");
+        if (athr_sleep((unsigned)TIMESTEP)) error(at, "failed to sleep");
     }
 }
 
