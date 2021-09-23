@@ -58,6 +58,13 @@ jobs:
       run: ctest -C $BUILD_TYPE --output-on-failure
 
     - name: Install
+      if: runner.os == 'Windows'
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --target install --config $BUILD_TYPE
+
+    - name: Install
+      if: runner.os != 'Windows'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: sudo cmake --build . --target install --config $BUILD_TYPE
