@@ -38,7 +38,7 @@ int thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
 
 void thr_detach(struct athr_thr *thr)
 {
-#if ATHR_WINDOWS
+#ifdef ATHR_WINDOWS
     CloseHandle(thr->handle);
 #else
     pthread_detach(thr->handle);

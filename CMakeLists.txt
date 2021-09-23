@@ -104,6 +104,8 @@ set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(athr PRIVATE c_std_11)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${TERMINAL_CURSES}>:TERMINAL_CURSES>)
 target_compile_definitions(athr PRIVATE $<$<BOOL:${TERMINAL_WIN32}>:TERMINAL_WIN32>)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>)
+target_compile_definitions(athr PRIVATE $<$<BOOL:${WIN32}>:_CRT_NONSTDC_NO_DEPRECATE>)
 target_compile_options(athr PRIVATE ${WARNING_FLAGS})
 
 # Write out athr/export.h to the current binary directory.
