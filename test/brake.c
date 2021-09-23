@@ -52,7 +52,7 @@ static char const *huge_desc = "Morbi ac cursus sem."
                                "Morbi ac cursus sem."
                                "Morbi ac cursus sem.";
 
-int main()
+int main(void)
 {
     athr_disable_threading(true);
     athr_term_force_fallback_use(true);

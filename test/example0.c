@@ -1,6 +1,6 @@
 #include "athr/athr.h"
 
-int main()
+int main(void)
 {
     athr_disable_threading(true);
     struct athr at = ATHR_INIT;

@@ -1,6 +1,6 @@
 #include "athr/athr.h"
 
-int main()
+int main(void)
 {
     struct athr at = ATHR_INIT;
     if (athr_start(&at, 14, "", ATHR_BAR)) return EXIT_FAILURE;
