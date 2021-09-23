@@ -168,7 +168,7 @@ install(
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   PUBLIC_HEADER DESTINATION include)
-install(DIRECTORY include/ DESTINATION include)
+install(DIRECTORY src/athr/ DESTINATION include/athr)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
         DESTINATION include/athr)
 install(
