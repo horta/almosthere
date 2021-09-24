@@ -24,8 +24,8 @@ extern "C" {
 
 struct athr
 {
-    unsigned long total;
-    atomic_ulong consumed;
+    uint64_t total;
+    atomic_uint_fast64_t consumed;
     struct athr_ema speed;
     struct elapsed elapsed;
 
@@ -45,9 +45,9 @@ struct athr
             false, ATOMIC_FLAG_INIT, ATHR_THR_INIT, NULL                       \
     }
 
-ATHR_API int athr_start(struct athr *at, unsigned long total, char const *desc,
+ATHR_API int athr_start(struct athr *at, uint64_t total, char const *desc,
                         enum athr_option opts);
-ATHR_API void athr_eat(struct athr *at, unsigned long amount);
+ATHR_API void athr_eat(struct athr *at, uint64_t amount);
 ATHR_API void athr_stop(struct athr *at);
 ATHR_API void athr_disable_threading(bool disable);
 ATHR_API int athr_sleep(unsigned milliseconds);

@@ -34,7 +34,8 @@ static void update(struct athr *at)
     double sec = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
     ema_add(&at->speed, sec);
 
-    double r = ((double)atomic_load_ul(&at->consumed)) / ((double)at->total);
+    double total = (double)at->total;
+    double r = ((double)atomic_load_uint_fast64(&at->consumed)) / total;
     at->main.super.vtable->update(&at->main.super, r, ema_get(&at->speed), sec);
 
     if (elapsed_start(&at->elapsed)) error(at, "failed to elapsed_start");
@@ -51,7 +52,7 @@ static void thread_start(void *args)
     }
 }
 
-int athr_start(struct athr *at, unsigned long total, const char *desc,
+int athr_start(struct athr *at, uint64_t total, const char *desc,
                enum athr_option opts)
 {
     if (desc == NULL) desc = "";
@@ -80,9 +81,9 @@ int athr_start(struct athr *at, unsigned long total, const char *desc,
     return 0;
 }
 
-void athr_eat(struct athr *at, unsigned long amount)
+void athr_eat(struct athr *at, uint64_t amount)
 {
-    atomic_fetch_add_ul(&at->consumed, amount);
+    atomic_fetch_add_uint_fast64(&at->consumed, amount);
     if (atomic_load_bool(&disable_thread)) update(at);
 }
 
