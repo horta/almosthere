@@ -29,16 +29,21 @@ static void unlock(struct athr *at) { atomic_flag_clear(&at->lock); }
 static void update(struct athr *at)
 {
     lock(at);
+    uint_fast64_t consumed = atomic_load_uint_fast64(&at->consumed);
+    if (consumed == at->last_consumed) goto cleanup;
+    at->last_consumed = consumed;
+
     if (elapsed_stop(&at->elapsed)) error(at, "failed to elapsed_stop");
 
     double sec = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
     ema_add(&at->speed, sec);
 
     double total = (double)at->total;
-    double r = ((double)atomic_load_uint_fast64(&at->consumed)) / total;
+    double r = ((double)consumed) / total;
     at->main.super.vtable->update(&at->main.super, r, ema_get(&at->speed), sec);
 
     if (elapsed_start(&at->elapsed)) error(at, "failed to elapsed_start");
+cleanup:
     unlock(at);
 }
 
@@ -58,6 +63,7 @@ int athr_start(struct athr *at, uint64_t total, const char *desc,
     if (desc == NULL) desc = "";
     at->total = total;
     at->consumed = 0;
+    at->last_consumed = 0;
     at->speed = ATHR_EMA_INIT;
     if (elapsed_start(&at->elapsed))
     {

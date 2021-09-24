@@ -26,6 +26,7 @@ struct athr
 {
     uint64_t total;
     atomic_uint_fast64_t consumed;
+    uint_fast64_t last_consumed;
     struct athr_ema speed;
     struct elapsed elapsed;
 
@@ -41,7 +42,7 @@ struct athr
 #define ATHR_INIT                                                              \
     (struct athr)                                                              \
     {                                                                          \
-        0, 0, ATHR_EMA_INIT, ELAPSED_INIT, ATHR_BAR, ATHR_WIDGET_MAIN_INIT,    \
+        0, 0, 0, ATHR_EMA_INIT, ELAPSED_INIT, ATHR_BAR, ATHR_WIDGET_MAIN_INIT, \
             false, ATOMIC_FLAG_INIT, ATHR_THR_INIT, NULL                       \
     }
 
