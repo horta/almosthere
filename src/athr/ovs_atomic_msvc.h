@@ -543,19 +543,19 @@ static inline bool atomic_load_bool(atomic_bool *x)
     return y;
 }
 
-static inline unsigned long atomic_load_ul(atomic_ulong *x)
+static inline uint_fast64_t atomic_load_uint_fast64(atomic_uint_fast64_t *x)
 {
     LONG64 y;
-    atomic_read_explicit((atomic_long *)x, &y, memory_order_seq_cst);
-    return (unsigned long)y;
+    atomic_read_explicit(x, &y, memory_order_seq_cst);
+    return (uint_fast64_t)y;
 }
 
-static inline unsigned long atomic_fetch_add_ul(atomic_ulong *x,
-                                                unsigned long arg)
+static inline uint_fast64_t
+atomic_fetch_add_uint_fast64(atomic_uint_fast64_t *x, uint_fast64_t arg)
 {
     LONG64 y;
-    atomic_add_explicit((atomic_long *)x, arg, &y, memory_order_seq_cst);
-    return (unsigned long)y;
+    atomic_add_explicit(x, arg, &y, memory_order_seq_cst);
+    return (uint_fast64_t)y;
 }
 
 #endif
