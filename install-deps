@@ -1,4 +1,6 @@
 #!/bin/bash
 
+set -e
+
 bash -c "$(curl -fsSL https://git.io/JerYI)" -s horta/hope
 bash -c "$(curl -fsSL https://git.io/JerYI)" -s horta/elapsed
