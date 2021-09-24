@@ -536,7 +536,9 @@ typedef ATOMIC(uintmax_t) atomic_uintmax_t;
 typedef ATOMIC(intptr_t) atomic_intptr_t;
 typedef ATOMIC(uintptr_t) atomic_uintptr_t;
 
-static inline bool atomic_load_bool(atomic_bool *x)
+typedef ATOMIC(uint_fast64_t) atomic_uint_fast64_t
+
+    static inline bool atomic_load_bool(atomic_bool *x)
 {
     atomic_bool y;
     atomic_read_explicit(x, &y, memory_order_seq_cst);
