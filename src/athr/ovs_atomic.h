@@ -21,6 +21,7 @@
 #else
 #include <stdatomic.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 static inline bool atomic_load_bool(atomic_bool *x) { return atomic_load(x); }
 
