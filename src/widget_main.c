@@ -12,19 +12,19 @@ static void update(struct athr_widget *, double, double, double);
 
 static unsigned min_size(struct athr_widget const *widget)
 {
-    struct athr_widget_main *main = (struct athr_widget_main *)widget->derived;
+    struct athr_widget_main *m = (struct athr_widget_main *)widget->derived;
     unsigned s = 1;
-    for (unsigned i = 0; i < main->nwidgets; ++i)
-        s += main->children[i]->vtable->min_length(main->children[i]);
+    for (unsigned i = 0; i < m->nwidgets; ++i)
+        s += m->children[i]->vtable->min_length(m->children[i]);
     return s;
 }
 
 static unsigned max_size(struct athr_widget const *widget)
 {
-    struct athr_widget_main *main = (struct athr_widget_main *)widget->derived;
+    struct athr_widget_main *m = (struct athr_widget_main *)widget->derived;
     unsigned s = 1;
-    for (unsigned i = 0; i < main->nwidgets; ++i)
-        s += main->children[i]->vtable->max_length(main->children[i]);
+    for (unsigned i = 0; i < m->nwidgets; ++i)
+        s += m->children[i]->vtable->max_length(m->children[i]);
     return s;
 }
 
@@ -33,74 +33,71 @@ static void partition(unsigned nwidgets, struct athr_widget **widget,
 
 static struct athr_widget_vtable const vtable = {update, min_size, max_size};
 
-static void assert_that_fits(struct athr_widget_main const *main)
+static void assert_that_fits(struct athr_widget_main const *m)
 {
     unsigned size = 0;
-    for (unsigned i = 0; i < main->nwidgets; ++i)
-        size += main->children[i]->vtable->min_length(main->children[i]);
+    for (unsigned i = 0; i < m->nwidgets; ++i)
+        size += m->children[i]->vtable->min_length(m->children[i]);
     assert(size < ATHR_CANVAS_MAX_SIZE);
 }
 
-struct athr_widget_bar *widget_main_add_bar(struct athr_widget_main *main)
+struct athr_widget_bar *widget_main_add_bar(struct athr_widget_main *m)
 {
-    main->children[main->nwidgets++] = (struct athr_widget *)&main->bar;
-    return &main->bar;
+    m->children[m->nwidgets++] = (struct athr_widget *)&m->bar;
+    return &m->bar;
 }
 
-struct athr_widget_eta *widget_main_add_eta(struct athr_widget_main *main)
+struct athr_widget_eta *widget_main_add_eta(struct athr_widget_main *m)
 {
-    main->children[main->nwidgets++] = (struct athr_widget *)&main->eta;
-    return &main->eta;
+    m->children[m->nwidgets++] = (struct athr_widget *)&m->eta;
+    return &m->eta;
 }
 
-struct athr_widget_perc *widget_main_add_perc(struct athr_widget_main *main)
+struct athr_widget_perc *widget_main_add_perc(struct athr_widget_main *m)
 {
-    main->children[main->nwidgets++] = (struct athr_widget *)&main->perc;
-    return &main->perc;
+    m->children[m->nwidgets++] = (struct athr_widget *)&m->perc;
+    return &m->perc;
 }
 
-struct athr_widget_text *widget_main_add_text(struct athr_widget_main *main)
+struct athr_widget_text *widget_main_add_text(struct athr_widget_main *m)
 {
-    main->children[main->nwidgets++] = (struct athr_widget *)&main->text;
-    return &main->text;
+    m->children[m->nwidgets++] = (struct athr_widget *)&m->text;
+    return &m->text;
 }
 
-void widget_main_create(struct athr_widget_main *main)
+void widget_main_create(struct athr_widget_main *m)
 {
-    widget_setup((struct athr_widget *)main, &vtable);
-    main->nwidgets = 0;
+    widget_setup((struct athr_widget *)m, &vtable);
+    m->nwidgets = 0;
     for (unsigned i = 0; i < ATHR_WIDGET_MAIN_MAX_CHILDREN; ++i)
-        main->children[i] = NULL;
-    athr_canvas_create(&main->canvas);
+        m->children[i] = NULL;
+    athr_canvas_create(&m->canvas);
 }
 
-void widget_main_setup(struct athr_widget_main *main)
+void widget_main_setup(struct athr_widget_main *m)
 {
-    athr_canvas_setup(&main->canvas, min_size(&main->super),
-                      max_size(&main->super));
-    assert_that_fits(main);
-    partition(main->nwidgets, main->children, main->canvas.size - 1);
+    athr_canvas_setup(&m->canvas, min_size(&m->super), max_size(&m->super));
+    assert_that_fits(m);
+    partition(m->nwidgets, m->children, m->canvas.size - 1);
 }
 
 static void update(struct athr_widget *widget, double consumed, double speed,
                    double dlt)
 {
-    struct athr_widget_main *main = widget->derived;
+    struct athr_widget_main *m = widget->derived;
     unsigned offset = 0;
 
-    bool resized = athr_canvas_resize(&main->canvas);
-    athr_canvas_clean(&main->canvas);
-    if (resized)
-        partition(main->nwidgets, main->children, main->canvas.size - 1);
+    bool resized = athr_canvas_resize(&m->canvas);
+    athr_canvas_clean(&m->canvas);
+    if (resized) partition(m->nwidgets, m->children, m->canvas.size - 1);
 
-    for (unsigned i = 0; i < main->nwidgets; ++i)
+    for (unsigned i = 0; i < m->nwidgets; ++i)
     {
-        main->children[i]->canvas.buff = main->canvas.buff + offset;
-        main->children[i]->vtable->update(main->children[i], consumed, speed,
-                                          dlt);
-        offset += main->children[i]->canvas.size;
+        m->children[i]->canvas.buff = m->canvas.buff + offset;
+        m->children[i]->vtable->update(m->children[i], consumed, speed, dlt);
+        offset += m->children[i]->canvas.size;
     }
-    athr_canvas_draw(&main->canvas);
+    athr_canvas_draw(&m->canvas);
 }
 
 static unsigned assign_minimum_size(unsigned nwidgets,
