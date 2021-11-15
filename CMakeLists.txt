@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(
   athr
-  VERSION 3.0.2
+  VERSION 3.0.3
   LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 

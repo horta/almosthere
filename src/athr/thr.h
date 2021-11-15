@@ -15,6 +15,7 @@ typedef void(athr_thr_start)(void *);
 
 struct athr_thr
 {
+    int has_been_created;
     athr_thr_handle handle;
     athr_thr_start *func;
     void *arg;

@@ -25,19 +25,24 @@ static WRAPPER_RETURN __thr_wrapper(WRAPPER_ARG_T arg)
 
 int thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
 {
+    thr->has_been_created = 0;
     thr->func = func;
     thr->arg = arg;
+    int rc = 0;
 
 #ifdef ATHR_WINDOWS
     thr->handle = CreateThread(NULL, 0, __thr_wrapper, (LPVOID)thr, 0, NULL);
-    return !thr->handle;
+    rc = !thr->handle;
 #else
-    return pthread_create(&thr->handle, 0, __thr_wrapper, (void *)thr);
+    rc = pthread_create(&thr->handle, 0, __thr_wrapper, (void *)thr);
 #endif
+    thr->has_been_created = !rc;
+    return rc;
 }
 
 void thr_detach(struct athr_thr *thr)
 {
+    if (!thr->has_been_created) return;
 #ifdef ATHR_WINDOWS
     CloseHandle(thr->handle);
 #else
