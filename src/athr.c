@@ -27,6 +27,7 @@ static void update(struct athr *at)
 {
     lock(at);
     uint_fast64_t consumed = atomic_load_uint_fast64(&at->consumed);
+    if (consumed > at->total) consumed = at->total;
     if (consumed == at->last_consumed) goto cleanup;
     uint_fast64_t delta = consumed - at->last_consumed;
     at->last_consumed = consumed;
