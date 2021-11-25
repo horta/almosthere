@@ -23,10 +23,10 @@ extern "C" {
 #include "elapsed/elapsed.h"
 
 /* How often to update initially, in milliseconds. */
-#define ATHR_TIMESTEP 300
+#define ATHR_TIMESTEP 250
 
 /* Limit on how long to update, in milliseconds. */
-#define ATHR_TIMESTEP_LIMIT 5000
+#define ATHR_TIMESTEP_LIMIT 1500
 
 struct athr
 {

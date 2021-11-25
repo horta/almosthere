@@ -36,7 +36,7 @@ static void update(struct athr *at)
     double seconds = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
     double progress = ((double)delta) / ((double)at->total);
 
-    if (progress < 0.01f)
+    if (progress < 0.001f && at->timestep < ATHR_TIMESTEP_LIMIT)
     {
         at->timestep += ATHR_TIMESTEP;
         if (at->timestep > ATHR_TIMESTEP_LIMIT)
