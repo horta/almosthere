@@ -26,27 +26,30 @@ static void update(struct athr_widget *w, double consumed, double speed)
     eta->consumed = consumed;
 
     if (speed < MIN_SPEED)
-        snprintf(eta->str, sz + 1, "%*s", sz, " - eta - ");
+        snprintf(eta->buff, sz + 1, "%*s", sz, " - eta - ");
     else
     {
-        double sec = (1 - eta->consumed) / speed;
+        int secs = (int)((1 - eta->consumed) / speed);
 
-        if (sec >= YEAR_SEC)
-            snprintf(eta->str, sz + 1, "%*d years", sz - 6, year_sec(sec));
-        else if (sec >= MONTH_SEC)
-            snprintf(eta->str, sz + 1, "%*d months", sz - 7, month_sec(sec));
-        else if (sec >= DAY_SEC)
-            snprintf(eta->str, sz + 1, "%*d days", sz - 5, day_sec(sec));
-        else if (sec >= HOUR_SEC)
-            snprintf(eta->str, sz + 1, "%*d hours", sz - 6, hour_sec(sec));
-        else if (sec >= MIN_SEC)
-            snprintf(eta->str, sz + 1, "%*d mins", sz - 5, min_sec(sec));
+        /* Based on wget progress module */
+        if (secs < 100)
+            snprintf(eta->buff, sz + 1, "%*ds", sz - 1, secs);
+        else if (secs < 100 * 60)
+            snprintf(eta->buff, sz + 1, "%*dm %*ds", sz - 3 - 2, secs / 60, 2,
+                     secs % 60);
+        else if (secs < 48 * 3600)
+            snprintf(eta->buff, sz + 1, "%*dh %*dm", sz - 3 - 2, secs / 3600, 2,
+                     (secs / 60) % 60);
+        else if (secs < 100 * 86400)
+            snprintf(eta->buff, sz + 1, "%*dd %*dh", sz - 3 - 2, secs / 86400,
+                     2, (secs / 3600) % 24);
         else
-            snprintf(eta->str, sz + 1, "%*d secs", sz - 5, (unsigned)sec);
+            /* even (2^31-1)/86400 doesn't overflow eta->buff. */
+            snprintf(eta->buff, sz + 1, "%*dd", sz - 1, secs / 86400);
     }
 
     for (unsigned i = 0; i < sz; ++i)
-        w->canvas.buff[i] = eta->str[i];
+        w->canvas.buff[i] = eta->buff[i];
 }
 
 static unsigned min_len(struct athr_widget const *w)

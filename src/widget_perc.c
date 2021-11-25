@@ -42,7 +42,7 @@ static void update(struct athr_widget *w, double consumed, double speed)
         perc = (unsigned)(eta->consumed * 100);
 
     memcpy(w->canvas.buff, ATHR_WIDGET_PERC_EXAMPLE,
-           ARRAY_SIZE(ATHR_WIDGET_PERC_EXAMPLE));
+           ARRAY_SIZE(ATHR_WIDGET_PERC_EXAMPLE) - 1);
     /* Skip the first space */
     perc_buff(w->canvas.buff + 1, perc);
 }
