@@ -6,11 +6,11 @@
 
 static void draw(struct athr_widget_bar *bar, struct athr_canvas_view *canvas)
 {
-    unsigned consumed = (unsigned)(bar->consumed * (canvas->size - 1));
+    unsigned consumed = (unsigned)(bar->consumed * (canvas->len - 1));
     canvas->buff[0] = '|';
     for (unsigned i = 1; i < consumed; ++i)
         canvas->buff[i] = '=';
-    canvas->buff[canvas->size - 1] = '|';
+    canvas->buff[canvas->len - 1] = '|';
 }
 
 static void update(struct athr_widget *w, double consumed, double speed)
@@ -20,17 +20,17 @@ static void update(struct athr_widget *w, double consumed, double speed)
     draw(bar, &w->canvas);
 }
 
-static unsigned min_size(struct athr_widget const *widget)
+static unsigned min_len(struct athr_widget const *widget)
 {
-    return ATHR_WIDGET_BAR_MIN_SIZE;
+    return ATHR_WIDGET_BAR_MIN_LEN;
 }
 
-static unsigned max_size(struct athr_widget const *widget)
+static unsigned max_len(struct athr_widget const *widget)
 {
-    return ATHR_CANVAS_MAX_SIZE;
+    return ATHR_WIDGET_BAR_MAX_LEN;
 }
 
-static struct athr_widget_vtable const vtable = {update, min_size, max_size};
+static struct athr_widget_vtable const vtable = {update, min_len, max_len};
 
 void widget_bar_create(struct athr_widget_bar *bar)
 {

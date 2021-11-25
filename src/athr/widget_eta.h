@@ -3,12 +3,12 @@
 
 #include "athr/widget.h"
 
-#define ATHR_WIDGET_ETA_SIZE 9
+#define ATHR_WIDGET_ETA_LEN 9
 
 struct athr_widget_eta
 {
     struct athr_widget super;
-    char str[ATHR_WIDGET_ETA_SIZE + 1];
+    char str[ATHR_WIDGET_ETA_LEN + 1];
     double consumed;
 };
 

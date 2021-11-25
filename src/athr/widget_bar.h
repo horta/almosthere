@@ -1,10 +1,12 @@
 #ifndef ATHR_WIDGET_BAR_H
 #define ATHR_WIDGET_BAR_H
 
+#include "athr/canvas.h"
 #include "athr/widget.h"
 
 #define ATHR_WIDGET_BAR_SMALLEST "|=|"
-#define ATHR_WIDGET_BAR_MIN_SIZE (sizeof(ATHR_WIDGET_BAR_SMALLEST) - 1)
+#define ATHR_WIDGET_BAR_MIN_LEN (sizeof(ATHR_WIDGET_BAR_SMALLEST) - 1)
+#define ATHR_WIDGET_BAR_MAX_LEN ATHR_CANVAS_MAX_LEN
 
 struct athr_widget_bar
 {

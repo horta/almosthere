@@ -3,14 +3,14 @@
 
 #include "athr/widget.h"
 
-#define ATHR_WIDGET_TEXT_MAX_SIZE 64
-#define ATHR_WIDGET_TEXT_MIN_SIZE 0
+#define ATHR_WIDGET_TEXT_MAX_LEN 64
+#define ATHR_WIDGET_TEXT_MIN_LEN 0
 
 struct athr_widget_text
 {
     struct athr_widget super;
-    char str[ATHR_WIDGET_TEXT_MAX_SIZE];
-    unsigned size;
+    char str[ATHR_WIDGET_TEXT_MAX_LEN];
+    unsigned len;
 };
 
 #define ATHR_WIDGET_TEXT_INIT                                                  \

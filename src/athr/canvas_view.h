@@ -3,8 +3,8 @@
 
 struct athr_canvas_view
 {
-    unsigned size;
-    unsigned min_size;
+    unsigned len;
+    unsigned min_len;
     char *buff;
 };
 

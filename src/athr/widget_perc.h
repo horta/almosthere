@@ -4,7 +4,7 @@
 #include "athr/widget.h"
 
 #define ATHR_WIDGET_PERC_EXAMPLE " 100%"
-#define ATHR_WIDGET_PERC_SIZE (sizeof(ATHR_WIDGET_PERC_EXAMPLE) - 1)
+#define ATHR_WIDGET_PERC_LEN (sizeof(ATHR_WIDGET_PERC_EXAMPLE) - 1)
 
 struct athr_widget_perc
 {

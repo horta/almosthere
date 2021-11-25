@@ -12,21 +12,21 @@ void athr_canvas_use_stderr(bool use) { atomic_store(&use_stderr, use); }
 
 void athr_canvas_create(struct athr_canvas *canvas)
 {
-    canvas->size = 0;
-    canvas->min_size = 0;
-    canvas->max_size = 0;
+    canvas->len = 0;
+    canvas->min_len = 0;
+    canvas->max_len = 0;
 }
 
 void athr_canvas_draw(struct athr_canvas const *canvas)
 {
     if (use_stderr)
     {
-        fprintf(stderr, "%.*s", canvas->size, canvas->buff);
+        fprintf(stderr, "%.*s", canvas->len, canvas->buff);
         fflush(stderr);
     }
     else
     {
-        fprintf(stdout, "%.*s", canvas->size, canvas->buff);
+        fprintf(stdout, "%.*s", canvas->len, canvas->buff);
         fflush(stdout);
     }
 }
@@ -38,24 +38,24 @@ bool athr_canvas_resize(struct athr_canvas *canvas)
     ncols--;
 #endif
 
-    unsigned prev_size = canvas->size;
-    canvas->size = ncols;
-    canvas->size = minu(canvas->size, canvas->max_size);
-    canvas->size = maxu(canvas->size, canvas->min_size);
-    return prev_size != canvas->size;
+    unsigned prev_size = canvas->len;
+    canvas->len = ncols;
+    canvas->len = minu(canvas->len, canvas->max_len);
+    canvas->len = maxu(canvas->len, canvas->min_len);
+    return prev_size != canvas->len;
 }
 
-void athr_canvas_setup(struct athr_canvas *canvas, unsigned min_size,
-                       unsigned max_size)
+void athr_canvas_setup(struct athr_canvas *canvas, unsigned min_len,
+                       unsigned max_len)
 {
-    canvas->min_size = min_size;
-    canvas->max_size = minu(max_size, ATHR_CANVAS_MAX_SIZE);
+    canvas->min_len = min_len;
+    canvas->max_len = minu(max_len, ATHR_CANVAS_MAX_LEN);
 }
 
 void athr_canvas_clean(struct athr_canvas *canvas)
 {
-    memset(canvas->buff, ' ', canvas->size - 1);
-    canvas->buff[canvas->size - 1] = '\r';
+    memset(canvas->buff, ' ', canvas->len - 1);
+    canvas->buff[canvas->len - 1] = '\r';
 }
 
 void athr_canvas_close(struct athr_canvas *canvas)

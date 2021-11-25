@@ -21,7 +21,7 @@ static inline unsigned min_sec(double s) { return (unsigned)(s / MIN_SEC); }
 
 static void update(struct athr_widget *w, double consumed, double speed)
 {
-    unsigned const sz = ATHR_WIDGET_ETA_SIZE;
+    unsigned const sz = ATHR_WIDGET_ETA_LEN;
     struct athr_widget_eta *eta = w->derived;
     eta->consumed = consumed;
 
@@ -49,17 +49,17 @@ static void update(struct athr_widget *w, double consumed, double speed)
         w->canvas.buff[i] = eta->str[i];
 }
 
-static unsigned min_size(struct athr_widget const *w)
+static unsigned min_len(struct athr_widget const *w)
 {
-    return ATHR_WIDGET_ETA_SIZE;
+    return ATHR_WIDGET_ETA_LEN;
 }
 
-static unsigned max_size(struct athr_widget const *w)
+static unsigned max_len(struct athr_widget const *w)
 {
-    return ATHR_WIDGET_ETA_SIZE;
+    return ATHR_WIDGET_ETA_LEN;
 }
 
-static struct athr_widget_vtable const vtable = {update, min_size, max_size};
+static struct athr_widget_vtable const vtable = {update, min_len, max_len};
 
 void widget_eta_create(struct athr_widget_eta *eta)
 {
