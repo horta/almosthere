@@ -6,8 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static void update(struct athr_widget *w, double consumed, double speed,
-                   double dlt)
+static void update(struct athr_widget *w, double consumed, double speed)
 {
     struct athr_widget_perc *eta = w->derived;
 

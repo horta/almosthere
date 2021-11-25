@@ -19,8 +19,7 @@ static inline unsigned day_sec(double s) { return (unsigned)(s / DAY_SEC); }
 static inline unsigned hour_sec(double s) { return (unsigned)(s / HOUR_SEC); }
 static inline unsigned min_sec(double s) { return (unsigned)(s / MIN_SEC); }
 
-static void update(struct athr_widget *w, double consumed, double speed,
-                   double dlt)
+static void update(struct athr_widget *w, double consumed, double speed)
 {
     unsigned const sz = ATHR_WIDGET_ETA_SIZE;
     struct athr_widget_eta *eta = w->derived;

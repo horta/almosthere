@@ -19,6 +19,12 @@ static inline void ema_add(struct athr_ema *ema, double x)
     ema->calls = minu(ema->calls + 1, ARRAY_SIZE(factor));
 }
 
+static inline void ema_reset(struct athr_ema *ema)
+{
+    ema->last = 0.;
+    ema->calls = 0;
+}
+
 static inline double ema_get(struct athr_ema const *ema)
 {
     assert(ema->calls > 0);

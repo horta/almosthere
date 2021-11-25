@@ -4,8 +4,7 @@
 #include <assert.h>
 #include <string.h>
 
-static void update(struct athr_widget *w, double consumed, double speed,
-                   double dlt)
+static void update(struct athr_widget *w, double consumed, double speed)
 {
     struct athr_widget_text *text = w->derived;
     assert(w->canvas.size >= text->size);

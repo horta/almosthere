@@ -5,8 +5,7 @@
 
 struct athr_widget;
 
-typedef void(athr_widget_update_t)(struct athr_widget *, double, double,
-                                   double);
+typedef void(athr_widget_update_t)(struct athr_widget *, double, double);
 typedef unsigned(athr_widget_min_size_t)(struct athr_widget const *);
 typedef unsigned(athr_widget_max_size_t)(struct athr_widget const *);
 
@@ -28,9 +27,9 @@ struct athr_widget
     (struct athr_widget) { NULL, NULL, ATHR_CANVAS_VIEW_INIT }
 
 static inline void athr_widget_update(struct athr_widget *w, double consumed,
-                                      double speed, double dlt)
+                                      double speed)
 {
-    w->vtable->update(w, consumed, speed, dlt);
+    w->vtable->update(w, consumed, speed);
 }
 
 static inline unsigned athr_widget_min_size(struct athr_widget *w)

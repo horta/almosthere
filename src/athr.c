@@ -13,9 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* How often to update, in milliseconds. */
-static uint64_t const TIMESTEP = 300;
-
 static atomic_bool disable_thread = false;
 
 static void lock(struct athr *at)
@@ -31,16 +28,27 @@ static void update(struct athr *at)
     lock(at);
     uint_fast64_t consumed = atomic_load_uint_fast64(&at->consumed);
     if (consumed == at->last_consumed) goto cleanup;
+    uint_fast64_t delta = consumed - at->last_consumed;
     at->last_consumed = consumed;
 
     if (elapsed_stop(&at->elapsed)) error(at, "failed to elapsed_stop");
 
-    double sec = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
-    ema_add(&at->speed, sec);
+    double seconds = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
+    double progress = ((double)delta) / ((double)at->total);
 
-    double total = (double)at->total;
-    double r = ((double)consumed) / total;
-    at->main.super.vtable->update(&at->main.super, r, ema_get(&at->speed), sec);
+    if (progress < 0.01f)
+    {
+        at->timestep += ATHR_TIMESTEP;
+        if (at->timestep > ATHR_TIMESTEP_LIMIT)
+            at->timestep = ATHR_TIMESTEP_LIMIT;
+        ema_reset(&at->speed);
+    }
+
+    ema_add(&at->speed, progress / seconds);
+
+    double consumed_fraction = ((double)consumed) / ((double)at->total);
+    at->main.super.vtable->update(&at->main.super, consumed_fraction,
+                                  ema_get(&at->speed));
 
     if (elapsed_start(&at->elapsed)) error(at, "failed to elapsed_start");
 cleanup:
@@ -53,7 +61,7 @@ static void thread_start(void *args)
     while (!atomic_load_bool(&at->stop) && !atomic_load_bool(&disable_thread))
     {
         update(at);
-        if (athr_sleep((unsigned)TIMESTEP)) error(at, "failed to sleep");
+        if (athr_sleep(at->timestep)) error(at, "failed to sleep");
     }
 }
 
@@ -61,6 +69,7 @@ int athr_start(struct athr *at, uint64_t total, const char *desc,
                enum athr_option opts)
 {
     if (desc == NULL) desc = "";
+    at->timestep = ATHR_TIMESTEP;
     at->total = total;
     at->consumed = 0;
     at->last_consumed = 0;

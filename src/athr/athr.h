@@ -22,8 +22,15 @@ extern "C" {
 #include "athr/widget_text.h"
 #include "elapsed/elapsed.h"
 
+/* How often to update initially, in milliseconds. */
+#define ATHR_TIMESTEP 300
+
+/* Limit on how long to update, in milliseconds. */
+#define ATHR_TIMESTEP_LIMIT 5000
+
 struct athr
 {
+    unsigned timestep;
     uint64_t total;
     atomic_uint_fast64_t consumed;
     uint_fast64_t last_consumed;
@@ -42,8 +49,9 @@ struct athr
 #define ATHR_INIT                                                              \
     (struct athr)                                                              \
     {                                                                          \
-        0, 0, 0, ATHR_EMA_INIT, ELAPSED_INIT, ATHR_BAR, ATHR_WIDGET_MAIN_INIT, \
-            false, ATOMIC_FLAG_INIT, ATHR_THR_INIT, NULL                       \
+        ATHR_TIMESTEP, 0, 0, 0, ATHR_EMA_INIT, ELAPSED_INIT, ATHR_BAR,         \
+            ATHR_WIDGET_MAIN_INIT, false, ATOMIC_FLAG_INIT, ATHR_THR_INIT,     \
+            NULL                                                               \
     }
 
 ATHR_API int athr_start(struct athr *at, uint64_t total, char const *desc,

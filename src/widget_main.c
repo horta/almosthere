@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-static void update(struct athr_widget *, double, double, double);
+static void update(struct athr_widget *, double, double);
 
 static unsigned min_size(struct athr_widget const *widget)
 {
@@ -81,8 +81,7 @@ void widget_main_setup(struct athr_widget_main *m)
     partition(m->nwidgets, m->children, m->canvas.size - 1);
 }
 
-static void update(struct athr_widget *widget, double consumed, double speed,
-                   double dlt)
+static void update(struct athr_widget *widget, double consumed, double speed)
 {
     struct athr_widget_main *m = widget->derived;
     unsigned offset = 0;
@@ -94,7 +93,7 @@ static void update(struct athr_widget *widget, double consumed, double speed,
     for (unsigned i = 0; i < m->nwidgets; ++i)
     {
         m->children[i]->canvas.buff = m->canvas.buff + offset;
-        m->children[i]->vtable->update(m->children[i], consumed, speed, dlt);
+        m->children[i]->vtable->update(m->children[i], consumed, speed);
         offset += m->children[i]->canvas.size;
     }
     athr_canvas_draw(&m->canvas);

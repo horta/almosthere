@@ -13,8 +13,7 @@ static void draw(struct athr_widget_bar *bar, struct athr_canvas_view *canvas)
     canvas->buff[canvas->size - 1] = '|';
 }
 
-static void update(struct athr_widget *w, double consumed, double speed,
-                   double dlt)
+static void update(struct athr_widget *w, double consumed, double speed)
 {
     struct athr_widget_bar *bar = w->derived;
     bar->consumed = consumed;
