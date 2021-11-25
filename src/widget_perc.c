@@ -7,7 +7,7 @@
 
 /* Non null-terminated sequence of characters with percentage.
  * From 0% to 100%. Buff needs to have room for 4 characters. */
-static void perc_buff(char buff[static 1], unsigned perc)
+static void perc_buff(char *buff, unsigned perc)
 {
     assert(perc <= 100);
 
