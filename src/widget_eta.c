@@ -21,6 +21,11 @@ static inline unsigned min_sec(double s) { return (unsigned)(s / MIN_SEC); }
 
 #define xsnprintf(...) snprintf(__VA_ARGS__) < 0 ? abort() : (void)0
 
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+#endif
+
 static void update(struct athr_widget *w, double consumed, double speed)
 {
     unsigned const sz = ATHR_WIDGET_ETA_LEN;
@@ -53,6 +58,10 @@ static void update(struct athr_widget *w, double consumed, double speed)
     for (unsigned i = 0; i < sz; ++i)
         w->canvas.buff[i] = eta->buff[i];
 }
+
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 
 static unsigned min_len(struct athr_widget const *w)
 {
