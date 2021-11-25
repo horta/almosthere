@@ -11,20 +11,21 @@ static long tput_cols(void)
     FILE *fd = NULL;
     long ncols = -1;
 
-    if (!(fd = popen("tput cols", "r"))) goto cleanup;
+    if (!(fd = _popen("tput cols", "r"))) goto cleanup;
 
     if (!fgets(buff, 16, fd)) goto cleanup;
     if (!buff[0]) goto cleanup;
 
     char *end = NULL;
     long tentative = strtol(buff, &end, 10);
+    if (*end == '\n') *end = 0;
     if (*end) goto cleanup;
 
     if (tentative < 0 || tentative > UINT_MAX) goto cleanup;
     ncols = (unsigned)tentative;
 
 cleanup:
-    if (fd) pclose(fd);
+    if (fd) _pclose(fd);
     return ncols;
 }
 
