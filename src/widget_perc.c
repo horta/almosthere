@@ -3,8 +3,31 @@
 #include "widget.h"
 #include "widget_perc.h"
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
+
+/* Non null-terminated sequence of characters with percentage.
+ * From 0% to 100%. Buff needs to have room for 4 characters. */
+static void perc_buff(char buff[static 1], unsigned perc)
+{
+    assert(perc <= 100);
+
+    if (perc / 100)
+        *buff = '1';
+    else
+        *buff = ' ';
+    ++buff;
+
+    if (perc / 10)
+        *buff = '0' + (perc % 100) / 10;
+    else
+        *buff = ' ';
+    ++buff;
+
+    *buff = '0' + (perc % 100 % 10);
+    ++buff;
+
+    *buff = '%';
+}
 
 static void update(struct athr_widget *w, double consumed, double speed)
 {
@@ -18,11 +41,10 @@ static void update(struct athr_widget *w, double consumed, double speed)
     else
         perc = (unsigned)(eta->consumed * 100);
 
-    char str[ATHR_WIDGET_PERC_LEN + 1] = {0};
-    int n = snprintf(str, ATHR_WIDGET_PERC_LEN + 1, " %3d%%", perc);
-    assert(n == ATHR_WIDGET_PERC_LEN);
-    UNUSED(n);
-    memcpy(w->canvas.buff, str, ATHR_WIDGET_PERC_LEN);
+    memcpy(w->canvas.buff, ATHR_WIDGET_PERC_EXAMPLE,
+           ARRAY_SIZE(ATHR_WIDGET_PERC_EXAMPLE));
+    /* Skip the first space */
+    perc_buff(w->canvas.buff + 1, perc);
 }
 
 static unsigned min_len(struct athr_widget const *w)

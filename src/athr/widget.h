@@ -6,14 +6,14 @@
 struct athr_widget;
 
 typedef void(athr_widget_update_t)(struct athr_widget *, double, double);
-typedef unsigned(athr_widget_min_size_t)(struct athr_widget const *);
-typedef unsigned(athr_widget_max_size_t)(struct athr_widget const *);
+typedef unsigned(athr_widget_min_len_t)(struct athr_widget const *);
+typedef unsigned(athr_widget_max_len_t)(struct athr_widget const *);
 
 struct athr_widget_vtable
 {
     athr_widget_update_t *update;
-    athr_widget_min_size_t *min_length;
-    athr_widget_max_size_t *max_length;
+    athr_widget_min_len_t *min_len;
+    athr_widget_max_len_t *max_len;
 };
 
 struct athr_widget
@@ -32,14 +32,14 @@ static inline void athr_widget_update(struct athr_widget *w, double consumed,
     w->vtable->update(w, consumed, speed);
 }
 
-static inline unsigned athr_widget_min_size(struct athr_widget *w)
+static inline unsigned athr_widget_min_len(struct athr_widget *w)
 {
-    return w->vtable->min_length(w);
+    return w->vtable->min_len(w);
 }
 
-static inline unsigned athr_widget_max_size(struct athr_widget *w)
+static inline unsigned athr_widget_max_len(struct athr_widget *w)
 {
-    return w->vtable->max_length(w);
+    return w->vtable->max_len(w);
 }
 
 #endif

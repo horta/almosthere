@@ -13,18 +13,20 @@ static void update(struct athr_widget *, double, double);
 static unsigned min_len(struct athr_widget const *widget)
 {
     struct athr_widget_main *m = (struct athr_widget_main *)widget->derived;
+    /* +1 for carriage return */
     unsigned s = 1;
     for (unsigned i = 0; i < m->nwidgets; ++i)
-        s += m->children[i]->vtable->min_length(m->children[i]);
+        s += m->children[i]->vtable->min_len(m->children[i]);
     return s;
 }
 
 static unsigned max_len(struct athr_widget const *widget)
 {
     struct athr_widget_main *m = (struct athr_widget_main *)widget->derived;
+    /* +1 for carriage return */
     unsigned s = 1;
     for (unsigned i = 0; i < m->nwidgets; ++i)
-        s += m->children[i]->vtable->max_length(m->children[i]);
+        s += m->children[i]->vtable->max_len(m->children[i]);
     return s;
 }
 
@@ -32,14 +34,6 @@ static void partition(unsigned nwidgets, struct athr_widget **widget,
                       unsigned size);
 
 static struct athr_widget_vtable const vtable = {update, min_len, max_len};
-
-static void assert_that_fits(struct athr_widget_main const *m)
-{
-    unsigned len = 0;
-    for (unsigned i = 0; i < m->nwidgets; ++i)
-        len += m->children[i]->vtable->min_length(m->children[i]);
-    assert(len < ATHR_CANVAS_MAX_LEN);
-}
 
 struct athr_widget_bar *widget_main_add_bar(struct athr_widget_main *m)
 {
@@ -77,7 +71,6 @@ void widget_main_create(struct athr_widget_main *m)
 void widget_main_setup(struct athr_widget_main *m)
 {
     athr_canvas_setup(&m->canvas, min_len(&m->super), max_len(&m->super));
-    assert_that_fits(m);
     partition(m->nwidgets, m->children, m->canvas.len - 1);
 }
 
@@ -99,17 +92,16 @@ static void update(struct athr_widget *widget, double consumed, double speed)
     athr_canvas_draw(&m->canvas);
 }
 
-static unsigned assign_minimum_size(unsigned nwidgets,
-                                    struct athr_widget **widget, unsigned size)
+static unsigned assign_minimum_len(unsigned nwidgets,
+                                   struct athr_widget **widget, unsigned len)
 {
     for (unsigned i = 0; i < nwidgets; ++i)
     {
-        unsigned s = widget[i]->vtable->min_length(widget[i]);
+        unsigned s = widget[i]->vtable->min_len(widget[i]);
         widget[i]->canvas.len = s;
-        assert(size >= s);
-        size -= s;
+        len -= s;
     }
-    return size;
+    return len;
 }
 
 static unsigned remaining_widgets(unsigned n, struct athr_widget **widget)
@@ -117,18 +109,18 @@ static unsigned remaining_widgets(unsigned n, struct athr_widget **widget)
     unsigned remaining = 0;
     for (unsigned i = 0; i < n; ++i)
     {
-        unsigned s = widget[i]->vtable->max_length(widget[i]);
+        unsigned s = widget[i]->vtable->max_len(widget[i]);
         if (widget[i]->canvas.len < s) remaining++;
     }
     return remaining;
 }
 
-static unsigned increase_size(unsigned nwidgets, struct athr_widget **widget,
-                              unsigned size, unsigned remain)
+static unsigned increase_len(unsigned nwidgets, struct athr_widget **widget,
+                             unsigned size, unsigned remain)
 {
     for (unsigned i = 0; i < nwidgets; ++i)
     {
-        unsigned max_size = widget[i]->vtable->max_length(widget[i]);
+        unsigned max_size = widget[i]->vtable->max_len(widget[i]);
         unsigned amount = minu(size, max_size - widget[i]->canvas.len);
         amount = minu(amount, remain);
         widget[i]->canvas.len += amount;
@@ -138,14 +130,13 @@ static unsigned increase_size(unsigned nwidgets, struct athr_widget **widget,
 }
 
 static void partition(unsigned nwidgets, struct athr_widget **widget,
-                      unsigned size)
+                      unsigned len)
 {
-    unsigned remain = assign_minimum_size(nwidgets, widget, size);
+    unsigned remain = assign_minimum_len(nwidgets, widget, len);
     unsigned npart = remaining_widgets(nwidgets, widget);
     if (npart > 0)
     {
-        remain = increase_size(nwidgets, widget, remain / npart, remain);
-        if (remain > 0)
-            remain = increase_size(nwidgets, widget, remain, remain);
+        remain = increase_len(nwidgets, widget, remain / npart, remain);
+        if (remain > 0) remain = increase_len(nwidgets, widget, remain, remain);
     }
 }

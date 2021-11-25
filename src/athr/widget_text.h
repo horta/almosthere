@@ -9,7 +9,7 @@
 struct athr_widget_text
 {
     struct athr_widget super;
-    char str[ATHR_WIDGET_TEXT_MAX_LEN];
+    char buff[ATHR_WIDGET_TEXT_MAX_LEN];
     unsigned len;
 };
 

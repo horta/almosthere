@@ -38,11 +38,11 @@ bool athr_canvas_resize(struct athr_canvas *canvas)
     ncols--;
 #endif
 
-    unsigned prev_size = canvas->len;
+    unsigned prev_len = canvas->len;
     canvas->len = ncols;
     canvas->len = minu(canvas->len, canvas->max_len);
     canvas->len = maxu(canvas->len, canvas->min_len);
-    return prev_size != canvas->len;
+    return prev_len != canvas->len;
 }
 
 void athr_canvas_setup(struct athr_canvas *canvas, unsigned min_len,
