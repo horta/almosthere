@@ -34,9 +34,6 @@ void athr_canvas_draw(struct athr_canvas const *canvas)
 bool athr_canvas_resize(struct athr_canvas *canvas)
 {
     unsigned ncols = terminal_width() + 1;
-#ifdef WIN32
-    ncols--;
-#endif
 
     unsigned prev_len = canvas->len;
     canvas->len = ncols;
