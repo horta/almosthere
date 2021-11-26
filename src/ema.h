@@ -5,24 +5,17 @@
 #include "common.h"
 #include <assert.h>
 
-#define SMOOTHING 0.3f
+#define SMOOTHING 0.2f
 
 /* 1 / (1 - pow(1 - SMOOTHING, n)) for n == 1, 2, ... */
-static double const factor[15] = {
-    3.33f, 1.96f, 1.52f, 1.32f, 1.20f, 1.13f, 1.09f, 1.06f,
-    1.04f, 1.03f, 1.02f, 1.01f, 1.01f, 1.01f, 1.00f,
-};
+static double const factor[] = {2.78, 2.05, 1.69, 1.49, 1.36, 1.27, 1.20, 1.16,
+                                1.12, 1.09, 1.07, 1.06, 1.05, 1.04, 1.03, 1.02,
+                                1.02, 1.01, 1.01, 1.01, 1.01, 1.01, 1.00};
 
 static inline void ema_add(struct athr_ema *ema, double x)
 {
     ema->last = SMOOTHING * x + (1 - SMOOTHING) * ema->last;
     ema->calls = minu(ema->calls + 1, ARRAY_SIZE(factor));
-}
-
-static inline void ema_reset(struct athr_ema *ema)
-{
-    ema->last = 0.;
-    ema->calls = 0;
 }
 
 static inline double ema_get(struct athr_ema const *ema)
