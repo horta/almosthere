@@ -18,12 +18,12 @@ static void perc_buff(char *buff, unsigned perc)
     ++buff;
 
     if (perc / 10)
-        *buff = (unsigned)'0' + (perc % 100) / 10;
+        *buff = (char)('0' + (perc % 100) / 10);
     else
         *buff = ' ';
     ++buff;
 
-    *buff = (unsigned)'0' + (perc % 100 % 10);
+    *buff = (char)('0' + (perc % 100 % 10));
     ++buff;
 
     *buff = '%';
