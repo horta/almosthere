@@ -36,6 +36,7 @@ struct athr
     uint_fast64_t last_consumed;
     struct athr_ema speed;
     struct elapsed elapsed;
+    struct elapsed total_elapsed;
 
     enum athr_option opts;
     struct athr_widget_main main;
@@ -49,9 +50,9 @@ struct athr
 #define ATHR_INIT                                                              \
     (struct athr)                                                              \
     {                                                                          \
-        ATHR_TIMESTEP, 0, 0, 0, ATHR_EMA_INIT, ELAPSED_INIT, ATHR_BAR,         \
-            ATHR_WIDGET_MAIN_INIT, false, ATOMIC_FLAG_INIT, ATHR_THR_INIT,     \
-            NULL                                                               \
+        ATHR_TIMESTEP, 0, 0, 0, ATHR_EMA_INIT, ELAPSED_INIT, ELAPSED_INIT,     \
+            ATHR_BAR, ATHR_WIDGET_MAIN_INIT, false, ATOMIC_FLAG_INIT,          \
+            ATHR_THR_INIT, NULL                                                \
     }
 
 ATHR_API int athr_start(struct athr *at, uint64_t total, char const *desc,

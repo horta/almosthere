@@ -47,6 +47,11 @@ static void update(struct athr_widget *w, double consumed, double speed)
     perc_buff(w->canvas.buff + 1, perc);
 }
 
+static void finish(struct athr_widget *w, double total_elapsed)
+{
+    update(w, 1.0f, 0.0f);
+}
+
 static unsigned min_len(struct athr_widget const *w)
 {
     return ATHR_WIDGET_PERC_LEN;
@@ -57,7 +62,8 @@ static unsigned max_len(struct athr_widget const *w)
     return ATHR_WIDGET_PERC_LEN;
 }
 
-static struct athr_widget_vtable const vtable = {update, min_len, max_len};
+static struct athr_widget_vtable const vtable = {update, finish, min_len,
+                                                 max_len};
 
 void widget_perc_create(struct athr_widget_perc *perc)
 {

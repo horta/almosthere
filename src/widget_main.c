@@ -9,6 +9,7 @@
 #include <stdlib.h>
 
 static void update(struct athr_widget *, double, double);
+static void finish(struct athr_widget *, double);
 
 static unsigned min_len(struct athr_widget const *widget)
 {
@@ -33,7 +34,8 @@ static unsigned max_len(struct athr_widget const *widget)
 static void partition(unsigned nwidgets, struct athr_widget **widget,
                       unsigned size);
 
-static struct athr_widget_vtable const vtable = {update, min_len, max_len};
+static struct athr_widget_vtable const vtable = {update, finish, min_len,
+                                                 max_len};
 
 struct athr_widget_bar *widget_main_add_bar(struct athr_widget_main *m)
 {
@@ -74,7 +76,9 @@ void widget_main_setup(struct athr_widget_main *m)
     partition(m->nwidgets, m->children, m->canvas.len - 1);
 }
 
-static void update(struct athr_widget *widget, double consumed, double speed)
+typedef void (*callback_t)(struct athr_widget *, void const *);
+
+static void call_children(struct athr_widget *widget, callback_t cb, void *arg)
 {
     struct athr_widget_main *m = widget->derived;
     unsigned offset = 0;
@@ -86,10 +90,33 @@ static void update(struct athr_widget *widget, double consumed, double speed)
     for (unsigned i = 0; i < m->nwidgets; ++i)
     {
         m->children[i]->canvas.buff = m->canvas.buff + offset;
-        m->children[i]->vtable->update(m->children[i], consumed, speed);
+        cb(m->children[i], arg);
         offset += m->children[i]->canvas.len;
     }
     athr_canvas_draw(&m->canvas);
+}
+
+static void update_cb(struct athr_widget *widget, void const *arg)
+{
+    double const *values = arg;
+    widget->vtable->update(widget, values[0], values[1]);
+}
+
+static void update(struct athr_widget *widget, double consumed, double speed)
+{
+    double const arg[2] = {consumed, speed};
+    call_children(widget, update_cb, (void *)arg);
+}
+
+static void finish_cb(struct athr_widget *widget, void const *arg)
+{
+    double const *total_elapsed = arg;
+    widget->vtable->finish(widget, *total_elapsed);
+}
+
+static void finish(struct athr_widget *widget, double total_elapsed)
+{
+    call_children(widget, finish_cb, (void *)&total_elapsed);
 }
 
 static unsigned assign_minimum_len(unsigned nwidgets,

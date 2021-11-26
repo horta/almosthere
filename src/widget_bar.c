@@ -20,6 +20,11 @@ static void update(struct athr_widget *w, double consumed, double speed)
     draw(bar, &w->canvas);
 }
 
+static void finish(struct athr_widget *w, double total_elapsed)
+{
+    update(w, 1.0f, 0.0f);
+}
+
 static unsigned min_len(struct athr_widget const *widget)
 {
     return ATHR_WIDGET_BAR_MIN_LEN;
@@ -30,7 +35,8 @@ static unsigned max_len(struct athr_widget const *widget)
     return ATHR_WIDGET_BAR_MAX_LEN;
 }
 
-static struct athr_widget_vtable const vtable = {update, min_len, max_len};
+static struct athr_widget_vtable const vtable = {update, finish, min_len,
+                                                 max_len};
 
 void widget_bar_create(struct athr_widget_bar *bar)
 {
