@@ -65,6 +65,6 @@ void athr_canvas_close(struct athr_canvas *canvas)
     else
     {
         fprintf(stdout, "\n");
-        fflush(stderr);
+        fflush(stdout);
     }
 }

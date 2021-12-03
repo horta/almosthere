@@ -27,7 +27,7 @@ extern "C" {
 #define ATHR_TIMESTEP 250
 
 /* Limit on how long to update, in milliseconds. */
-#define ATHR_TIMESTEP_LIMIT 1000
+#define ATHR_TIMESTEP_LIMIT 750
 
 struct athr
 {
