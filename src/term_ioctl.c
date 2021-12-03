@@ -1,5 +1,6 @@
 #include "term_ioctl.h"
 #include "athr/os.h"
+#include "logger.h"
 #include "terminal.h"
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -16,5 +17,6 @@ unsigned term_ioctl_width(void)
 
     if (ioctl(fd, TIOCGWINSZ, &wsz) >= 0) return wsz.ws_col;
 
+    error("ioctl failed");
     return terminal_fallback_width();
 }

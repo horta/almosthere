@@ -1,4 +1,5 @@
 #include "term_win32.h"
+#include "logger.h"
 #include "terminal.h"
 #include <limits.h>
 #include <stdio.h>
@@ -11,17 +12,37 @@ static long tput_cols(void)
     FILE *fd = NULL;
     long ncols = -1;
 
-    if (!(fd = _popen("tput cols", "r"))) goto cleanup;
+    if (!(fd = _popen("tput cols", "r")))
+    {
+        error("failed to run tput");
+        goto cleanup;
+    }
 
-    if (!fgets(buff, 16, fd)) goto cleanup;
-    if (!buff[0]) goto cleanup;
+    if (!fgets(buff, 16, fd))
+    {
+        error("fgets failed");
+        goto cleanup;
+    }
+    if (!buff[0])
+    {
+        error("fgets read failed");
+        goto cleanup;
+    }
 
     char *end = NULL;
     long tentative = strtol(buff, &end, 10);
     if (*end == '\n') *end = 0;
-    if (*end) goto cleanup;
+    if (*end)
+    {
+        error("invalid number");
+        goto cleanup;
+    }
 
-    if (tentative < 0 || tentative > UINT_MAX) goto cleanup;
+    if (tentative < 0 || tentative > UINT_MAX)
+    {
+        error("ncols overflow");
+        goto cleanup;
+    }
     ncols = (unsigned)tentative;
 
 cleanup:
@@ -35,10 +56,12 @@ unsigned term_win32_width(void)
     HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hdl == INVALID_HANDLE_VALUE)
     {
+        error("invalid handle");
         goto fallback;
     }
     if (GetConsoleScreenBufferInfo(hdl, &csbi) == 0)
     {
+        error("failed to get screen info");
         goto fallback;
     }
 

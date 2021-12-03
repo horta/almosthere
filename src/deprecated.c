@@ -1,6 +1,7 @@
 #include "athr/deprecated.h"
 #include "athr.h"
 #include "athr/athr.h"
+#include "logger.h"
 
 struct athr *athr_create_var(athr_create_args in)
 {
@@ -13,6 +14,11 @@ struct athr *athr_create_var(athr_create_args in)
             : ATHR_BAR_DEPRECATED | ATHR_ETA_DEPRECATED | ATHR_PERC_DEPRECATED;
 
     struct athr *at = malloc(sizeof *at);
+    if (!at)
+    {
+        error("failed to malloc");
+        return NULL;
+    }
     *at = ATHR_INIT;
     athr_start(at, (unsigned long)volume_out, desc_out,
                (enum athr_option)opts_out);
