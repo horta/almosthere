@@ -2,7 +2,7 @@
 #include "athr.h"
 #include "athr/widget_main.h"
 #include "ema.h"
-#include "error.h"
+#include "logger.h"
 #include "thr.h"
 #include "widget_bar.h"
 #include "widget_eta.h"
@@ -32,7 +32,7 @@ static void update(struct athr *at)
     uint_fast64_t delta = consumed - at->last_consumed;
     at->last_consumed = consumed;
 
-    if (elapsed_stop(&at->elapsed)) error(at, "failed to elapsed_stop");
+    if (elapsed_stop(&at->elapsed)) error("failed to elapsed_stop");
 
     double seconds = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
     double progress = ((double)delta) / ((double)at->total);
@@ -50,7 +50,7 @@ static void update(struct athr *at)
     at->main.super.vtable->update(&at->main.super, consumed_fraction,
                                   ema_get(&at->speed));
 
-    if (elapsed_start(&at->elapsed)) error(at, "failed to elapsed_start");
+    if (elapsed_start(&at->elapsed)) error("failed to elapsed_start");
 cleanup:
     unlock(at);
 }
@@ -61,7 +61,7 @@ static void thread_start(void *args)
     while (!atomic_load_bool(&at->stop) && !atomic_load_bool(&disable_thread))
     {
         update(at);
-        if (athr_sleep(at->timestep)) error(at, "failed to sleep");
+        if (athr_sleep(at->timestep)) error("failed to sleep");
     }
 }
 
@@ -76,12 +76,12 @@ int athr_start(struct athr *at, uint64_t total, const char *desc,
     at->speed = ATHR_EMA_INIT;
     if (elapsed_start(&at->elapsed))
     {
-        error(at, "failed to elapsed_start");
+        error("failed to elapsed_start");
         return 1;
     }
     if (elapsed_start(&at->total_elapsed))
     {
-        error(at, "failed to elapsed_start");
+        error("failed to elapsed_start");
         return 1;
     }
 
@@ -111,7 +111,7 @@ void athr_stop(struct athr *at)
 {
     atomic_store(&at->stop, true);
     update(at);
-    if (elapsed_stop(&at->total_elapsed)) error(at, "failed to elapsed_stop");
+    if (elapsed_stop(&at->total_elapsed)) error("failed to elapsed_stop");
 
     double seconds = ((double)elapsed_milliseconds(&at->total_elapsed)) / 1000.;
     at->main.super.vtable->finish(&at->main.super, seconds);

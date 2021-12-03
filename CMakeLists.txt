@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(
   athr
-  VERSION 3.0.4
+  VERSION 4.0.0
   LANGUAGES C
 )
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
@@ -116,7 +116,7 @@ add_library(
   src/athr.c
   src/canvas.c
   src/deprecated.c
-  src/error.c
+  src/logger.c
   src/terminal.c
   src/thr.c
   src/widget_bar.c

@@ -1,4 +1,5 @@
 #include "term_curses.h"
+#include "logger.h"
 #include "terminal.h"
 #include <curses.h>
 #include <errno.h>
@@ -11,15 +12,14 @@
 
 unsigned term_curses_width(void)
 {
-    static int failed_before = 0;
+    static volatile int failed_before = 0;
     int cols = -1;
     int tty_fd = -1;
 
     char const *const term = getenv("TERM");
     if (!term)
     {
-        if (!failed_before)
-            fprintf(stderr, "TERM environment variable not set\n");
+        if (!failed_before) error("TERM environment variable not set");
         failed_before = 1;
         goto done;
     }
@@ -27,16 +27,14 @@ unsigned term_curses_width(void)
     char const *const cterm_path = ctermid(NULL);
     if (!cterm_path || !cterm_path[0])
     {
-        if (!failed_before) fprintf(stderr, "ctermid() failed\n");
+        if (!failed_before) error("ctermid() failed");
         return terminal_fallback_width();
     }
 
     tty_fd = open(cterm_path, O_RDWR);
     if (tty_fd == -1)
     {
-        if (!failed_before)
-            fprintf(stderr, "open(\"%s\") failed (%d): %s\n", cterm_path, errno,
-                    strerror(errno));
+        if (!failed_before) error("open() failed");
         failed_before = 1;
         goto done;
     }
@@ -49,22 +47,18 @@ unsigned term_curses_width(void)
         {
         case -1:
             if (!failed_before)
-                fprintf(stderr,
-                        "setupterm() failed: terminfo database not found\n");
+                error("setupterm() failed: terminfo database not found");
             failed_before = 1;
             goto done;
         case 0:
             if (!failed_before)
-                fprintf(
-                    stderr,
-                    "setupterm() failed: TERM=%s not found in database or too "
-                    "generic\n",
-                    term);
+                error("setupterm() failed: TERM=%s not found in database or "
+                      "too generic");
             failed_before = 1;
             goto done;
         case 1:
             if (!failed_before)
-                fprintf(stderr, "setupterm() failed: terminal is hardcopy\n");
+                error("setupterm() failed: terminal is hardcopy");
             failed_before = 1;
             goto done;
         } // err
@@ -73,7 +67,7 @@ unsigned term_curses_width(void)
     cols = tigetnum((char *)"cols");
     if (cols < 0)
     {
-        if (!failed_before) fprintf(stderr, "tigetnum() failed (%d)\n", cols);
+        if (!failed_before) error("tigetnum() failed");
         failed_before = 1;
     }
 
