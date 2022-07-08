@@ -71,5 +71,5 @@ unsigned term_win32_width(void)
 
 fallback:
     ncols = tput_cols();
-    return ncols == -1 ? terminal_fallback_width() : (unsigned)ncols;
+    return ncols == -1 ? __athr_terminal_fallback_width() : (unsigned)ncols;
 }

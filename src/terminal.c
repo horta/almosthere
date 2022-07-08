@@ -31,7 +31,7 @@ unsigned __athr_terminal_width(void)
 #elif defined(TERMINAL_IOCTL)
     return term_ioctl_width();
 #else
-    return terminal_fallback_width();
+    return __athr_terminal_fallback_width();
 #endif
 }
 
