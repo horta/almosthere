@@ -10,13 +10,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(cmake/compiler-options.cmake)
 include(cmake/sanitizers.cmake)
-
+include(cmake/CPM.cmake)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 cpmaddpackage(NAME elapsed VERSION 3.0.6 GITHUB_REPOSITORY horta/elapsed)
 
 find_package(Threads REQUIRED)
-find_package(elapsed REQUIRED)
 find_package(Curses)
 if(UNIX AND NOT APPLE)
   find_package(LibRt)
