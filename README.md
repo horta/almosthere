@@ -7,6 +7,7 @@ ATHR is a simple yet powerful progress indicator library that works on Windows, 
 ## Get started
 
 On Linux, macOS, and Windows (Git bash terminal) open a terminal and install it via
+
 ```bash
 /bin/bash -c "$(curl -fsSL https://git.io/Jz7Oa)" -s horta/almosthere
 ```
@@ -14,9 +15,11 @@ On Linux, macOS, and Windows (Git bash terminal) open a terminal and install it 
 The above commands will download the latest library version, compile it to create a dynamic library and copy the C header into the appropriate directory. (For a more manual approach, see the section [Manual installation](#manual-installation) in this document.)
 
 It is now ready to be linked into in your C/C++ project. Suppose you have a file `example.c` that makes use of this library. Using `gcc` compiler, you can do
+
 ```bash
 gcc example.c -lathr -o example
 ```
+
 to produce a binary `example` linked against `athr` library.
 
 ## Examples
@@ -40,6 +43,7 @@ int main() {
     return 0;
 }
 ```
+
 ![Example 1](figures/example1.gif)
 
 ```c
@@ -61,6 +65,7 @@ int main() {
     return 0;
 }
 ```
+
 ![Example 2](figures/example2.gif)
 
 ```c
@@ -82,6 +87,7 @@ int main() {
     return 0;
 }
 ```
+
 ![Example 3](figures/example3.gif)
 
 ```c
@@ -103,17 +109,20 @@ int main() {
     return 0;
 }
 ```
+
 ![Example 4](figures/example4.gif)
 
 ## Manual installation
 
 Clone and enter into the repository folder
+
 ```bash
 git clone https://github.com/horta/almosthere
 cd almosthere
 ```
 
 Create a `build` folder to not clutter the project and proceed with cmake steps
+
 ```bash
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON
@@ -123,6 +132,7 @@ make && make test && make install
 ## Interface
 
 It consists in two functions
+
 ```c
 void athr_consume(struct athr *at, long consume);
 void athr_finish(struct athr *at);
@@ -141,6 +151,7 @@ enum ATHR_OPTS { ATHR_BAR = 1, ATHR_ETA = 2, ATHR_PERC = 4 };
 ```
 
 The variadic macro is better explained by examples
+
 ```c
 /* progress indicator with ATHR_BAR, ATHR_ETA, and ATHR_PERC widgets */
 struct athr *at0 = athr_create(100);
@@ -166,7 +177,7 @@ A `athr_finish` call then ends the process.
 
 ## Authors
 
-* [Danilo Horta](https://github.com/horta)
+- [Danilo Horta](https://github.com/horta)
 
 ## Acknowledgements
 
