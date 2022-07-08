@@ -50,7 +50,7 @@ cleanup:
     return ncols;
 }
 
-unsigned term_win32_width(void)
+unsigned __athr_term_win32_width(void)
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);

@@ -27,9 +27,9 @@ unsigned __athr_terminal_width(void)
 #if defined(TERMINAL_CURSES)
     return __athr_term_curses_width();
 #elif defined(TERMINAL_WIN32)
-    return term_win32_width();
+    return __athr_term_win32_width();
 #elif defined(TERMINAL_IOCTL)
-    return term_ioctl_width();
+    return __athr_term_ioctl_width();
 #else
     return __athr_terminal_fallback_width();
 #endif
