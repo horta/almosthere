@@ -32,7 +32,7 @@ jobs:
           -DENABLE_ALL_WARNINGS=ON
 
       - name: Configure CMake
-        if: runner.os != 'Linux'
+        if: runner.os == 'macOS'
         run: >
           cmake
           -B ${{github.workspace}}/build
