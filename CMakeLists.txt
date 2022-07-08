@@ -1,66 +1,19 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
 project(
   athr
   VERSION 4.0.1
-  LANGUAGES C
-)
+  LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
 # Generate compile_commands.json file
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-# Set RPATH only if it's not a system directory
-list(
-  FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
-  "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir
-)
-if("${isSystemDir}" STREQUAL "-1")
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-endif()
+include(cmake/compiler-options.cmake)
+include(cmake/sanitizers.cmake)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-  # /wd5105:
-  # https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/c5105?view=msvc-160
-  set(WARNING_FLAGS /W3 /wd5105)
-else()
-  set(
-    WARNING_FLAGS
-    -Wall
-    -Wextra
-    -Wstrict-prototypes
-    -Wshadow
-    -Wconversion
-    -Wmissing-prototypes
-    -Wno-unused-parameter
-    -Wsign-conversion
-    -Wno-unused-function
-  )
-
-  if(NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    list(
-      APPEND WARNING_FLAGS -Wno-gnu-designator -Wno-empty-translation-unit
-      -Wno-gnu-statement-expression -Wno-nullability-extension
-    )
-  endif()
-endif()
-
-option(CI_BUILD "CI, extra flags will be set" OFF)
-if(CI_BUILD)
-  message(STATUS "CI build enabled")
-  if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    add_compile_options(/WX)
-  else()
-    add_compile_options(-Werror)
-  endif()
-endif()
-
-if(NOT (CMAKE_VERSION VERSION_GREATER 3.12.0))
-  # Fix for https://github.com/horta/almosthere/issues/3
-  set(GCC_TOO_OLD TRUE)
-endif()
+cpmaddpackage(NAME elapsed VERSION 3.0.6 GITHUB_REPOSITORY horta/elapsed)
 
 find_package(Threads REQUIRED)
 find_package(elapsed REQUIRED)
@@ -123,39 +76,32 @@ add_library(
   src/widget_eta.c
   src/widget_main.c
   src/widget_perc.c
-  src/widget_text.c
-)
+  src/widget_text.c)
 add_library(ATHR::athr ALIAS athr)
 target_include_directories(
   athr
   PUBLIC $<INSTALL_INTERFACE:include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set_target_properties(athr PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(athr PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_options(athr PRIVATE ${WARNING_FLAGS})
 target_compile_features(athr PRIVATE c_std_11)
-target_compile_definitions(athr PRIVATE $<$<BOOL:${TERMINAL_CURSES}>:TERMINAL_CURSES>)
 target_compile_definitions(
-  athr
-  PRIVATE $<$<BOOL:${TERMINAL_WIN32}>:TERMINAL_WIN32>
-)
+  athr PRIVATE $<$<BOOL:${TERMINAL_CURSES}>:TERMINAL_CURSES>)
+target_compile_definitions(athr
+                           PRIVATE $<$<BOOL:${TERMINAL_WIN32}>:TERMINAL_WIN32>)
+target_compile_definitions(athr
+                           PRIVATE $<$<BOOL:${TERMINAL_IOCTL}>:TERMINAL_IOCTL>)
+target_compile_definitions(athr
+                           PRIVATE $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>)
 target_compile_definitions(
-  athr
-  PRIVATE $<$<BOOL:${TERMINAL_IOCTL}>:TERMINAL_IOCTL>
-)
+  athr PRIVATE $<$<BOOL:${WIN32}>:_CRT_NONSTDC_NO_DEPRECATE>)
 target_compile_definitions(
-  athr
-  PRIVATE $<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>
-)
-target_compile_definitions(athr PRIVATE $<$<BOOL:${WIN32}>:_CRT_NONSTDC_NO_DEPRECATE>)
-target_compile_definitions(athr PRIVATE $<$<BOOL:${HAVE_STDNORETURN_H}>:HAVE_STDNORETURN_H>)
-target_compile_definitions(
-  athr
-  PRIVATE $<$<BOOL:${HAVE_UNISTD_H}>:HAVE_UNISTD_H>
-)
+  athr PRIVATE $<$<BOOL:${HAVE_STDNORETURN_H}>:HAVE_STDNORETURN_H>)
+target_compile_definitions(athr
+                           PRIVATE $<$<BOOL:${HAVE_UNISTD_H}>:HAVE_UNISTD_H>)
 
 if(CURSES_FOUND)
   target_compile_definitions(athr PRIVATE CURSES_FOUND)
@@ -176,8 +122,7 @@ generate_export_header(
   EXPORT_MACRO_NAME
   ATHR_API
   EXPORT_FILE_NAME
-  ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
-)
+  ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h)
 
 install(
   TARGETS athr
@@ -185,33 +130,39 @@ install(
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
-  PUBLIC_HEADER DESTINATION include
-)
+  PUBLIC_HEADER DESTINATION include)
 install(DIRECTORY src/athr/ DESTINATION include/athr)
-install(
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
-  DESTINATION include/athr
-)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr/export.h
+        DESTINATION include/athr)
 install(
   EXPORT athr-targets
   FILE athr-targets.cmake
   NAMESPACE ATHR::
-  DESTINATION lib/cmake/athr
-)
+  DESTINATION lib/cmake/athr)
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
   athr-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
   INSTALL_DESTINATION lib/cmake/athr
-  NO_SET_AND_CHECK_MACRO
-)
-install(
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
-  DESTINATION lib/cmake/athr
-)
-install(
-  FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
-  DESTINATION lib/cmake/athr/librt
-)
+  NO_SET_AND_CHECK_MACRO)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/athr-config.cmake
+        DESTINATION lib/cmake/athr)
+install(FILES ${CMAKE_CURRENT_LIST_DIR}/cmake/FindLibRt.cmake
+        DESTINATION lib/cmake/athr/librt)
 
 enable_testing()
 add_subdirectory(test)
+
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_VENDOR "Danilo Horta")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Progress indicator library written in C")
+set(CPACK_PACKAGE_CONTACT "Danilo Horta")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md)
+set(CPACK_RESOURCE_FILE_README ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/package)
+set(CPACK_VERBATIM_VARIABLES YES)
+set(CPACK_PACKAGE_RELOCATABLE YES)
+set(CPACK_MONOLITHIC_INSTALL YES)
+include(CPack)

@@ -2,46 +2,58 @@ name: Test
 
 on: push
 
-env:
-  BUILD_TYPE: Release
-
 jobs:
   test:
+    name: Test on ${{ matrix.os }} with build type ${{ matrix.build_type }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os:
+          [
+            ubuntu-22.04,
+            ubuntu-20.04,
+            macos-12,
+            macos-11,
+            windows-2022,
+            windows-2019,
+          ]
+        build_type: [Release, Debug]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Check for sudo
-      shell: bash
-      run: |
-        if type sudo >/dev/null 2>&1; then SUDO="sudo"; else SUDO=""; fi
-        echo "SUDO=$SUDO" >> $GITHUB_ENV
+      - name: Configure CMake
+        if: runner.os == 'Linux'
+        run: >
+          cmake
+          -B ${{github.workspace}}/build
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DUSE_SANITIZER='Address;Undefined'
+          -DENABLE_ALL_WARNINGS=ON
 
-    - name: Install dependencies
-      shell: bash
-      run: if [ -f install-deps ]; then $SUDO ./install-deps; fi
+      - name: Configure CMake
+        if: runner.os != 'Linux'
+        run: >
+          cmake
+          -B ${{github.workspace}}/build
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DENABLE_ALL_WARNINGS=ON
 
-    - name: Configure CMake
-      if: runner.os != 'Windows'
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCI_BUILD=ON
+      # https://techinplanet.com/how-to-update-windows-sdk-on-windows-latest-on-github-action/
+      - name: Configure CMake
+        if: runner.os == 'Windows'
+        run: >
+          cmake
+          -B ${{github.workspace}}/build
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DCMAKE_SYSTEM_VERSION="10.0.19041.0"
 
-    # https://techinplanet.com/how-to-update-windows-sdk-on-windows-latest-on-github-action/
-    - name: Configure CMake
-      if: runner.os == 'Windows'
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCI_BUILD=ON -DCMAKE_SYSTEM_VERSION="10.0.19041.0"
+      - name: Build
+        run: >
+          cmake
+          --build ${{github.workspace}}/build
+          --config ${{matrix.build_type}}
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
-
-    - name: Install
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      run: $SUDO cmake --build . --target install --config $BUILD_TYPE
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{matrix.build_type}} --output-on-failure
