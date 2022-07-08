@@ -3,6 +3,6 @@
 
 struct athr_widget_bar;
 
-void widget_bar_create(struct athr_widget_bar *);
+void __athr_widget_bar_create(struct athr_widget_bar *);
 
 #endif

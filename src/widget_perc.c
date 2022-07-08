@@ -31,6 +31,7 @@ static void perc_buff(char *buff, unsigned perc)
 
 static void update(struct athr_widget *w, double consumed, double speed)
 {
+    (void)speed;
     struct athr_widget_perc *eta = w->derived;
 
     unsigned perc = 0;
@@ -49,23 +50,26 @@ static void update(struct athr_widget *w, double consumed, double speed)
 
 static void finish(struct athr_widget *w, double total_elapsed)
 {
+    (void)total_elapsed;
     update(w, 1.0f, 0.0f);
 }
 
 static unsigned min_len(struct athr_widget const *w)
 {
+    (void)w;
     return ATHR_WIDGET_PERC_LEN;
 }
 
 static unsigned max_len(struct athr_widget const *w)
 {
+    (void)w;
     return ATHR_WIDGET_PERC_LEN;
 }
 
 static struct athr_widget_vtable const vtable = {update, finish, min_len,
                                                  max_len};
 
-void widget_perc_create(struct athr_widget_perc *perc)
+void __athr_widget_perc_create(struct athr_widget_perc *perc)
 {
     widget_setup((struct athr_widget *)perc, &vtable);
 }

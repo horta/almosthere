@@ -3,6 +3,6 @@
 
 struct athr_widget_text;
 
-void widget_text_create(struct athr_widget_text *, char const *);
+void __athr_widget_text_create(struct athr_widget_text *, char const *);
 
 #endif

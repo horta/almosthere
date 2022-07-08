@@ -23,7 +23,7 @@ static WRAPPER_RETURN __thr_wrapper(WRAPPER_ARG_T arg)
     return 0;
 }
 
-int thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
+int __athr_thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
 {
     thr->has_been_created = 0;
     thr->func = func;
@@ -40,7 +40,7 @@ int thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
     return rc;
 }
 
-void thr_detach(struct athr_thr *thr)
+void __athr_thr_detach(struct athr_thr *thr)
 {
     if (!thr->has_been_created) return;
 #ifdef ATHR_WINDOWS
@@ -50,7 +50,7 @@ void thr_detach(struct athr_thr *thr)
 #endif
 }
 
-int thr_join(struct athr_thr *thr)
+int __athr_thr_join(struct athr_thr *thr)
 {
 #ifdef ATHR_WINDOWS
     if (WaitForSingleObject(thr, INFINITE) == WAIT_FAILED) return 1;

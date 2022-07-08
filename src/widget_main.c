@@ -37,31 +37,31 @@ static void partition(unsigned nwidgets, struct athr_widget **widget,
 static struct athr_widget_vtable const vtable = {update, finish, min_len,
                                                  max_len};
 
-struct athr_widget_bar *widget_main_add_bar(struct athr_widget_main *m)
+struct athr_widget_bar *__athr_widget_main_add_bar(struct athr_widget_main *m)
 {
     m->children[m->nwidgets++] = (struct athr_widget *)&m->bar;
     return &m->bar;
 }
 
-struct athr_widget_eta *widget_main_add_eta(struct athr_widget_main *m)
+struct athr_widget_eta *__athr_widget_main_add_eta(struct athr_widget_main *m)
 {
     m->children[m->nwidgets++] = (struct athr_widget *)&m->eta;
     return &m->eta;
 }
 
-struct athr_widget_perc *widget_main_add_perc(struct athr_widget_main *m)
+struct athr_widget_perc *__athr_widget_main_add_perc(struct athr_widget_main *m)
 {
     m->children[m->nwidgets++] = (struct athr_widget *)&m->perc;
     return &m->perc;
 }
 
-struct athr_widget_text *widget_main_add_text(struct athr_widget_main *m)
+struct athr_widget_text *__athr_widget_main_add_text(struct athr_widget_main *m)
 {
     m->children[m->nwidgets++] = (struct athr_widget *)&m->text;
     return &m->text;
 }
 
-void widget_main_create(struct athr_widget_main *m)
+void __athr_widget_main_create(struct athr_widget_main *m)
 {
     widget_setup((struct athr_widget *)m, &vtable);
     m->nwidgets = 0;
@@ -70,7 +70,7 @@ void widget_main_create(struct athr_widget_main *m)
     athr_canvas_create(&m->canvas);
 }
 
-void widget_main_setup(struct athr_widget_main *m)
+void __athr_widget_main_setup(struct athr_widget_main *m)
 {
     athr_canvas_setup(&m->canvas, min_len(&m->super), max_len(&m->super));
     partition(m->nwidgets, m->children, m->canvas.len - 1);

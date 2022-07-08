@@ -20,11 +20,12 @@ void athr_term_set_fallback_width(unsigned width) { fallback_width = width; }
 
 void athr_term_force_fallback_use(bool v) { force_fallback_use = v; }
 
-unsigned terminal_width(void)
+unsigned __athr_terminal_width(void)
 {
-    if (terminal_force_fallback_use()) return terminal_fallback_width();
+    if (__athr_terminal_force_fallback_use())
+        return __athr_terminal_fallback_width();
 #if defined(TERMINAL_CURSES)
-    return term_curses_width();
+    return __athr_term_curses_width();
 #elif defined(TERMINAL_WIN32)
     return term_win32_width();
 #elif defined(TERMINAL_IOCTL)
@@ -34,6 +35,6 @@ unsigned terminal_width(void)
 #endif
 }
 
-unsigned terminal_fallback_width(void) { return fallback_width; }
+unsigned __athr_terminal_fallback_width(void) { return fallback_width; }
 
-bool terminal_force_fallback_use(void) { return force_fallback_use; }
+bool __athr_terminal_force_fallback_use(void) { return force_fallback_use; }

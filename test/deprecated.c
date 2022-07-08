@@ -13,7 +13,7 @@ int main(void)
 
 int test_example1(void)
 {
-    struct athr *at = athr_create(14);
+    struct athr *at = athr_create(14, 0, 0);
     int i;
 
     for (i = 0; i < 14; ++i)
@@ -29,7 +29,7 @@ int test_example1(void)
 
 int test_example2(void)
 {
-    struct athr *at = athr_create(9, "My tasks");
+    struct athr *at = athr_create(9, "My tasks", 0);
     int i;
 
     for (i = 0; i < 9; ++i)

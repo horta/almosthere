@@ -86,17 +86,20 @@ int athr_start(struct athr *at, uint64_t total, const char *desc,
     }
 
     at->opts = opts;
-    widget_main_create(&at->main);
-    widget_text_create(widget_main_add_text(&at->main), desc);
-    if (opts & ATHR_PERC) widget_perc_create(widget_main_add_perc(&at->main));
-    if (opts & ATHR_BAR) widget_bar_create(widget_main_add_bar(&at->main));
-    if (opts & ATHR_ETA) widget_eta_create(widget_main_add_eta(&at->main));
-    widget_main_setup(&at->main);
+    __athr_widget_main_create(&at->main);
+    __athr_widget_text_create(__athr_widget_main_add_text(&at->main), desc);
+    if (opts & ATHR_PERC)
+        __athr_widget_perc_create(__athr_widget_main_add_perc(&at->main));
+    if (opts & ATHR_BAR)
+        __athr_widget_bar_create(__athr_widget_main_add_bar(&at->main));
+    if (opts & ATHR_ETA)
+        __athr_widget_eta_create(__athr_widget_main_add_eta(&at->main));
+    __athr_widget_main_setup(&at->main);
 
     atomic_store(&at->stop, false);
 
     if (!atomic_load_bool(&disable_thread))
-        return thr_create(&at->thr, thread_start, at);
+        return __athr_thr_create(&at->thr, thread_start, at);
 
     return 0;
 }
@@ -111,7 +114,7 @@ void athr_stop(struct athr *at)
 {
     atomic_store(&at->stop, true);
     update(at);
-    thr_join(&at->thr);
+    __athr_thr_join(&at->thr);
 
     if (elapsed_stop(&at->total_elapsed)) error("failed to elapsed_stop");
 
@@ -124,7 +127,7 @@ void athr_stop_wait(struct athr *at)
 {
     atomic_store(&at->stop, true);
     update(at);
-    thr_join(&at->thr);
+    __athr_thr_join(&at->thr);
 
     athr_canvas_close(&at->main.canvas);
 }

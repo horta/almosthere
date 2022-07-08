@@ -10,7 +10,7 @@
 #include <term.h>
 #include <unistd.h>
 
-unsigned term_curses_width(void)
+unsigned __athr_term_curses_width(void)
 {
     static volatile int failed_before = 0;
     int cols = -1;
@@ -28,7 +28,7 @@ unsigned term_curses_width(void)
     if (!cterm_path || !cterm_path[0])
     {
         if (!failed_before) error("ctermid() failed");
-        return terminal_fallback_width();
+        return __athr_terminal_fallback_width();
     }
 
     tty_fd = open(cterm_path, O_RDWR);
@@ -77,5 +77,5 @@ unsigned term_curses_width(void)
 done:
     if (tty_fd != -1) close(tty_fd);
 
-    return cols < 0 ? terminal_fallback_width() : (unsigned)cols;
+    return cols < 0 ? __athr_terminal_fallback_width() : (unsigned)cols;
 }

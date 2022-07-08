@@ -7,18 +7,6 @@
 
 #define MIN_SPEED 0.000000001
 
-#define MIN_SEC 60
-#define HOUR_SEC 3600
-#define DAY_SEC 86400
-#define MONTH_SEC 2592000
-#define YEAR_SEC 31104000
-
-static inline unsigned year_sec(double s) { return (unsigned)(s / YEAR_SEC); }
-static inline unsigned month_sec(double s) { return (unsigned)(s / MONTH_SEC); }
-static inline unsigned day_sec(double s) { return (unsigned)(s / DAY_SEC); }
-static inline unsigned hour_sec(double s) { return (unsigned)(s / HOUR_SEC); }
-static inline unsigned min_sec(double s) { return (unsigned)(s / MIN_SEC); }
-
 #define xsnprintf(...) snprintf(__VA_ARGS__) < 0 ? abort() : (void)0
 
 #if defined(__GNUC__) && !defined(__clang__)
@@ -80,18 +68,20 @@ static void finish(struct athr_widget *w, double total_elapsed)
 
 static unsigned min_len(struct athr_widget const *w)
 {
+    (void)w;
     return ATHR_WIDGET_ETA_LEN;
 }
 
 static unsigned max_len(struct athr_widget const *w)
 {
+    (void)w;
     return ATHR_WIDGET_ETA_LEN;
 }
 
 static struct athr_widget_vtable const vtable = {update, finish, min_len,
                                                  max_len};
 
-void widget_eta_create(struct athr_widget_eta *eta)
+void __athr_widget_eta_create(struct athr_widget_eta *eta)
 {
     widget_setup((struct athr_widget *)eta, &vtable);
 }

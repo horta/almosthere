@@ -1,6 +1,6 @@
 #ifndef TERM_CURSES_H
 #define TERM_CURSES_H
 
-unsigned term_curses_width(void);
+unsigned __athr_term_curses_width(void);
 
 #endif

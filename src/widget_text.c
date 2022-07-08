@@ -6,6 +6,8 @@
 
 static void update(struct athr_widget *w, double consumed, double speed)
 {
+    (void)consumed;
+    (void)speed;
     struct athr_widget_text *text = w->derived;
     assert(w->canvas.len >= text->len);
     memcpy(w->canvas.buff, text->buff, text->len);
@@ -13,6 +15,7 @@ static void update(struct athr_widget *w, double consumed, double speed)
 
 static void finish(struct athr_widget *w, double total_elapsed)
 {
+    (void)total_elapsed;
     update(w, 1.0f, 0.0f);
 }
 
@@ -29,7 +32,7 @@ static unsigned max_len(struct athr_widget const *w)
 static struct athr_widget_vtable const vtable = {update, finish, min_len,
                                                  max_len};
 
-void widget_text_create(struct athr_widget_text *text, char const *buff)
+void __athr_widget_text_create(struct athr_widget_text *text, char const *buff)
 {
     char const *ptr = memccpy(text->buff, buff, 0, ATHR_WIDGET_TEXT_MAX_LEN);
     if (ptr)

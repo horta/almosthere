@@ -33,7 +33,7 @@ void athr_canvas_draw(struct athr_canvas const *canvas)
 
 bool athr_canvas_resize(struct athr_canvas *canvas)
 {
-    unsigned ncols = terminal_width() + 1;
+    unsigned ncols = __athr_terminal_width() + 1;
 
     unsigned prev_len = canvas->len;
     canvas->len = ncols;
@@ -57,6 +57,7 @@ void athr_canvas_clean(struct athr_canvas *canvas)
 
 void athr_canvas_close(struct athr_canvas *canvas)
 {
+    (void)canvas;
     if (use_stderr)
     {
         fprintf(stderr, "\n");
