@@ -31,14 +31,12 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
           -DENABLE_ALL_WARNINGS=ON
 
-      # https://techinplanet.com/how-to-update-windows-sdk-on-windows-latest-on-github-action/
       - name: Configure CMake
         if: runner.os == 'Windows'
         run: >
           cmake
           -B ${{github.workspace}}/build
           -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
-          -DCMAKE_SYSTEM_VERSION="10.0.19041.0"
 
       - name: Build
         run: >
