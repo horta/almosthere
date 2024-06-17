@@ -5,8 +5,9 @@ project(
   LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
-# Generate compile_commands.json file
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_EXTENSIONS OFF)
 
 include(cmake/compiler-options.cmake)
 include(cmake/sanitizers.cmake)
@@ -39,7 +40,6 @@ include(CheckLibraryExists)
 include(CheckIncludeFile)
 
 check_include_file(sys/ioctl.h HAVE_SYS_IOCTL_H)
-check_include_file(stdnoreturn.h HAVE_STDNORETURN_H)
 check_include_file(unistd.h HAVE_UNISTD_H)
 
 if(CURSES_FOUND)
