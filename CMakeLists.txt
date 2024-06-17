@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
 project(
   athr
-  VERSION 4.0.3
+  VERSION 4.0.4
   LANGUAGES C)
 set(PROJECT_DESCRIPTION "Progress indicator library written in C.")
 
@@ -13,7 +13,7 @@ include(cmake/sanitizers.cmake)
 include(cmake/CPM.cmake)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-cpmaddpackage(NAME elapsed VERSION 3.0.6 GITHUB_REPOSITORY horta/elapsed)
+cpmaddpackage(NAME elapsed VERSION 3.1.2 GITHUB_REPOSITORY horta/elapsed)
 
 find_package(Threads REQUIRED)
 find_package(Curses)

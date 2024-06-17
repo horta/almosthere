@@ -2,6 +2,7 @@
 #include "athr.h"
 #include "athr/athr.h"
 #include "logger.h"
+#include <stdlib.h>
 
 struct athr *athr_create_var(athr_create_args in)
 {

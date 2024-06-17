@@ -1,4 +1,5 @@
 #include "athr/athr.h"
+#include <stdlib.h>
 
 static int brake(char const *desc, enum athr_option opt)
 {

@@ -1,4 +1,5 @@
 #include "athr/athr.h"
+#include <stdlib.h>
 
 int main(void)
 {
