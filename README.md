@@ -35,7 +35,7 @@ int main() {
 
     for (i = 0; i < 100; ++i) {
         athr_sleep(50); /* some time-consuming task */
-        athr_consume(at, 1);
+        athr_eat(at, 1);
     }
 
     athr_finish(at);
@@ -57,7 +57,7 @@ int main() {
 
     for (i = 0; i < 100; ++i) {
         athr_sleep(50); /* some time-consuming task */
-        athr_consume(at, 1);
+        athr_eat(at, 1);
     }
 
     athr_finish(at);
@@ -79,7 +79,7 @@ int main() {
 
     for (i = 0; i < 100; ++i) {
         athr_sleep(50); /* some time-consuming task */
-        athr_consume(at, 1);
+        athr_eat(at, 1);
     }
 
     athr_finish(at);
@@ -101,7 +101,7 @@ int main() {
 
     for (i = 0; i < 100; ++i) {
         athr_sleep(50); /* some time-consuming task */
-        athr_consume(at, 1);
+        athr_eat(at, 1);
     }
 
     athr_finish(at);
@@ -134,7 +134,7 @@ make && make test && make install
 It consists in two functions
 
 ```c
-void athr_consume(struct athr *at, long consume);
+void athr_eat(struct athr *at, uint64_t amount);
 void athr_finish(struct athr *at);
 ```
 
@@ -172,7 +172,7 @@ struct athr *at4 = athr_create(100, .opts=ATHR_PERC, .desc="Description");
 struct athr *at5 = athr_create(100, .opts=ATHR_PERC);
 ```
 
-The first parameter is mandatory and specify the total volume from which we will consume through `athr_consume` calls.
+The first parameter is mandatory and specify the total volume from which we will consume through `athr_eat` calls.
 A `athr_finish` call then ends the process.
 
 ## Authors

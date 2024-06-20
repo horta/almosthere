@@ -65,7 +65,6 @@ add_library(
   $<$<BOOL:${TERMINAL_IOCTL}>:src/term_ioctl.c>
   src/athr.c
   src/canvas.c
-  src/deprecated.c
   src/elapsed.c
   src/logger.c
   src/terminal.c

@@ -8,7 +8,7 @@ static int brake(char const *desc, enum athr_option opt)
 
     for (unsigned i = 0; i < 8; ++i)
     {
-        athr_consume(&at, 1);
+        athr_eat(&at, 1);
     }
 
     athr_stop(&at);

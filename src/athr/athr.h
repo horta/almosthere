@@ -7,7 +7,6 @@ extern "C" {
 
 #include "athr/canvas.h"
 #include "athr/canvas_view.h"
-#include "athr/deprecated.h"
 #include "athr/ema.h"
 #include "athr/export.h"
 #include "athr/logger.h"
