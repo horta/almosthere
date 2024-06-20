@@ -1,6 +1,5 @@
 macro(inject_dll_to_please_windows test_name)
   file(TO_CMAKE_PATH "$ENV{PATH}" PATH)
-  list(APPEND PATH $<TARGET_FILE_DIR:ELAPSED::elapsed>)
   list(APPEND PATH $<TARGET_FILE_DIR:ATHR::athr>)
   string(REPLACE ";" "\\;" PATH "${PATH}")
   set_tests_properties(${test_name} PROPERTIES ENVIRONMENT "PATH=${PATH}")

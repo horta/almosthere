@@ -14,8 +14,6 @@ include(cmake/sanitizers.cmake)
 include(cmake/CPM.cmake)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-cpmaddpackage(NAME elapsed VERSION 3.1.2 GITHUB_REPOSITORY horta/elapsed)
-
 find_package(Threads REQUIRED)
 find_package(Curses)
 if(UNIX AND NOT APPLE)
@@ -68,6 +66,7 @@ add_library(
   src/athr.c
   src/canvas.c
   src/deprecated.c
+  src/elapsed.c
   src/logger.c
   src/terminal.c
   src/thr.c
@@ -109,7 +108,6 @@ if(CURSES_FOUND)
 endif()
 
 target_link_libraries(athr PUBLIC Threads::Threads)
-target_link_libraries(athr PUBLIC ELAPSED::elapsed)
 target_link_libraries(athr PUBLIC $<$<BOOL:${LIBRT_FOUND}>:LIBRT::LIBRT>)
 
 # Write out athr/export.h to the current binary directory.

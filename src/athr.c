@@ -1,6 +1,7 @@
 #include "athr/athr.h"
 #include "athr.h"
 #include "athr/widget_main.h"
+#include "elapsed.h"
 #include "ema.h"
 #include "logger.h"
 #include "thr.h"
@@ -32,9 +33,9 @@ static void update(struct athr *at)
     uint_fast64_t delta = consumed - at->last_consumed;
     at->last_consumed = consumed;
 
-    if (elapsed_stop(&at->elapsed)) error("failed to elapsed_stop");
+    if (elapsed_stop(at->elapsed)) error("failed to elapsed_stop");
 
-    double seconds = ((double)elapsed_milliseconds(&at->elapsed)) / 1000.;
+    double seconds = ((double)elapsed_milliseconds(at->elapsed)) / 1000.;
     double progress = ((double)delta) / ((double)at->total);
 
     if (progress < 0.005f && at->timestep < ATHR_TIMESTEP_LIMIT)
@@ -50,7 +51,7 @@ static void update(struct athr *at)
     at->main.super.vtable->update(&at->main.super, consumed_fraction,
                                   ema_get(&at->speed));
 
-    if (elapsed_start(&at->elapsed)) error("failed to elapsed_start");
+    if (elapsed_start(at->elapsed)) error("failed to elapsed_start");
 cleanup:
     unlock(at);
 }
@@ -74,13 +75,23 @@ int athr_start(struct athr *at, uint64_t total, const char *desc,
     at->consumed = 0;
     at->last_consumed = 0;
     at->speed = ATHR_EMA_INIT;
-    if (elapsed_start(&at->elapsed))
+    at->elapsed = elapsed_new();
+    at->total_elapsed = elapsed_new();
+    if (!at->elapsed || !at->total_elapsed)
     {
-        error("failed to elapsed_start");
+        elapsed_del(at->elapsed);
+        elapsed_del(at->total_elapsed);
+        at->elapsed = NULL;
+        at->total_elapsed = NULL;
+        error("failed to allocate elapsed struct");
         return 1;
     }
-    if (elapsed_start(&at->total_elapsed))
+    if (elapsed_start(at->elapsed) || elapsed_start(at->total_elapsed))
     {
+        elapsed_del(at->elapsed);
+        elapsed_del(at->total_elapsed);
+        at->elapsed = NULL;
+        at->total_elapsed = NULL;
         error("failed to elapsed_start");
         return 1;
     }
@@ -99,7 +110,17 @@ int athr_start(struct athr *at, uint64_t total, const char *desc,
     atomic_store(&at->stop, false);
 
     if (!atomic_load_bool(&disable_thread))
-        return __athr_thr_create(&at->thr, thread_start, at);
+    {
+        int rc = __athr_thr_create(&at->thr, thread_start, at);
+        if (rc)
+        {
+            elapsed_del(at->elapsed);
+            elapsed_del(at->total_elapsed);
+            at->elapsed = NULL;
+            at->total_elapsed = NULL;
+        }
+        return rc;
+    }
 
     return 0;
 }
@@ -116,11 +137,15 @@ void athr_stop(struct athr *at)
     update(at);
     __athr_thr_join(&at->thr);
 
-    if (elapsed_stop(&at->total_elapsed)) error("failed to elapsed_stop");
+    if (elapsed_stop(at->total_elapsed)) error("failed to elapsed_stop");
 
-    double seconds = ((double)elapsed_milliseconds(&at->total_elapsed)) / 1000.;
+    double seconds = ((double)elapsed_milliseconds(at->total_elapsed)) / 1000.;
     at->main.super.vtable->finish(&at->main.super, seconds);
     athr_canvas_close(&at->main.canvas);
+    elapsed_del(at->elapsed);
+    elapsed_del(at->total_elapsed);
+    at->elapsed = NULL;
+    at->total_elapsed = NULL;
 }
 
 void athr_stop_wait(struct athr *at)

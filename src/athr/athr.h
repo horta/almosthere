@@ -21,13 +21,14 @@ extern "C" {
 #include "athr/widget_main.h"
 #include "athr/widget_perc.h"
 #include "athr/widget_text.h"
-#include "elapsed/elapsed.h"
 
 /* How often to update initially, in milliseconds. */
 #define ATHR_TIMESTEP 250
 
 /* Limit on how long to update, in milliseconds. */
 #define ATHR_TIMESTEP_LIMIT 750
+
+struct elapsed;
 
 struct athr
 {
@@ -36,8 +37,8 @@ struct athr
     atomic_uint_fast64_t consumed;
     uint_fast64_t last_consumed;
     struct athr_ema speed;
-    struct elapsed elapsed;
-    struct elapsed total_elapsed;
+    struct elapsed *elapsed;
+    struct elapsed *total_elapsed;
 
     enum athr_option opts;
     struct athr_widget_main main;
@@ -50,9 +51,8 @@ struct athr
 #define ATHR_INIT                                                              \
     (struct athr)                                                              \
     {                                                                          \
-        ATHR_TIMESTEP, 0, 0, 0, ATHR_EMA_INIT, ELAPSED_INIT, ELAPSED_INIT,     \
-            ATHR_BAR, ATHR_WIDGET_MAIN_INIT, false, ATOMIC_FLAG_INIT,          \
-            ATHR_THR_INIT                                                      \
+        ATHR_TIMESTEP, 0, 0, 0, ATHR_EMA_INIT, NULL, NULL, ATHR_BAR,           \
+            ATHR_WIDGET_MAIN_INIT, false, ATOMIC_FLAG_INIT, ATHR_THR_INIT      \
     }
 
 ATHR_API int athr_start(struct athr *at, uint64_t total, char const *desc,
