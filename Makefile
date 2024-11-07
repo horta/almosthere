@@ -44,6 +44,11 @@ else
   HDR := $(filter-out athr_terminal_win32.h,$(SRC))
 endif
 
+ifeq ($(CURSES_FOUND),false)
+  SRC := $(filter-out athr_terminal_curses.c,$(SRC))
+  HDR := $(filter-out athr_terminal_curses.h,$(SRC))
+endif
+
 CFLAGS += -DATHR_TERMINAL_WIN32=$(ATHR_TERMINAL_WIN32)
 CFLAGS += -DATHR_TERMINAL_CURSES=$(ATHR_TERMINAL_CURSES)
 CFLAGS += -DATHR_TERMINAL_IOCTL=$(ATHR_TERMINAL_IOCTL)
