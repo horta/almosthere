@@ -24,7 +24,11 @@ endif
 
 ifeq ($(PKG_CONFIG_FOUND),true)
   CURSES_FOUND := $(shell pkg-config --exists ncurses && echo true || echo false)
-  CURSES_LIBS  := $(shell pkg-config --libs ncurses)
+  ifeq ($(CURSES_FOUND),true)
+    CURSES_LIBS  := $(shell pkg-config --libs ncurses)
+  else
+    CURSES_LIBS  :=
+  endif
 else
   CURSES_FOUND := false
   CURSES_LIBS  :=
