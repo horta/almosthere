@@ -3,16 +3,35 @@ name: Test
 on: push
 
 jobs:
-  test:
+  test-unix:
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, macos-13, macos-14, macos-15, windows-2022]
+        os: [ubuntu-22.04, ubuntu-24.04, macos-13, macos-14, macos-15]
 
     steps:
       - uses: actions/checkout@v4
+
       - name: make
         run: make
+
+      - name: make check
+        run: make check
+
+  test-win32:
+    name: Test on windows-2022
+    runs-on: windows-2022
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: make
+        run: make
+
       - name: make check
         run: make check
