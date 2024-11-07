@@ -15,6 +15,8 @@
 #include <term.h>
 #include <unistd.h>
 
+#define error(msg) athr_logger_error(athr_logger_format(msg))
+
 unsigned athr_terminal_curses_width(void)
 {
     static volatile int failed_before = 0;

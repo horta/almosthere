@@ -17,4 +17,4 @@ void athr_logger_setup(athr_logger_print_t *print, void *arg)
 
 static void logger_print(char const *msg) { __logger_print(msg, __logger_arg); }
 
-void __athr_logger_error(char const *msg) { logger_print(msg); }
+void athr_logger_error(char const *msg) { logger_print(msg); }
