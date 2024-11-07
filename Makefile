@@ -20,8 +20,13 @@ ATHR_OS_WIN32        := 1
 ATHR_OS_UNIX         := 2
 ATHR_OS              :=
 
-ifndef ($(OS))
-  OS=$(shell uname)
+ifeq '$(findstring ;,$(PATH))' ';'
+    UNAME := Windows
+else
+    UNAME := $(shell uname 2>/dev/null || echo Unknown)
+    UNAME := $(patsubst CYGWIN%,Cygwin,$(UNAME))
+    UNAME := $(patsubst MSYS%,Windows,$(UNAME))
+    UNAME := $(patsubst MINGW%,Windows,$(UNAME))
 endif
 
 ifeq ($(PKG_CONFIG_FOUND),true)
@@ -36,7 +41,7 @@ else
   CURSES_LIBS  :=
 endif
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(UNAME),Windows)
   ATHR_OS       := ATHR_OS_WIN32
   ATHR_TERMINAL := ATHR_TERMINAL_WIN32
 else
@@ -63,7 +68,7 @@ CFLAGS += -DATHR_OS_WIN32=$(ATHR_OS_WIN32)
 CFLAGS += -DATHR_OS_UNIX=$(ATHR_OS_UNIX)
 CFLAGS += -DATHR_OS=$(ATHR_OS)
 
-$(info OS               = $(OS))
+$(info UNAME            = $(UNAME))
 $(info CC               = $(CC))
 $(info PKG_CONFIG_FOUND = $(PKG_CONFIG_FOUND))
 $(info CURSES_FOUND     = $(CURSES_FOUND))
