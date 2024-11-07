@@ -60,7 +60,7 @@ CFLAGS += -DATHR_OS=$(ATHR_OS)
 $(info OS               = $(OS))
 $(info PKG_CONFIG_FOUND = $(PKG_CONFIG_FOUND))
 $(info CURSES_FOUND     = $(CURSES_FOUND))
-$(info CURSES_LIBS      = $(CURSES_LIBSCURSES_FOUND))
+$(info CURSES_LIBS      = $(CURSES_LIBS))
 $(info ATHR_TERMINAL    = $(ATHR_TERMINAL))
 $(info ATHR_OS          = $(ATHR_OS))
 $(info CFLAGS           = $(CFLAGS))
@@ -76,7 +76,7 @@ $(LIB): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST_TARGET): %: %.o $(LIB)
-	$(CC) $(CFLAGS) $< -L. $(CURSES_LIBS) -lathr -lm -o $@
+	$(CC) $(CFLAGS) $< -L. -lathr $(CURSES_LIBS) -lm -o $@
 
 check: $(TEST_TARGET)
 	for test in $(TEST_TARGET); do ./$$test || exit 1; done
