@@ -2,15 +2,14 @@
 #define ATHR_H
 
 #include "athr_ema.h"
-#include "athr_os.h"
 #include "athr_option.h"
 #include "athr_thr.h"
 #include "athr_widget_main.h"
 #include <stdint.h>
 
-#if defined(ATHR_WINDOWS)
+#if ATHR_OS == ATHR_OS_WIN32
 #include "athr_ovs_atomic_msvc.h"
-#elif defined(ATHR_POSIX)
+#elif ATHR_OS == ATHR_OS_UNIX
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>

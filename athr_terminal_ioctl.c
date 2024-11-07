@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <sys/ioctl.h>
 
-#if defined(ATHR_WINDOWS)
+#if ATHR_OS == ATHR_OS_WIN32
 #include <windows.h>
 #endif
 

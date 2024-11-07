@@ -1,14 +1,13 @@
 #include "athr_canvas.h"
 #include "athr_common.h"
-#include "athr_os.h"
 #include "athr_terminal.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(ATHR_WINDOWS)
+#if ATHR_OS == ATHR_OS_WIN32
 #include "athr_ovs_atomic_msvc.h"
-#elif defined(ATHR_POSIX)
+#elif ATHR_OS == ATHR_OS_UNIX
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>

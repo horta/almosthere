@@ -11,11 +11,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "athr_os.h"
 
-#if defined(ATHR_WINDOWS)
+#if ATHR_OS == ATHR_OS_WIN32
 #include "athr_ovs_atomic_msvc.h"
-#elif defined(ATHR_POSIX)
+#elif ATHR_OS == ATHR_OS_UNIX
 #include "athr_ovs_atomic_posix.h"
 #endif
 

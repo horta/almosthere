@@ -14,6 +14,9 @@ ATHR_TERMINAL_WIN32  := 1
 ATHR_TERMINAL_CURSES := 2
 ATHR_TERMINAL_IOCTL  := 3
 ATHR_TERMINAL        :=
+ATHR_OS_WIN32        := 1
+ATHR_OS_UNIX         := 2
+ATHR_OS              :=
 
 ifndef ($(OS))
   OS=$(shell uname)
@@ -28,27 +31,32 @@ else
 endif
 
 ifeq ($(OS),Windows_NT)
+  ATHR_OS       := ATHR_OS_WIN32
   ATHR_TERMINAL := ATHR_TERMINAL_WIN32
 else
-  SRC := $(filter-out athr_terminal_win32.c,$(SRC))
-  HDR := $(filter-out athr_terminal_win32.h,$(SRC))
+  ATHR_OS := ATHR_OS_UNIX
   ifeq ($(CURSES_FOUND),true)
     ATHR_TERMINAL := ATHR_TERMINAL_CURSES
   else
     ATHR_TERMINAL := ATHR_TERMINAL_IOCTL
   endif
+  SRC := $(filter-out athr_terminal_win32.c,$(SRC))
+  HDR := $(filter-out athr_terminal_win32.h,$(SRC))
 endif
 
-CFLAGS += $(CURSES_LIBS)
-CFLAGS += -DATHR_TERMINAL=$(ATHR_TERMINAL)
 CFLAGS += -DATHR_TERMINAL_WIN32=$(ATHR_TERMINAL_WIN32)
 CFLAGS += -DATHR_TERMINAL_CURSES=$(ATHR_TERMINAL_CURSES)
 CFLAGS += -DATHR_TERMINAL_IOCTL=$(ATHR_TERMINAL_IOCTL)
+CFLAGS += -DATHR_TERMINAL=$(ATHR_TERMINAL)
+CFLAGS += -DATHR_OS_WIN32=$(ATHR_OS_WIN32)
+CFLAGS += -DATHR_OS_UNIX=$(ATHR_OS_UNIX)
+CFLAGS += -DATHR_OS=$(ATHR_OS)
 
 $(info OS               = $(OS))
 $(info PKG_CONFIG_FOUND = $(PKG_CONFIG_FOUND))
 $(info CURSES_FOUND     = $(CURSES_FOUND))
 $(info ATHR_TERMINAL    = $(ATHR_TERMINAL))
+$(info ATHR_OS          = $(ATHR_OS))
 $(info CFLAGS           = $(CFLAGS))
 
 all: $(LIB)
@@ -62,7 +70,7 @@ $(LIB): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST_TARGET): %: %.o $(LIB)
-	$(CC) $(CFLAGS) $< -L. -lathr -lm -o $@
+	$(CC) $(CFLAGS) $< -L. $(CURSES_LIBS) -lathr -lm -o $@
 
 check: $(TEST_TARGET)
 	for test in $(TEST_TARGET); do ./$$test || exit 1; done

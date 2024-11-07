@@ -4,12 +4,6 @@
 #error "C11 or a more recent version is required"
 #endif
 
-#if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
-#define WINDOWS_OS
-#else
-#define POSIX_OS
-#endif
-
 #if defined(POSIX_OS)
 #if !defined(_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 200809L
 #undef _POSIX_C_SOURCE
@@ -28,12 +22,12 @@ struct elapsed {
 #error Undefined TIME_UTC
 #endif
 
-#if defined(POSIX_OS)
+#if ATHR_OS == ATHR_OS_UNIX
 #include <sys/time.h>
 #include <unistd.h>
 #endif
 
-#if defined(WINDOWS_OS)
+#if ATHR_OS == ATHR_OS_WIN32
 #include <windows.h>
 #endif
 
@@ -110,11 +104,11 @@ int elapsed_sleep(long ms)
     struct timespec duration = { .tv_sec = (time_t)(ms / MILLISECONDS_IN_A_SECOND),
         .tv_nsec = (long)((ms % MILLISECONDS_IN_A_SECOND) * 1000000) };
 
-#if defined(POSIX_OS)
+#if ATHR_OS == ATHR_OS_UNIX
     return nanosleep(&duration, NULL);
 #endif
 
-#if defined(WINDOWS_OS)
+#if ATHR_OS == ATHR_OS_WIN32
     struct timespec start;
 
     timespec_get(&start, TIME_UTC);
