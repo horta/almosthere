@@ -1,18 +1,13 @@
 #ifndef ATHR_ELAPSED_H
 #define ATHR_ELAPSED_H
 
-// PRIVATE ------------------------------------------------------------------
-struct elapsed;
+struct athr_elapsed;
 
-struct elapsed* elapsed_new(void);
-void elapsed_del(struct elapsed*);
-
-int elapsed_start(struct elapsed*);
-int elapsed_stop(struct elapsed*);
-
-long elapsed_milliseconds(struct elapsed const*);
-
-int elapsed_sleep(long milliseconds);
-// PRIVATE ------------------------------------------------------------------
+struct athr_elapsed *athr_elapsed_new(void);
+void                 athr_elapsed_del(struct athr_elapsed *);
+int                  athr_elapsed_start(struct athr_elapsed *);
+int                  athr_elapsed_stop(struct athr_elapsed *);
+long                 athr_elapsed_milliseconds(struct athr_elapsed const *);
+int                  athr_elapsed_sleep(long milliseconds);
 
 #endif

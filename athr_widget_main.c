@@ -1,6 +1,6 @@
 #include "athr_widget_main.h"
 #include "athr_canvas.h"
-#include "athr_common.h"
+#include "athr_min.h"
 #include "athr_widget.h"
 #include "athr_widget_main.h"
 #include <assert.h>
@@ -146,8 +146,8 @@ static unsigned increase_len(unsigned nwidgets, struct athr_widget **widget,
     for (unsigned i = 0; i < nwidgets; ++i)
     {
         unsigned max_size = widget[i]->vtable->max_len(widget[i]);
-        unsigned amount = minu(size, max_size - widget[i]->canvas.len);
-        amount = minu(amount, remain);
+        unsigned amount = athr_min(size, max_size - widget[i]->canvas.len);
+        amount = athr_min(amount, remain);
         widget[i]->canvas.len += amount;
         remain -= amount;
     }

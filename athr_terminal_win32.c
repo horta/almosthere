@@ -50,7 +50,7 @@ cleanup:
     return ncols;
 }
 
-unsigned __athr_term_win32_width(void)
+unsigned athr_terminal_win32_width(void)
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -71,5 +71,5 @@ unsigned __athr_term_win32_width(void)
 
 fallback:
     ncols = tput_cols();
-    return ncols == -1 ? __athr_terminal_fallback_width() : (unsigned)ncols;
+    return ncols == -1 ? athr_terminal_fallback_width() : (unsigned)ncols;
 }

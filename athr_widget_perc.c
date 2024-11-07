@@ -1,5 +1,5 @@
 #include "athr_widget_perc.h"
-#include "athr_common.h"
+#include "athr_array.h"
 #include "athr_widget.h"
 #include "athr_widget_perc.h"
 #include <assert.h>
@@ -43,7 +43,7 @@ static void update(struct athr_widget *w, double consumed, double speed)
         perc = (unsigned)(eta->consumed * 100);
 
     memcpy(w->canvas.buff, ATHR_WIDGET_PERC_EXAMPLE,
-           ARRAY_SIZE(ATHR_WIDGET_PERC_EXAMPLE) - 1);
+           athr_array_size(ATHR_WIDGET_PERC_EXAMPLE) - 1);
     /* Skip the first space */
     perc_buff(w->canvas.buff + 1, perc);
 }

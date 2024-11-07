@@ -3,9 +3,9 @@
 
 struct athr_canvas_view
 {
-    unsigned len;
-    unsigned min_len;
-    char *buff;
+    unsigned  len;
+    unsigned  min_len;
+    char     *buff;
 };
 
 #define ATHR_CANVAS_VIEW_INIT                                                  \

@@ -10,7 +10,7 @@
 
 static WRAPPER_RETURN __thr_wrapper(WRAPPER_ARG_T arg)
 {
-    struct athr_thr *thr = (struct athr_thr *)arg;
+    struct athr_thread *thr = (struct athr_thread *)arg;
     thr->func(thr->arg);
 
 #if ATHR_OS == ATHR_OS_WIN32
@@ -22,7 +22,7 @@ static WRAPPER_RETURN __thr_wrapper(WRAPPER_ARG_T arg)
     return 0;
 }
 
-int __athr_thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
+int athr_thread_create(struct athr_thread *thr, athr_thread_start *func, void *arg)
 {
     thr->has_been_created = 0;
     thr->func = func;
@@ -39,7 +39,7 @@ int __athr_thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg)
     return rc;
 }
 
-void __athr_thr_detach(struct athr_thr *thr)
+void athr_thread_detach(struct athr_thread *thr)
 {
     if (!thr->has_been_created) return;
 #if ATHR_OS == ATHR_OS_WIN32
@@ -49,7 +49,7 @@ void __athr_thr_detach(struct athr_thr *thr)
 #endif
 }
 
-int __athr_thr_join(struct athr_thr *thr)
+int athr_thread_join(struct athr_thread *thr)
 {
 #if ATHR_OS == ATHR_OS_WIN32
     if (WaitForSingleObject(thr, INFINITE) == WAIT_FAILED) return 1;

@@ -9,7 +9,7 @@
 #endif
 
 /* Source: wget2 */
-unsigned __athr_term_ioctl_width(void)
+unsigned athr_terminal_ioctl_width(void)
 {
     struct winsize wsz;
     int fd = fileno(stderr);
@@ -17,5 +17,5 @@ unsigned __athr_term_ioctl_width(void)
     if (ioctl(fd, TIOCGWINSZ, &wsz) >= 0) return wsz.ws_col;
 
     error("ioctl failed");
-    return __athr_terminal_fallback_width();
+    return athr_terminal_fallback_width();
 }

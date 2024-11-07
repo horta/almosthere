@@ -13,7 +13,7 @@ struct athr_canvas
     unsigned len;
     unsigned min_len;
     unsigned max_len;
-    char buff[ATHR_CANVAS_MAX_LEN];
+    char     buff[ATHR_CANVAS_MAX_LEN];
 };
 
 #define ATHR_CANVAS_INIT                                                       \
@@ -23,12 +23,11 @@ struct athr_canvas
     }
 
 void athr_canvas_use_stderr(bool use);
-void athr_canvas_create(struct athr_canvas *canvas);
-void athr_canvas_draw(struct athr_canvas const *canvas);
-void athr_canvas_clean(struct athr_canvas *canvas);
-void athr_canvas_close(struct athr_canvas *canvas);
-bool athr_canvas_resize(struct athr_canvas *canvas);
-void athr_canvas_setup(struct athr_canvas *canvas, unsigned min_len,
-                       unsigned max_len);
+void athr_canvas_create(struct athr_canvas *);
+void athr_canvas_draw(struct athr_canvas const *);
+void athr_canvas_clean(struct athr_canvas *);
+void athr_canvas_close(struct athr_canvas *);
+bool athr_canvas_resize(struct athr_canvas *);
+void athr_canvas_setup(struct athr_canvas *, unsigned min_len, unsigned max_len);
 
 #endif

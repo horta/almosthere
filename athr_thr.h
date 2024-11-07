@@ -9,22 +9,20 @@ typedef HANDLE athr_thr_handle;
 typedef pthread_t athr_thr_handle;
 #endif
 
-typedef void(athr_thr_start)(void *);
+typedef void(athr_thread_start)(void *);
 
-struct athr_thr
+struct athr_thread
 {
-    int has_been_created;
-    athr_thr_handle handle;
-    athr_thr_start *func;
-    void *arg;
+    int                has_been_created;
+    athr_thr_handle    handle;
+    athr_thread_start *func;
+    void              *arg;
 };
 
 #define ATHR_THR_INIT {0}
 
-// PRIVATE ------------------------------------------------------------------
-int  __athr_thr_create(struct athr_thr *thr, athr_thr_start *func, void *arg);
-void __athr_thr_detach(struct athr_thr *thr);
-int  __athr_thr_join(struct athr_thr *thr);
-// PRIVATE ------------------------------------------------------------------
+int  athr_thread_create(struct athr_thread *, athr_thread_start *, void *arg);
+void athr_thread_detach(struct athr_thread *);
+int  athr_thread_join(struct athr_thread *);
 
 #endif

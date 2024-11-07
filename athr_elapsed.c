@@ -13,7 +13,7 @@
 
 #include <time.h>
 
-struct elapsed {
+struct athr_elapsed {
     struct timespec start;
     struct timespec stop;
 };
@@ -35,13 +35,13 @@ struct elapsed {
 #include <stdio.h>
 #include <stdlib.h>
 
-struct elapsed* elapsed_new(void)
+struct athr_elapsed* athr_elapsed_new(void)
 {
-    struct elapsed* x = malloc(sizeof(struct elapsed));
+    struct athr_elapsed* x = malloc(sizeof(struct athr_elapsed));
     return x;
 }
 
-void elapsed_del(struct elapsed* elapsed)
+void athr_elapsed_del(struct athr_elapsed* elapsed)
 {
     free(elapsed);
 }
@@ -60,7 +60,7 @@ die(char const* msg)
     abort();
 }
 
-int elapsed_start(struct elapsed* elapsed)
+int athr_elapsed_start(struct athr_elapsed* elapsed)
 {
     return get_any_timespec(&elapsed->start);
 }
@@ -82,7 +82,7 @@ int elapsed_start(struct elapsed* elapsed)
 #define MICROSECONDS_IN_A_SECOND (MILLISECONDS_IN_A_SECOND * 1000L)
 #define NANOSECONDS_IN_A_SECOND (MICROSECONDS_IN_A_SECOND * 1000L)
 
-long elapsed_milliseconds(struct elapsed const* elapsed)
+long athr_elapsed_milliseconds(struct athr_elapsed const* elapsed)
 {
     struct timespec diff = { 0 };
     timespecsub(&elapsed->stop, &elapsed->start, &diff);
@@ -94,12 +94,12 @@ long elapsed_milliseconds(struct elapsed const* elapsed)
     return ms + re;
 }
 
-int elapsed_stop(struct elapsed* elapsed)
+int athr_elapsed_stop(struct athr_elapsed* elapsed)
 {
     return get_any_timespec(&elapsed->stop);
 }
 
-int elapsed_sleep(long ms)
+int athr_elapsed_sleep(long ms)
 {
     struct timespec duration = { .tv_sec = (time_t)(ms / MILLISECONDS_IN_A_SECOND),
         .tv_nsec = (long)((ms % MILLISECONDS_IN_A_SECOND) * 1000000) };
