@@ -1,4 +1,6 @@
-CC         ?= gcc
+ifeq ($(origin CC),default)
+  CC := gcc
+endif
 CFLAGS     ?= -std=c11 -Wall -Wextra -O3 -MMD -MP
 PREFIX     ?= /usr/local
 SRC         = $(filter-out $(wildcard test_*.c),$(wildcard *.c))
@@ -62,6 +64,7 @@ CFLAGS += -DATHR_OS_UNIX=$(ATHR_OS_UNIX)
 CFLAGS += -DATHR_OS=$(ATHR_OS)
 
 $(info OS               = $(OS))
+$(info CC               = $(CC))
 $(info PKG_CONFIG_FOUND = $(PKG_CONFIG_FOUND))
 $(info CURSES_FOUND     = $(CURSES_FOUND))
 $(info CURSES_LIBS      = $(CURSES_LIBS))
