@@ -29,10 +29,10 @@ static void perc_buff(char *buff, unsigned perc)
     *buff = '%';
 }
 
-static void update(struct athr_widget *w, double consumed, double speed)
+static void update(struct athr_widget *x, double consumed, double speed)
 {
     (void)speed;
-    struct athr_widget_perc *eta = w->derived;
+    struct athr_widget_perc *eta = x->derived;
 
     unsigned perc = 0;
     eta->consumed = consumed;
@@ -42,34 +42,34 @@ static void update(struct athr_widget *w, double consumed, double speed)
     else
         perc = (unsigned)(eta->consumed * 100);
 
-    memcpy(w->canvas.buff, ATHR_WIDGET_PERC_EXAMPLE,
+    memcpy(x->canvas.buff, ATHR_WIDGET_PERC_EXAMPLE,
            athr_array_size(ATHR_WIDGET_PERC_EXAMPLE) - 1);
     /* Skip the first space */
-    perc_buff(w->canvas.buff + 1, perc);
+    perc_buff(x->canvas.buff + 1, perc);
 }
 
-static void finish(struct athr_widget *w, double total_elapsed)
+static void finish(struct athr_widget *x, double total_elapsed)
 {
     (void)total_elapsed;
-    update(w, 1.0f, 0.0f);
+    update(x, 1.0f, 0.0f);
 }
 
-static unsigned min_len(struct athr_widget const *w)
+static unsigned min_len(struct athr_widget const *x)
 {
-    (void)w;
+    (void)x;
     return ATHR_WIDGET_PERC_LEN;
 }
 
-static unsigned max_len(struct athr_widget const *w)
+static unsigned max_len(struct athr_widget const *x)
 {
-    (void)w;
+    (void)x;
     return ATHR_WIDGET_PERC_LEN;
 }
 
 static struct athr_widget_vtable const vtable = {update, finish, min_len,
                                                  max_len};
 
-void __athr_widget_perc_create(struct athr_widget_perc *perc)
+void athr_widget_perc_create(struct athr_widget_perc *x)
 {
-    widget_setup((struct athr_widget *)perc, &vtable);
+    widget_setup((struct athr_widget *)x, &vtable);
 }

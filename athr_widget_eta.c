@@ -32,10 +32,10 @@ static void human_readable(char *buff, unsigned sz, int secs)
         xsnprintf(buff, sz + 1, "%*dd", sz - 1, secs / 86400);
 }
 
-static void update(struct athr_widget *w, double consumed, double speed)
+static void update(struct athr_widget *x, double consumed, double speed)
 {
     unsigned const sz = ATHR_WIDGET_ETA_LEN;
-    struct athr_widget_eta *eta = w->derived;
+    struct athr_widget_eta *eta = x->derived;
     eta->consumed = consumed;
 
     if (speed < MIN_SPEED)
@@ -47,41 +47,41 @@ static void update(struct athr_widget *w, double consumed, double speed)
     }
 
     for (unsigned i = 0; i < sz; ++i)
-        w->canvas.buff[i] = eta->buff[i];
+        x->canvas.buff[i] = eta->buff[i];
 }
 
-static void finish(struct athr_widget *w, double total_elapsed)
+static void finish(struct athr_widget *x, double total_elapsed)
 {
     unsigned const sz = ATHR_WIDGET_ETA_LEN;
-    struct athr_widget_eta *eta = w->derived;
+    struct athr_widget_eta *eta = x->derived;
 
     int secs = (int)total_elapsed;
     human_readable(eta->buff, sz, secs);
 
     for (unsigned i = 0; i < sz; ++i)
-        w->canvas.buff[i] = eta->buff[i];
+        x->canvas.buff[i] = eta->buff[i];
 }
 
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic pop
 #endif
 
-static unsigned min_len(struct athr_widget const *w)
+static unsigned min_len(struct athr_widget const *x)
 {
-    (void)w;
+    (void)x;
     return ATHR_WIDGET_ETA_LEN;
 }
 
-static unsigned max_len(struct athr_widget const *w)
+static unsigned max_len(struct athr_widget const *x)
 {
-    (void)w;
+    (void)x;
     return ATHR_WIDGET_ETA_LEN;
 }
 
 static struct athr_widget_vtable const vtable = {update, finish, min_len,
                                                  max_len};
 
-void __athr_widget_eta_create(struct athr_widget_eta *eta)
+void athr_widget_eta_create(struct athr_widget_eta *x)
 {
-    widget_setup((struct athr_widget *)eta, &vtable);
+    widget_setup((struct athr_widget *)x, &vtable);
 }

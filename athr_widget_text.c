@@ -4,29 +4,29 @@
 #include <assert.h>
 #include <string.h>
 
-static void update(struct athr_widget *w, double consumed, double speed)
+static void update(struct athr_widget *x, double consumed, double speed)
 {
     (void)consumed;
     (void)speed;
-    struct athr_widget_text *text = w->derived;
-    assert(w->canvas.len >= text->len);
-    memcpy(w->canvas.buff, text->buff, text->len);
+    struct athr_widget_text *text = x->derived;
+    assert(x->canvas.len >= text->len);
+    memcpy(x->canvas.buff, text->buff, text->len);
 }
 
-static void finish(struct athr_widget *w, double total_elapsed)
+static void finish(struct athr_widget *x, double total_elapsed)
 {
     (void)total_elapsed;
-    update(w, 1.0f, 0.0f);
+    update(x, 1.0f, 0.0f);
 }
 
-static unsigned min_len(struct athr_widget const *w)
+static unsigned min_len(struct athr_widget const *x)
 {
-    return ((struct athr_widget_text *)w->derived)->len;
+    return ((struct athr_widget_text *)x->derived)->len;
 }
 
-static unsigned max_len(struct athr_widget const *w)
+static unsigned max_len(struct athr_widget const *x)
 {
-    return ((struct athr_widget_text *)w->derived)->len;
+    return ((struct athr_widget_text *)x->derived)->len;
 }
 
 static void *__memccpy(void *restrict dest, const void *restrict src, int c,
@@ -46,12 +46,12 @@ static void *__memccpy(void *restrict dest, const void *restrict src, int c,
 static struct athr_widget_vtable const vtable = {update, finish, min_len,
                                                  max_len};
 
-void __athr_widget_text_create(struct athr_widget_text *text, char const *buff)
+void athr_widget_text_create(struct athr_widget_text *x, char const *buff)
 {
-    char const *ptr = __memccpy(text->buff, buff, 0, ATHR_WIDGET_TEXT_MAX_LEN);
+    char const *ptr = __memccpy(x->buff, buff, 0, ATHR_WIDGET_TEXT_MAX_LEN);
     if (ptr)
-        text->len = (unsigned)(ptr - text->buff - 1);
+        x->len = (unsigned)(ptr - x->buff - 1);
     else
-        text->len = ATHR_WIDGET_TEXT_MAX_LEN;
-    widget_setup((struct athr_widget *)text, &vtable);
+        x->len = ATHR_WIDGET_TEXT_MAX_LEN;
+    widget_setup((struct athr_widget *)x, &vtable);
 }

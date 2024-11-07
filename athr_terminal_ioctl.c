@@ -8,6 +8,8 @@
 #include <windows.h>
 #endif
 
+#define error(msg) athr_logger_error(athr_logger_format(msg))
+
 /* Source: wget2 */
 unsigned athr_terminal_ioctl_width(void)
 {

@@ -14,13 +14,8 @@ struct athr_widget_bar
     double consumed;
 };
 
-#define ATHR_WIDGET_BAR_INIT                                                   \
-    (struct athr_widget_bar) { ATHR_WIDGET_INIT, 0 }
+#define ATHR_WIDGET_BAR_INIT (struct athr_widget_bar){ATHR_WIDGET_INIT, 0}
 
-// PRIVATE ------------------------------------------------------------------
-struct athr_widget_bar;
-
-void __athr_widget_bar_create(struct athr_widget_bar *);
-// PRIVATE ------------------------------------------------------------------
+void athr_widget_bar_create(struct athr_widget_bar *);
 
 #endif

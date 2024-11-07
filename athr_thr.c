@@ -22,34 +22,34 @@ static WRAPPER_RETURN __thr_wrapper(WRAPPER_ARG_T arg)
     return 0;
 }
 
-int athr_thread_create(struct athr_thread *thr, athr_thread_start *func, void *arg)
+int athr_thread_create(struct athr_thread *x, athr_thread_start *func, void *arg)
 {
-    thr->has_been_created = 0;
-    thr->func = func;
-    thr->arg = arg;
+    x->has_been_created = 0;
+    x->func = func;
+    x->arg = arg;
     int rc = 0;
 
 #if ATHR_OS == ATHR_OS_WIN32
     thr->handle = CreateThread(NULL, 0, __thr_wrapper, (LPVOID)thr, 0, NULL);
     rc = !thr->handle;
 #elif ATHR_OS == ATHR_OS_UNIX
-    rc = pthread_create(&thr->handle, 0, __thr_wrapper, (void *)thr);
+    rc = pthread_create(&x->handle, 0, __thr_wrapper, (void *)x);
 #endif
-    thr->has_been_created = !rc;
+    x->has_been_created = !rc;
     return rc;
 }
 
-void athr_thread_detach(struct athr_thread *thr)
+void athr_thread_detach(struct athr_thread *x)
 {
-    if (!thr->has_been_created) return;
+    if (!x->has_been_created) return;
 #if ATHR_OS == ATHR_OS_WIN32
     CloseHandle(thr->handle);
 #elif ATHR_OS == ATHR_OS_UNIX
-    pthread_detach(thr->handle);
+    pthread_detach(x->handle);
 #endif
 }
 
-int athr_thread_join(struct athr_thread *thr)
+int athr_thread_join(struct athr_thread *x)
 {
 #if ATHR_OS == ATHR_OS_WIN32
     if (WaitForSingleObject(thr, INFINITE) == WAIT_FAILED) return 1;
@@ -57,6 +57,6 @@ int athr_thread_join(struct athr_thread *thr)
     return 0;
 #elif ATHR_OS == ATHR_OS_UNIX
     void *pres = NULL;
-    return pthread_join(thr->handle, &pres);
+    return pthread_join(x->handle, &pres);
 #endif
 }

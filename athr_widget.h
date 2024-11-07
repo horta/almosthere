@@ -12,53 +12,49 @@ typedef unsigned(athr_widget_max_len_t)(struct athr_widget const *);
 
 struct athr_widget_vtable
 {
-    athr_widget_update_t *update;
-    athr_widget_finish_t *finish;
+    athr_widget_update_t  *update;
+    athr_widget_finish_t  *finish;
     athr_widget_min_len_t *min_len;
     athr_widget_max_len_t *max_len;
 };
 
 struct athr_widget
 {
-    void *derived;
+    void                            *derived;
     struct athr_widget_vtable const *vtable;
-    struct athr_canvas_view canvas;
+    struct athr_canvas_view          canvas;
 };
 
 #define ATHR_WIDGET_INIT                                                       \
     (struct athr_widget) { NULL, NULL, ATHR_CANVAS_VIEW_INIT }
 
-static inline void athr_widget_update(struct athr_widget *w, double consumed,
+static inline void athr_widget_update(struct athr_widget *x, double consumed,
                                       double speed)
 {
-    w->vtable->update(w, consumed, speed);
+    x->vtable->update(x, consumed, speed);
 }
 
-static inline void athr_widget_finish(struct athr_widget *w,
+static inline void athr_widget_finish(struct athr_widget *x,
                                       double total_elapsed)
 {
-    w->vtable->finish(w, total_elapsed);
+    x->vtable->finish(x, total_elapsed);
 }
 
-static inline unsigned athr_widget_min_len(struct athr_widget *w)
+static inline unsigned athr_widget_min_len(struct athr_widget *x)
 {
-    return w->vtable->min_len(w);
+    return x->vtable->min_len(x);
 }
 
-static inline unsigned athr_widget_max_len(struct athr_widget *w)
+static inline unsigned athr_widget_max_len(struct athr_widget *x)
 {
-    return w->vtable->max_len(w);
+    return x->vtable->max_len(x);
 }
 
-// PRIVATE ------------------------------------------------------------------
-#include "athr_widget.h"
-
-static inline void widget_setup(struct athr_widget *widget,
+static inline void widget_setup(struct athr_widget *x,
                                 struct athr_widget_vtable const *vtable)
 {
-    widget->derived = widget;
-    widget->vtable = vtable;
+    x->derived = x;
+    x->vtable = vtable;
 }
-// PRIVATE ------------------------------------------------------------------
 
 #endif

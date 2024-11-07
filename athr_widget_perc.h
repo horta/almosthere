@@ -9,16 +9,11 @@
 struct athr_widget_perc
 {
     struct athr_widget super;
-    double consumed;
+    double             consumed;
 };
 
-#define ATHR_WIDGET_PERC_INIT                                                  \
-    (struct athr_widget_perc) { ATHR_WIDGET_INIT, 0 }
+#define ATHR_WIDGET_PERC_INIT (struct athr_widget_perc){ATHR_WIDGET_INIT, 0}
 
-// PRIVATE ------------------------------------------------------------------
-struct athr_widget_perc;
-
-void __athr_widget_perc_create(struct athr_widget_perc *);
-// PRIVATE ------------------------------------------------------------------
+void athr_widget_perc_create(struct athr_widget_perc *);
 
 #endif

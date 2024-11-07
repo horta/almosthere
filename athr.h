@@ -30,8 +30,8 @@ struct athr
     atomic_uint_fast64_t  consumed;
     uint_fast64_t         last_consumed;
     struct athr_ema       speed;
-    struct athr_elapsed       *elapsed;
-    struct athr_elapsed       *total_elapsed;
+    struct athr_elapsed  *elapsed;
+    struct athr_elapsed  *total_elapsed;
 
     enum athr_option opts;
     struct athr_widget_main main;

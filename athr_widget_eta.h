@@ -8,17 +8,12 @@
 struct athr_widget_eta
 {
     struct athr_widget super;
-    char buff[ATHR_WIDGET_ETA_LEN + 1];
-    double consumed;
+    char               buff[ATHR_WIDGET_ETA_LEN + 1];
+    double             consumed;
 };
 
-#define ATHR_WIDGET_ETA_INIT                                                   \
-    (struct athr_widget_eta) { ATHR_WIDGET_INIT, {0}, 0 }
+#define ATHR_WIDGET_ETA_INIT (struct athr_widget_eta){ATHR_WIDGET_INIT, {0}, 0}
 
-// PRIVATE ------------------------------------------------------------------
-struct athr_widget_eta;
-
-void __athr_widget_eta_create(struct athr_widget_eta *);
-// PRIVATE ------------------------------------------------------------------
+void athr_widget_eta_create(struct athr_widget_eta *);
 
 #endif

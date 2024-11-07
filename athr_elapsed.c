@@ -41,28 +41,26 @@ struct athr_elapsed* athr_elapsed_new(void)
     return x;
 }
 
-void athr_elapsed_del(struct athr_elapsed* elapsed)
+void athr_elapsed_del(struct athr_elapsed* x)
 {
-    free(elapsed);
+    free(x);
 }
 
-static int
-get_any_timespec(struct timespec* ts)
+static int get_any_timespec(struct timespec *ts)
 {
     return timespec_get(ts, TIME_UTC) != TIME_UTC;
 }
 
-static void
-die(char const* msg)
+static void die(char const *msg)
 {
     fprintf(stderr, "%s", msg);
     fflush(stderr);
     abort();
 }
 
-int athr_elapsed_start(struct athr_elapsed* elapsed)
+int athr_elapsed_start(struct athr_elapsed* x)
 {
-    return get_any_timespec(&elapsed->start);
+    return get_any_timespec(&x->start);
 }
 
 /* source: libbsd */
@@ -82,10 +80,10 @@ int athr_elapsed_start(struct athr_elapsed* elapsed)
 #define MICROSECONDS_IN_A_SECOND (MILLISECONDS_IN_A_SECOND * 1000L)
 #define NANOSECONDS_IN_A_SECOND (MICROSECONDS_IN_A_SECOND * 1000L)
 
-long athr_elapsed_milliseconds(struct athr_elapsed const* elapsed)
+long athr_elapsed_milliseconds(struct athr_elapsed const* x)
 {
     struct timespec diff = { 0 };
-    timespecsub(&elapsed->stop, &elapsed->start, &diff);
+    timespecsub(&x->stop, &x->start, &diff);
     if (diff.tv_sec < 0 || diff.tv_nsec < 0)
         die("unexpected negative time duration");
 
@@ -94,9 +92,9 @@ long athr_elapsed_milliseconds(struct athr_elapsed const* elapsed)
     return ms + re;
 }
 
-int athr_elapsed_stop(struct athr_elapsed* elapsed)
+int athr_elapsed_stop(struct athr_elapsed* x)
 {
-    return get_any_timespec(&elapsed->stop);
+    return get_any_timespec(&x->stop);
 }
 
 int athr_elapsed_sleep(long ms)

@@ -18,6 +18,8 @@
 #include "athr_ovs_atomic_posix.h"
 #endif
 
+#define error(msg) athr_logger_error(athr_logger_format(msg))
+
 static atomic_bool disable_thread = false;
 
 static void lock(struct athr *at)
@@ -26,38 +28,38 @@ static void lock(struct athr *at)
         /* spin until the lock is acquired */;
 }
 
-static void unlock(struct athr *at) { atomic_flag_clear(&at->lock); }
+static void unlock(struct athr *x) { atomic_flag_clear(&x->lock); }
 
-static void update(struct athr *at)
+static void update(struct athr *x)
 {
-    lock(at);
-    uint_fast64_t consumed = atomic_load_uint_fast64(&at->consumed);
-    if (consumed > at->total) consumed = at->total;
-    if (consumed == at->last_consumed) goto cleanup;
-    uint_fast64_t delta = consumed - at->last_consumed;
-    at->last_consumed = consumed;
+    lock(x);
+    uint_fast64_t consumed = atomic_load_uint_fast64(&x->consumed);
+    if (consumed > x->total) consumed = x->total;
+    if (consumed == x->last_consumed) goto cleanup;
+    uint_fast64_t delta = consumed - x->last_consumed;
+    x->last_consumed = consumed;
 
-    if (athr_elapsed_stop(at->elapsed)) error("failed to elapsed_stop");
+    if (athr_elapsed_stop(x->elapsed)) error("failed to elapsed_stop");
 
-    double seconds = ((double)athr_elapsed_milliseconds(at->elapsed)) / 1000.;
-    double progress = ((double)delta) / ((double)at->total);
+    double seconds = ((double)athr_elapsed_milliseconds(x->elapsed)) / 1000.;
+    double progress = ((double)delta) / ((double)x->total);
 
-    if (progress < 0.005f && at->timestep < ATHR_TIMESTEP_LIMIT)
+    if (progress < 0.005f && x->timestep < ATHR_TIMESTEP_LIMIT)
     {
-        at->timestep += ATHR_TIMESTEP;
-        if (at->timestep > ATHR_TIMESTEP_LIMIT)
-            at->timestep = ATHR_TIMESTEP_LIMIT;
+        x->timestep += ATHR_TIMESTEP;
+        if (x->timestep > ATHR_TIMESTEP_LIMIT)
+            x->timestep = ATHR_TIMESTEP_LIMIT;
     }
 
-    athr_ema_add(&at->speed, progress / seconds);
+    athr_ema_add(&x->speed, progress / seconds);
 
-    double consumed_fraction = ((double)consumed) / ((double)at->total);
-    at->main.super.vtable->update(&at->main.super, consumed_fraction,
-                                  athr_ema_get(&at->speed));
+    double consumed_fraction = ((double)consumed) / ((double)x->total);
+    x->main.super.vtable->update(&x->main.super, consumed_fraction,
+                                  athr_ema_get(&x->speed));
 
-    if (athr_elapsed_start(at->elapsed)) error("failed to elapsed_start");
+    if (athr_elapsed_start(x->elapsed)) error("failed to elapsed_start");
 cleanup:
-    unlock(at);
+    unlock(x);
 }
 
 static void thread_start(void *args)
@@ -70,58 +72,58 @@ static void thread_start(void *args)
     }
 }
 
-int athr_start(struct athr *at, uint64_t total, const char *desc,
+int athr_start(struct athr *x, uint64_t total, const char *desc,
                enum athr_option opts)
 {
     if (desc == NULL) desc = "";
-    at->timestep = ATHR_TIMESTEP;
-    at->total = total;
-    at->consumed = 0;
-    at->last_consumed = 0;
-    at->speed = ATHR_EMA_INIT;
-    at->elapsed = athr_elapsed_new();
-    at->total_elapsed = athr_elapsed_new();
-    if (!at->elapsed || !at->total_elapsed)
+    x->timestep = ATHR_TIMESTEP;
+    x->total = total;
+    x->consumed = 0;
+    x->last_consumed = 0;
+    x->speed = ATHR_EMA_INIT;
+    x->elapsed = athr_elapsed_new();
+    x->total_elapsed = athr_elapsed_new();
+    if (!x->elapsed || !x->total_elapsed)
     {
-        athr_elapsed_del(at->elapsed);
-        athr_elapsed_del(at->total_elapsed);
-        at->elapsed = NULL;
-        at->total_elapsed = NULL;
+        athr_elapsed_del(x->elapsed);
+        athr_elapsed_del(x->total_elapsed);
+        x->elapsed = NULL;
+        x->total_elapsed = NULL;
         error("failed to allocate elapsed struct");
         return 1;
     }
-    if (athr_elapsed_start(at->elapsed) || athr_elapsed_start(at->total_elapsed))
+    if (athr_elapsed_start(x->elapsed) || athr_elapsed_start(x->total_elapsed))
     {
-        athr_elapsed_del(at->elapsed);
-        athr_elapsed_del(at->total_elapsed);
-        at->elapsed = NULL;
-        at->total_elapsed = NULL;
+        athr_elapsed_del(x->elapsed);
+        athr_elapsed_del(x->total_elapsed);
+        x->elapsed = NULL;
+        x->total_elapsed = NULL;
         error("failed to elapsed_start");
         return 1;
     }
 
-    at->opts = opts;
-    __athr_widget_main_create(&at->main);
-    __athr_widget_text_create(__athr_widget_main_add_text(&at->main), desc);
+    x->opts = opts;
+    athr_widget_main_create(&x->main);
+    athr_widget_text_create(athr_widget_main_add_text(&x->main), desc);
     if (opts & ATHR_PERC)
-        __athr_widget_perc_create(__athr_widget_main_add_perc(&at->main));
+        athr_widget_perc_create(athr_widget_main_add_perc(&x->main));
     if (opts & ATHR_BAR)
-        __athr_widget_bar_create(__athr_widget_main_add_bar(&at->main));
+        athr_widget_bar_create(athr_widget_main_add_bar(&x->main));
     if (opts & ATHR_ETA)
-        __athr_widget_eta_create(__athr_widget_main_add_eta(&at->main));
-    __athr_widget_main_setup(&at->main);
+        athr_widget_eta_create(athr_widget_main_add_eta(&x->main));
+    athr_widget_main_setup(&x->main);
 
-    atomic_store(&at->stop, false);
+    atomic_store(&x->stop, false);
 
     if (!atomic_load_bool(&disable_thread))
     {
-        int rc = athr_thread_create(&at->thr, thread_start, at);
+        int rc = athr_thread_create(&x->thr, thread_start, x);
         if (rc)
         {
-            athr_elapsed_del(at->elapsed);
-            athr_elapsed_del(at->total_elapsed);
-            at->elapsed = NULL;
-            at->total_elapsed = NULL;
+            athr_elapsed_del(x->elapsed);
+            athr_elapsed_del(x->total_elapsed);
+            x->elapsed = NULL;
+            x->total_elapsed = NULL;
         }
         return rc;
     }
@@ -129,27 +131,27 @@ int athr_start(struct athr *at, uint64_t total, const char *desc,
     return 0;
 }
 
-void athr_eat(struct athr *at, uint64_t amount)
+void athr_eat(struct athr *x, uint64_t amount)
 {
-    atomic_fetch_add_uint_fast64(&at->consumed, amount);
-    if (atomic_load_bool(&disable_thread)) update(at);
+    atomic_fetch_add_uint_fast64(&x->consumed, amount);
+    if (atomic_load_bool(&disable_thread)) update(x);
 }
 
-void athr_stop(struct athr *at)
+void athr_stop(struct athr *x)
 {
-    atomic_store(&at->stop, true);
-    update(at);
-    athr_thread_join(&at->thr);
+    atomic_store(&x->stop, true);
+    update(x);
+    athr_thread_join(&x->thr);
 
-    if (athr_elapsed_stop(at->total_elapsed)) error("failed to elapsed_stop");
+    if (athr_elapsed_stop(x->total_elapsed)) error("failed to elapsed_stop");
 
-    double seconds = ((double)athr_elapsed_milliseconds(at->total_elapsed)) / 1000.;
-    at->main.super.vtable->finish(&at->main.super, seconds);
-    athr_canvas_close(&at->main.canvas);
-    athr_elapsed_del(at->elapsed);
-    athr_elapsed_del(at->total_elapsed);
-    at->elapsed = NULL;
-    at->total_elapsed = NULL;
+    double seconds = ((double)athr_elapsed_milliseconds(x->total_elapsed)) / 1000.;
+    x->main.super.vtable->finish(&x->main.super, seconds);
+    athr_canvas_close(&x->main.canvas);
+    athr_elapsed_del(x->elapsed);
+    athr_elapsed_del(x->total_elapsed);
+    x->elapsed = NULL;
+    x->total_elapsed = NULL;
 }
 
 void athr_stop_wait(struct athr *at)

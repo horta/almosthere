@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <windows.h>
 
+#define error(msg) athr_logger_error(athr_logger_format(msg))
+
 static long tput_cols(void)
 {
     char buff[16] = {0};
