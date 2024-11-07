@@ -1,4 +1,4 @@
-# athr
+# Almosthere
 
 Progress indicator C library.
 
@@ -44,7 +44,7 @@ int main() {
 }
 ```
 
-![Example 1](figures/example1.gif)
+![Example 1](.github/assets/example1.gif)
 
 ```c
 /* example2.c */
@@ -66,7 +66,7 @@ int main() {
 }
 ```
 
-![Example 2](figures/example2.gif)
+![Example 2](.github/assets/example2.gif)
 
 ```c
 /* example3.c */
@@ -88,7 +88,7 @@ int main() {
 }
 ```
 
-![Example 3](figures/example3.gif)
+![Example 3](.github/assets/example3.gif)
 
 ```c
 /* example4.c */
@@ -110,7 +110,7 @@ int main() {
 }
 ```
 
-![Example 4](figures/example4.gif)
+![Example 4](.github/assets/example4.gif)
 
 ## Manual installation
 
