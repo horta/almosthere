@@ -4,7 +4,7 @@
 #error "C11 or a more recent version is required"
 #endif
 
-#if defined(POSIX_OS)
+#if ATHR_OS == ATHR_OS_UNIX
 #if !defined(_POSIX_C_SOURCE) || _POSIX_C_SOURCE < 200809L
 #undef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200809L
