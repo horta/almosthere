@@ -40,7 +40,13 @@ static long tput_cols(void)
         goto cleanup;
     }
 
-    if (tentative < 0 || tentative > UINT_MAX)
+    if (tentative < 0)
+    {
+        error("ncols underflow");
+        goto cleanup;
+    }
+
+    if ((unsigned long)tentative > UINT_MAX)
     {
         error("ncols overflow");
         goto cleanup;
