@@ -7,9 +7,9 @@
 #include "athr_widget_main.h"
 #include <stdint.h>
 
-#if ATHR_OS == ATHR_OS_WIN32
+#if defined(ATHR_OS_WIN32)
 #include "athr_ovs_atomic_msvc.h"
-#elif ATHR_OS == ATHR_OS_UNIX
+#elif defined(ATHR_OS_UNIX)
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>

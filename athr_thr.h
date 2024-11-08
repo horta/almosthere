@@ -1,10 +1,10 @@
 #ifndef ATHR_THR_H
 #define ATHR_THR_H
 
-#if ATHR_OS == ATHR_OS_WIN32
+#if defined(ATHR_OS_WIN32)
 #include <windows.h>
 typedef HANDLE athr_thr_handle;
-#elif ATHR_OS == ATHR_OS_UNIX
+#elif defined(ATHR_OS_UNIX)
 #include <pthread.h>
 typedef pthread_t athr_thr_handle;
 #endif
