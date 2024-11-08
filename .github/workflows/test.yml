@@ -24,14 +24,15 @@ jobs:
     runs-on: windows-2022
 
     defaults:
-      run:
-        shell: bash
 
     steps:
       - uses: actions/checkout@v4
 
+      - name: install make
+        run: choco install make
+
       - name: make
-        run: mingw64-make
+        run: mingw32-make
 
       - name: make check
-        run: mingw64-make check
+        run: mingw32-make check

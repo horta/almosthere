@@ -11,7 +11,7 @@ TEST_SRC    = $(wildcard test_*.c)
 TEST_OBJ    = $(TEST_SRC:.c=.o)
 TEST_TARGET = $(basename $(TEST_OBJ))
 
-PKG_CONFIG_FOUND     := $(if $(shell which pkg-config),true,false)
+PKG_CONFIG_FOUND     := $(if $(shell which pkg-config 2>/dev/null),true,false)
 
 ifeq '$(findstring ;,$(PATH))' ';'
     UNAME := Windows
