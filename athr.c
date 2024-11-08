@@ -8,15 +8,11 @@
 #include "athr_widget_main.h"
 #include "athr_widget_perc.h"
 #include "athr_widget_text.h"
+#include <stdatomic.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#if defined(ATHR_OS_WIN32)
-#include "athr_ovs_atomic_msvc.h"
-#elif defined(ATHR_OS_UNIX)
-#include "athr_ovs_atomic_posix.h"
-#endif
 
 #define error(msg) athr_logger_error(athr_logger_format(msg))
 
@@ -33,7 +29,7 @@ static void unlock(struct athr *x) { atomic_flag_clear(&x->lock); }
 static void update(struct athr *x)
 {
     lock(x);
-    uint_fast64_t consumed = atomic_load_uint_fast64(&x->consumed);
+    uint_fast64_t consumed = atomic_load(&x->consumed);
     if (consumed > x->total) consumed = x->total;
     if (consumed == x->last_consumed) goto cleanup;
     uint_fast64_t delta = consumed - x->last_consumed;
@@ -65,7 +61,7 @@ cleanup:
 static void thread_start(void *args)
 {
     struct athr *at = (struct athr *)args;
-    while (!atomic_load_bool(&at->stop) && !atomic_load_bool(&disable_thread))
+    while (!atomic_load(&at->stop) && !atomic_load(&disable_thread))
     {
         update(at);
         if (athr_sleep(at->timestep)) error("failed to sleep");
@@ -115,7 +111,7 @@ int athr_start(struct athr *x, uint64_t total, const char *desc,
 
     atomic_store(&x->stop, false);
 
-    if (!atomic_load_bool(&disable_thread))
+    if (!atomic_load(&disable_thread))
     {
         int rc = athr_thread_create(&x->thr, thread_start, x);
         if (rc)
@@ -133,8 +129,8 @@ int athr_start(struct athr *x, uint64_t total, const char *desc,
 
 void athr_eat(struct athr *x, uint64_t amount)
 {
-    atomic_fetch_add_uint_fast64(&x->consumed, amount);
-    if (atomic_load_bool(&disable_thread)) update(x);
+    atomic_fetch_add(&x->consumed, amount);
+    if (atomic_load(&disable_thread)) update(x);
 }
 
 void athr_stop(struct athr *x)

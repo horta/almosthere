@@ -1,18 +1,13 @@
 #include "athr_canvas.h"
-#include "athr_min.h"
 #include "athr_max.h"
+#include "athr_min.h"
 #include "athr_terminal.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#if defined(ATHR_OS_WIN32)
-#include "athr_ovs_atomic_msvc.h"
-#elif defined(ATHR_OS_UNIX)
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 static atomic_bool use_stderr = false;
 
