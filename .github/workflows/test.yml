@@ -23,11 +23,12 @@ jobs:
     name: Test on windows-2022
     runs-on: windows-2022
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - uses: actions/checkout@v4
-
-      - name: install make
-        run: choco install make
 
       - name: make
         run: mingw32-make
