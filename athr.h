@@ -5,15 +5,9 @@
 #include "athr_option.h"
 #include "athr_thread.h"
 #include "athr_widget_main.h"
-#include <stdint.h>
-
-#if defined(ATHR_OS_WIN32)
-#include "athr_ovs_atomic_msvc.h"
-#elif defined(ATHR_OS_UNIX)
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>
-#endif
 
 /* How often to update initially, in milliseconds. */
 #define ATHR_TIMESTEP 250
