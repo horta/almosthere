@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: make
-        run: mingw32-make
+        run: mingw64-make
 
       - name: make check
-        run: mingw32-make check
+        run: mingw64-make check
