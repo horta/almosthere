@@ -37,6 +37,8 @@ endif
 ifeq ($(UNAME),Windows)
   CFLAGS += -DATHR_OS_WIN32
   CFLAGS += -DATHR_TERMINAL_WIN32
+  SRC := $(filter-out athr_terminal_ioctl.c,$(SRC))
+  HDR := $(filter-out athr_terminal_ioctl.h,$(SRC))
 else
   CFLAGS += -DATHR_OS_UNIX
   ifeq ($(CURSES_FOUND),true)
@@ -58,9 +60,9 @@ $(info CC               = $(CC))
 $(info PKG_CONFIG_FOUND = $(PKG_CONFIG_FOUND))
 $(info CURSES_FOUND     = $(CURSES_FOUND))
 $(info CURSES_LIBS      = $(CURSES_LIBS))
-$(info ATHR_TERMINAL    = $(ATHR_TERMINAL))
 $(info CFLAGS           = $(CFLAGS))
 
+.PHONY: all
 all: $(LIB)
 
 $(LIB): $(OBJ)
@@ -74,6 +76,7 @@ $(LIB): $(OBJ)
 $(TEST_TARGET): %: %.o $(LIB)
 	$(CC) $(CFLAGS) $< -L. -lathr $(CURSES_LIBS) -lm -o $@
 
+.PHONY: check
 check: $(TEST_TARGET)
 	for test in $(TEST_TARGET); do ./$$test || exit 1; done
 
@@ -82,9 +85,10 @@ install: $(LIB) $(HDR)
 	install -m 0755 $(LIB) $(PREFIX)/lib/
 	install -m 0644 $(HDR) $(PREFIX)/include/
 
+.PHONY: uninstall
 uninstall:
 	rm -f $(PREFIX)/lib/$(LIB) $(HDR:%=$(PREFIX)/include/%)
 
-.PHONY: all clean check uninstall
+.PHONY: clean
 clean:
 	rm -f $(OBJ) $(LIB) $(TEST_OBJ) $(TEST_TARGET) *.d

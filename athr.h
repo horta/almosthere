@@ -3,7 +3,7 @@
 
 #include "athr_ema.h"
 #include "athr_option.h"
-#include "athr_thr.h"
+#include "athr_thread.h"
 #include "athr_widget_main.h"
 #include <stdint.h>
 
